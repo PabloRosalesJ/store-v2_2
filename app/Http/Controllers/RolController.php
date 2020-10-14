@@ -9,6 +9,6 @@ class RolController extends Controller
 {
     public function __invoke()
     {
-        return response()->json(['rols' => Rol::all()]);
+        return response()->json(Rol::all());
     }
 }

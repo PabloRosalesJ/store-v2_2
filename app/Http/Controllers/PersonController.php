@@ -18,7 +18,7 @@ class PersonController extends Controller
     
     public function index()
     {
-        return response()->json(['people' => $this->repository->all()]);
+        return response()->json($this->repository->all());
     }
     
     public function store(StorePersonRequest $request)

@@ -18,7 +18,7 @@ class IncomeController extends Controller
     
     public function index()
     {
-        return response()->json( [ 'incomes' => $this->repository->all( new Income() ) ] );
+        return response()->json( $this->repository->all( new Income() ) );
     }
     
     public function store(Request $request)

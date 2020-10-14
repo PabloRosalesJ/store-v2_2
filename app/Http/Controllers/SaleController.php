@@ -3,83 +3,41 @@
 namespace App\Http\Controllers;
 
 use App\Models\Sale;
+use App\Repository\SaleRepository;
 use Illuminate\Http\Request;
 
 class SaleController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $repository;
+
+    public function __construct(SaleRepository $repository)
+    {
+        $this->middleware('OnlyAjaxRequest');
+        $this->repository = $repository;
+    }
+    
     public function index()
     {
-        //
+        return response()->json($this->repository->all(new Sale()));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function create()
-    {
-        //
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        return response()->json( $this->repository->store($request));
     }
-
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function show(Sale $sale)
+    
+    public function show(int $id)
     {
-        //
+        return response()->json( $this->repository->getSale($id));
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(Sale $sale)
+    
+    public function disable(int $id)
     {
-        //
+        return response()->json( $this->repository->disableSale($id));
     }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function update(Request $request, Sale $sale)
+    
+    public function search(Request $request)
     {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\Models\Sale  $sale
-     * @return \Illuminate\Http\Response
-     */
-    public function destroy(Sale $sale)
-    {
-        //
+        return response()->json( $this->repository->search($request));
     }
 }

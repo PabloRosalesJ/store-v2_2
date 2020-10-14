@@ -2,84 +2,47 @@
 
 namespace App\Http\Controllers;
 
+use App\Repository\SaleRepository;
 use App\sales_details;
 use Illuminate\Http\Request;
 
 class SalesDetailsController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
+    private $repository;
+
+    public function __construct(SaleRepository $repository)
+    {
+        $this->middleware('OnlyAjaxReqest');
+        $this->repository = $repository;
+    }
+    
     public function index()
     {
-        //
+        $this->repository;
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        //
+        $this->repository;
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(Request $request)
     {
-        //
+        $this->repository;
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\sales_details  $sales_details
-     * @return \Illuminate\Http\Response
-     */
     public function show(sales_details $sales_details)
     {
-        //
+        $this->repository;
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  \App\sales_details  $sales_details
-     * @return \Illuminate\Http\Response
-     */
-    public function edit(sales_details $sales_details)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\sales_details  $sales_details
-     * @return \Illuminate\Http\Response
-     */
+    
     public function update(Request $request, sales_details $sales_details)
     {
-        //
+        $this->repository;
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  \App\sales_details  $sales_details
-     * @return \Illuminate\Http\Response
-     */
     public function destroy(sales_details $sales_details)
     {
-        //
+        $this->repository;
     }
 }

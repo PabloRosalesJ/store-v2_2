@@ -11,8 +11,7 @@ class SaleEloquentImpl implements SaleRepository
 {
     public function all(Model $model)
     {
-        return $model::where('state', '1')
-                    ->with('user')->get();
+        return $model::where('status', '1')->get();
     }
 
     public function store(Request $request)
@@ -46,15 +45,14 @@ class SaleEloquentImpl implements SaleRepository
     
     public function getSale($id)
     {
-        $income = Income::findOrFail($id)
-                    ->with('income_details')
-                    ->with('user')
-                    ->get();
-        $products = IncomeDetail::where('income_id', 1)
-                        ->with('products')
+        $sale_detail = DB::table('sales')
+                        ->join('sales_details', 'sales.id', '=', 'sales_details.sale_id')
+                        ->select('sales.*', 'sales_details.*')
                         ->get();
 
-        return compact('income', 'products');
+    //    $sale_detail = DB::table('sales_details')->where('sale_id', $id)->get();
+        return $sale_detail;
+
     }
     
     public function disableSale($id)

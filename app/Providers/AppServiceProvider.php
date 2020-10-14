@@ -7,10 +7,12 @@ use App\Repository\Impl\IcomeEloquentImpl;
 use App\Repository\Impl\PersonEloquentImpl;
 use App\Repository\Impl\ProductEloquentImpl;
 use App\Repository\Impl\ProviderEloquentImpl;
+use App\Repository\Impl\SaleEloquentImpl;
 use App\Repository\Impl\USerEloquentImpl;
 use App\Repository\PersonRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProviderRepository;
+use App\Repository\SaleRepository;
 use App\Repository\UserRepository;
 use Illuminate\Support\ServiceProvider;
 
@@ -51,6 +53,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             IcomeRepository::class,
             IcomeEloquentImpl::class
+        );
+
+        $this->app->bind(
+            SaleRepository::class,
+            SaleEloquentImpl::class
         );
     }
 

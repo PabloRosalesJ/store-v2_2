@@ -19,7 +19,7 @@ class UserController extends Controller
     
     public function index()
     {
-        return response()->json(['users' => $this->repository->all()]);
+        return response()->json($this->repository->all());
     }
     
     public function store(StoreUserRequest $request)

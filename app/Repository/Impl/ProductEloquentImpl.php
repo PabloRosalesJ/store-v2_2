@@ -10,7 +10,7 @@ class ProductEloquentImpl implements ProductRepository
     public function all()
     {   
         $products = Product::where('status', 1)->get();
-        return ['products' => $products];
+        return $products;
     }
 
     public function store(Request $request)

@@ -14,7 +14,7 @@ class CrudEloquentImpl implements CrudRepository
 
     public function all()
     {
-        return $this->Entity::where('status',1)->get();
+        return $this->Entity::where('status',1)->paginate();
     }
 
     public function store(Request $request)

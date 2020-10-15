@@ -11,7 +11,7 @@ class USerEloquentImpl implements UserRepository
 {
     public function all()
     {
-        return User::where('status', 1)->get();
+        return User::where('status', 1)->paginate();
     }
 
     public function store(Request $request)

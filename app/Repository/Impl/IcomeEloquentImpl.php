@@ -12,7 +12,7 @@ class IcomeEloquentImpl implements IcomeRepository
     public function all(Model $model)
     {
         return $model::where('state', '1')
-                    ->with('user')->get();
+                    ->with('user')->paginate();
     }
 
     public function store(Request $request)

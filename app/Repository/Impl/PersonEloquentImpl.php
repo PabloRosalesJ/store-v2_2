@@ -8,7 +8,7 @@ class PersonEloquentImpl implements PersonRepository
 {
     public function all()
     {
-        return Person::where('status',1)->get();
+        return Person::where('status',1)->paginate();
     }
 
     public function store(Request $request)

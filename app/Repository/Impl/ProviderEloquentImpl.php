@@ -11,7 +11,7 @@ class ProviderEloquentImpl implements ProviderRepository
 {
     public function all()
     {
-        return Provider::all();
+        return Provider::pagiate();
     }
 
     public function store(Request $request)
@@ -33,7 +33,7 @@ class ProviderEloquentImpl implements ProviderRepository
 
             $person->fill($request->all())->save();
 
-            $provider->provider_id            = $person->id;
+            $provider->provider_id   = $person->id;
             $provider->provider_name = $request->provider_name;
             $provider->save();
 

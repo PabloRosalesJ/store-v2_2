@@ -12,7 +12,7 @@ class SaleEloquentImpl implements SaleRepository
 {
     public function all(Model $model)
     {
-        return $model::where('status', '1')->get();
+        return $model::where('status', '1')->paginate();
     }
 
     public function store(Request $request)

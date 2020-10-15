@@ -9,7 +9,7 @@ class ProductEloquentImpl implements ProductRepository
 {
     public function all()
     {   
-        $products = Product::where('status', 1)->get();
+        $products = Product::where('status', 1)->paginate();
         return $products;
     }
 

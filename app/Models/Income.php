@@ -14,13 +14,9 @@ class Income extends Model
     }
 
     public function income_details(){
-        return $this->hasOne(IncomeDetail::class);
+        return $this->hasMany(IncomeDetail::class);
     }
-
-    // public function product()
-    // {
-    //     return $this->hasOneThrough(Product::class, IncomeDetail::class,'product_id','id');
-    // }
+    
     public function products()
     {
         return $this->hasManyThrough(Product::class, IncomeDetail::class);

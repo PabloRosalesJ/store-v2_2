@@ -3,7 +3,6 @@
 use App\Repository\ProductRepository;
 use App\Models\Product;
 use Illuminate\Http\Request;
-use phpDocumentor\Reflection\Types\Boolean;
 
 class ProductEloquentImpl implements ProductRepository
 {

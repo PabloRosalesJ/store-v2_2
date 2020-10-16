@@ -82,18 +82,10 @@ Route::prefix('sale')->group(function () {
     Route::get('/search/{query}', 'SaleController@search')->name('sale.search');
 });
 
-Route::get('restore/{id}/', function($id){
-    return App\Models\Person::withTrashed()->where('id', $id)->restore();
-});
-
-Route::get('hasMany', function(){
-    $icdt = IncomeDetail::where('income_id', 1)
-                        ->with('products')
-                        ->get();
-    return $icdt;
-});
-
-
-Route::get('test', function(Request $request){
-    return $request->ip;
+Route::prefix('credit')->group(function () {
+    Route::get('/', 'CreditController@index')->name('credit.index');
+    Route::post('/', 'CreditController@store')->name('credit.store');
+    Route::get('/{credit_id}/details', 'CreditController@show')->name('credit.show');
+    Route::put('/{credit_id}/disable', 'CreditController@disable')->name('credit.disable');
+    Route::get('/search/{query}', 'CreditController@search')->name('credit.search');
 });

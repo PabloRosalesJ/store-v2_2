@@ -9,11 +9,14 @@ use App\Repository\Impl\ProductEloquentImpl;
 use App\Repository\Impl\ProviderEloquentImpl;
 use App\Repository\Impl\SaleEloquentImpl;
 use App\Repository\Impl\USerEloquentImpl;
+use App\Repository\Impl\CreditEloquentImpl;
 use App\Repository\PersonRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProviderRepository;
 use App\Repository\SaleRepository;
 use App\Repository\UserRepository;
+use App\Repository\CreditRepository;
+
 use Illuminate\Support\ServiceProvider;
 
 class AppServiceProvider extends ServiceProvider
@@ -58,6 +61,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             SaleRepository::class,
             SaleEloquentImpl::class
+        );
+
+        $this->app->bind(
+            CreditRepository::class,
+            CreditEloquentImpl::class
         );
     }
 

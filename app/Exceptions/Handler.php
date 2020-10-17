@@ -54,14 +54,17 @@ class Handler extends ExceptionHandler
      */
     public function render($request, Throwable $exception)
     {
-        if ($exception instanceof ModelNotFoundException) 
+        if ($exception instanceof ModelNotFoundException)
         {
             return response()->json(["message"=>"Entidad no encontrada"], 404);
         }
 
-        if ($exception instanceof MethodNotAllowedHttpException) 
+        if ($exception instanceof MethodNotAllowedHttpException)
         {
-            return response()->json(["message"=>"El metodo espesificado en la peticion no es valido"], 405);
+            return response()->json([
+                                    "message"=>"El metodo espesificado en la peticion no es valido",
+                                    "exception" => $exception->getMessage()
+                                    ], 405);
         }
 
         if($exception instanceof NotFoundHttpException)

@@ -32,13 +32,13 @@ class CreditController extends Controller
         return response()->json($this->CreditRepository->getCredit($credit_id));
     }
 
-    public function disable(Credit $credit)
+    public function disable(int $id)
     {
-        return response()->json($this->CreditRepository);
+        return response()->json($this->CreditRepository->disableCredit($id));
     }
 
-    public function search(Credit $credit)
+    public function search(Request $request)
     {
-        return response()->json($this->CreditRepository);
+        return response()->json($this->CreditRepository->searchCredit($request));
     }
 }

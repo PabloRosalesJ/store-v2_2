@@ -15,4 +15,8 @@ class Credit extends Model
     public function person(){
         return $this->belongsTo(Person::class, 'people_id');
     }
+
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+    ];
 }

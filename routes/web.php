@@ -87,5 +87,5 @@ Route::prefix('credit')->group(function () {
     Route::post('/', 'CreditController@store')->name('credit.store');
     Route::get('/{credit_id}/details', 'CreditController@show')->name('credit.show');
     Route::put('/{credit_id}/disable', 'CreditController@disable')->name('credit.disable');
-    Route::get('/search/{query}', 'CreditController@search')->name('credit.search');
+    Route::get('/search/', 'CreditController@search')->name('credit.search');
 });

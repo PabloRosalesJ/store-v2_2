@@ -10,7 +10,7 @@ interface CreditRepository{
 
     public function getCredit(int $credit_id);
 
-    public function disableCredit();
+    public function disableCredit(int $id);
 
-    public function searchCredit();
+    public function searchCredit(Request $request);
 }

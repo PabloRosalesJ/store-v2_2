@@ -53,9 +53,7 @@
                     <div class="col-sm-12">
                         <div class="card">
                             <div class="card-body">
-                                @livewire('counter')
-                                @section('content')
-                                @endsection
+                                @yield('content')
                             </div>
                         </div>
                     </div>

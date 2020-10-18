@@ -90,3 +90,7 @@ Route::prefix('credit')->group(function () {
     Route::put('/{credit_id}/disable', 'CreditController@disable')->name('credit.disable');
     Route::get('/search/', 'CreditController@search')->name('credit.search');
 });
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

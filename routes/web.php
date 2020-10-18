@@ -4,9 +4,10 @@ use App\Models\IncomeDetail;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/', function () {
-    return view('contenido.contenido');
-});
+Route::get('/','HomeController@index')->name('root');
+
+Route::view('/test', 'test');
+
 
 Auth::routes();
 

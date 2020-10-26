@@ -47,4 +47,8 @@ class User extends Model
     {
         $this->attributes['username'] = trim($value);
     }
+
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+    ];
 }

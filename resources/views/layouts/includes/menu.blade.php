@@ -32,18 +32,18 @@
 
                     <!-- Usuarios -->
                     <li class="nav-item pcoded-hasmenu">
-                        <a href="#!" class="nav-link "><span class="pcoded-micon">
+                        <a class="nav-link "><span class="pcoded-micon">
                             <i class="feather icon-users"></i>
                             </span><span class="pcoded-mtext">Usuarios</span></a>
                         <ul class="pcoded-submenu">
                             <li>
-                                <router-link :to="{ name: 'user'}"> Clientes </router-link>
+                                <router-link :to="{name:'clients'}">Clientes</router-link>
                             </li>
                             <li>
-                                <a href="layout-horizontal-2.html" target="_blank">Proveedores</a>
+                                <router-link :to="{name:'providers'}">Proveedores</router-link>
                             </li>
                             <li>
-                                <a href="layout-horizontal-rtl.html" target="_blank">Usuarios</a>
+                                <router-link :to="{name:'users'}">Usuarios</router-link>
                             </li>
                         </ul>
                     </li>

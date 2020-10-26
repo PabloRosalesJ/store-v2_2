@@ -62,4 +62,7 @@ class Person extends Model
         return ucwords($value);
     }
 
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+    ];
 }

@@ -9,8 +9,8 @@
     <!-- Favicon icon -->
     <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon">
     <!-- Styles -->
+    @yield('extra_css')
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
-    @livewireStyles
     {{-- <link href="{{ asset('css/app.css') }}" rel="stylesheet"> --}}
 
 </head>
@@ -27,38 +27,27 @@
         @include('layouts.includes.menu')
         
         @include('layouts.includes.header')
-
-                <div class="pcoded-main-container">
+        
+        <div class="pcoded-main-container">
             <div class="pcoded-content">
                 <!-- [ breadcrumb ] start -->
                 <div class="page-header">
                     <div class="page-block">
                         <div class="row align-items-center">
-                            <div class="col-md-12">
-                                <div class="page-header-title">
-                                    <h5 class="m-b-10">Section title</h5>
-                                </div>
-                                <ul class="breadcrumb">
-                                    <li class="breadcrumb-item"><a href="index.html"><i class="feather icon-home"></i></a>
-                                    </li>
-                                    <li class="breadcrumb-item"><a href="#!">Area title</a></li>
-                                </ul>
-                            </div>
-                        </div>
+                        <ul class="breadcrumb">
+                            <li class="breadcrumb-item">
+                                <router-link to="/"><i class="feather icon-home"></i></router-link>
+                            </li>
+                            {{-- <li class="breadcrumb-item"></li> --}}
+                        </ul>
+                    </div>
                     </div>
                 </div>
-                <!-- [ breadcrumb ] end -->
-                <!-- [ Main Content ] start -->
                 <div class="row">
                     <div class="col-sm-12">
-                        <div class="card">
-                            <div class="card-body">
-                                @yield('content')
-                            </div>
-                        </div>
+                        <router-view></router-view>
                     </div>
                 </div>
-                <!-- [ Main Content ] end -->
             </div>
         </div>
         
@@ -70,11 +59,13 @@
     <script src="{{ asset('js/ripple.js') }}"></script>
     <script src="{{ asset('js/pcoded.min.js') }}"></script>
 
-    <!-- Apex Chart -->
-    <script src="{{ asset('js/plugins/apexcharts.min.js') }}"></script>
-    <!-- custom-chart js -->
-    <script src="{{ asset('js/pages/dashboard-main.js') }}"></script>
-    @livewireScripts
+    <script src="{{ asset('js/plugins/jquery.dataTables.min.js') }}"></script>
+    <script src="{{ asset('js/plugins/dataTables.bootstrap4.min.js') }}"></script>
+    
+    <script>
+        $('#table').DataTable();
+    </script>
+    @yield('extra_js')
     
 </body>
 

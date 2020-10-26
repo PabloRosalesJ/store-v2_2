@@ -2,14 +2,15 @@
     <header class="navbar pcoded-header navbar-expand-lg navbar-light header-blue">
 
         <div class="m-header">
-            <a class="mobile-menu" id="mobile-collapse" href="#!"><span></span></a>
-            <a href="#!" class="b-brand">
+            <a class="mobile-menu" id="mobile-collapse"><span></span></a>
+            <span class="b-brand">
                 <!-- ========   change your logo hear   ============ -->
-               <h3 class="text-white">Store</h3> &nbsp; <small>V2.2</small>
-            </a>
-            <a href="#!" class="mob-toggler">
-                <i class="feather icon-more-vertical"></i>
-            </a>
+                <router-link :to="{name:'root'}">
+                    <h3 class="text-white">Store</h3> 
+                </router-link>
+                &nbsp; <small>V2.2</small>
+               
+            </span>
         </div>
 
         <!-- Notifications -->
@@ -17,7 +18,7 @@
 
             <ul class="navbar-nav mr-auto">
                 <li class="nav-item">
-                    <a href="#!" class="pop-search"><i class="feather icon-search"></i></a>
+                    <span class="pop-search"><i class="feather icon-search"></i></span>
                     <div class="search-bar">
                         <input type="text" class="form-control border-0 shadow-none" placeholder="Search hear">
                         <button type="button" class="close" aria-label="Close">

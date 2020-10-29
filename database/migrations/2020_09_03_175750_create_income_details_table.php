@@ -19,6 +19,7 @@ class CreateIncomeDetailsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
             $table->decimal('price', 11, 2);
+            $table->decimal('sub_total', 11, 2);
             
             $table->foreign('income_id')->references('id')->on('incomes')->onDelete('cascade');
             $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade');

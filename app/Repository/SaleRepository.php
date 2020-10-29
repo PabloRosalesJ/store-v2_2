@@ -14,4 +14,8 @@ interface SaleRepository
     public function disableSale(int $id);
 
     public function search(Request $request);
+
+    public function byUser(int $id);
+
+    public function byClient(int $id);
 }

@@ -70,4 +70,22 @@ class SaleEloquentImpl implements SaleRepository
                     ->get();
     }
 
+    public function byUser($id)
+    {
+        $sales_user = Sale::where('user_id', $id)
+                            ->where('status', 1)
+                            ->with('people')
+                            ->get();
+        return $sales_user;
+    }
+    
+    public function byClient($id)
+    {
+        $sales_user = Sale::where('people_id', $id)
+                            ->where('status', 1)
+                            ->with('user')
+                            ->get();
+        return $sales_user;
+    }
+
 }

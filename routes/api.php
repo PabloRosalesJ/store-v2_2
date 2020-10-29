@@ -71,6 +71,8 @@ Route::prefix('income')->group(function () {
 Route::prefix('sale')->group(function () {
     Route::get('/', 'SaleController@index')->name('sale.index');
     Route::post('/', 'SaleController@store')->name('sale.store');
+    Route::get('/{id}/client', 'SaleController@byClient')->name('sale.client');
+    Route::get('/{id}/user', 'SaleController@byUser')->name('sale.byUser');
     Route::get('/{id}/details', 'SaleController@show')->name('sale.show');
     Route::put('/{id}/disable', 'SaleController@disable')->name('sale.disable');
     Route::get('/search/{query}', 'SaleController@search')->name('sale.search');

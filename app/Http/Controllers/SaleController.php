@@ -40,4 +40,14 @@ class SaleController extends Controller
     {
         return response()->json( $this->repository->search($request));
     }
+
+    public function byClient(int $id)
+    {
+        return response()->json($this->repository->byClient($id));
+    }
+    
+    public function byUser(int $id)
+    {
+        return response()->json($this->repository->byUser($id));
+    }
 }

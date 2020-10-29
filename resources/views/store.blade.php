@@ -43,29 +43,30 @@
                     </div>
                     </div>
                 </div>
-                <div class="row">
-                    <div class="col-sm-12">
+                {{-- <div class="row"> --}}
+                    {{-- <div class="col-sm-12"> --}}
                         <router-view></router-view>
-                    </div>
-                </div>
+                    {{-- </div> --}}
+                {{-- </div> --}}
             </div>
         </div>
         
     </div>
 
     <script src="{{ asset('js/app.js') }}" ></script>
-    <script src="{{ asset('js/vendor-all.min.js') }}"></script>
-    <script src="{{ asset('js/plugins/bootstrap.min.js') }}"></script>
-    <script src="{{ asset('js/ripple.js') }}"></script>
-    <script src="{{ asset('js/pcoded.min.js') }}"></script>
+    <script src="{{ asset('js/scripts.js') }}" ></script>
 
     <script src="{{ asset('js/plugins/jquery.dataTables.min.js') }}"></script>
     <script src="{{ asset('js/plugins/dataTables.bootstrap4.min.js') }}"></script>
     
-    <script>
-        $('#table').DataTable();
-    </script>
     @yield('extra_js')
+
+    <script>
+        // setTimeout(function(){ 
+        //     // $("#client-table").DataTable();
+        // }, 3000);
+       
+    </script>
     
 </body>
 

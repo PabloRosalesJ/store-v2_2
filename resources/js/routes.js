@@ -12,6 +12,11 @@ let routes = [
         component: require('./views/users/Clients.vue').default
     },
     {
+        path: '/client/:id',
+        name: 'client',
+        component: require('./views/users/Client.vue').default
+    },
+    {
         path: '/providers',
         name: 'providers',
         component: require('./views/users/Providers.vue').default

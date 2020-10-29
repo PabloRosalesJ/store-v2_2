@@ -19,7 +19,8 @@ class CreateSalesDetailsTable extends Migration
             $table->unsignedBigInteger('product_id');
             $table->integer('quantity');
             $table->decimal('price', 11, 2);
-            $table->decimal('discount', 11, 2);
+            $table->decimal('discount', 11, 2); 
+            $table->decimal('sub_total', 11, 2);
 
             $table->foreign('sale_id')->references('id')->on('sales');
             $table->foreign('product_id')->references('id')->on('products');

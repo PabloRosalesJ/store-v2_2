@@ -13,4 +13,7 @@ import router from './routes'
 const app = new Vue({
     el: '#app',
     router,
+    data: {
+        API_URL: 'http://store.test/'
+    }
 });

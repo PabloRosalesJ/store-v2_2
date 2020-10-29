@@ -9,4 +9,4 @@ Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
 
-Route::get('/','HomeController@index')->name('root');
+Route::get('/{any?}','HomeController@index')->name('root')->where('any','.*');

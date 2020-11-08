@@ -19,7 +19,7 @@ class CreateCredtiDetailsTable extends Migration
             $table->unsignedInteger('pices');
             $table->unsignedInteger('cost');
             $table->unsignedInteger('sub_total');
-            $table->timestamps();
+            $table->SoftDeletes();
 
             $table->foreign('credit_id')->references('id')->on('credits');
             $table->foreign('product_id')->references('id')->on('products');

@@ -21,4 +21,8 @@ class Sale extends Model
     {
         return $this->belongsTo(Person::class);
     }
+
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+    ];
 }

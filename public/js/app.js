@@ -86,18 +86,6 @@
 /************************************************************************/
 /******/ ({
 
-/***/ "./node_modules/@babel/runtime/regenerator/index.js":
-/*!**********************************************************!*\
-  !*** ./node_modules/@babel/runtime/regenerator/index.js ***!
-  \**********************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports = __webpack_require__(/*! regenerator-runtime */ "./node_modules/regenerator-runtime/runtime.js");
-
-
-/***/ }),
-
 /***/ "./node_modules/axios/index.js":
 /*!*************************************!*\
   !*** ./node_modules/axios/index.js ***!
@@ -1953,14 +1941,8 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
+//
+//
 //
 //
 //
@@ -2206,52 +2188,37 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         s_name: null,
         address: null,
         phone: null,
-        email: null
+        email: ""
       },
       errorToStored: null,
-      showUpdate: false
+      showUpdate: false,
+      tableTime: 50
     };
   },
   mounted: function mounted() {
     this.getClients();
   },
-  beforeMount: function beforeMount() {
-    setTimeout(function () {
-      $("#clients-table").DataTable({
-        order: [[0, "desc"]]
-      });
-    }, 1500);
-  },
+  beforeMount: function beforeMount() {},
   methods: {
     getClients: function getClients() {
       var _this = this;
 
-      return _asyncToGenerator( /*#__PURE__*/_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _this.clients = []; // let data = await axios.get("api/person");
-                // this.clients = await data.data;
-
-                axios.get("api/person").then(function (response) {
-                  _this.clients = response.data;
-                })["catch"](function (error) {
-                  Swal.fire({
-                    icon: "error",
-                    title: "Oops...",
-                    text: "No pudimos conectarnos con el servidor...",
-                    footer: "".concat(error.response.data.message, " - <i class='feather icon-globe'></i>")
-                  });
-                });
-
-              case 2:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      }))();
+      //this.clients = [];
+      axios.get("api/person").then(function (response) {
+        _this.clients = response.data;
+        setTimeout(function () {
+          $("#clients-table").DataTable({
+            order: [[0, "desc"]]
+          });
+        }, _this.tableTime);
+      })["catch"](function (error) {
+        Swal.fire({
+          icon: "error",
+          title: "Oops...",
+          text: "No pudimos conectarnos con el servidor...",
+          footer: "".concat(error.response.data.message, " - <i class='feather icon-globe'></i>")
+        });
+      });
     },
     edit: function edit(client) {
       this.client.id = client.id;
@@ -2264,7 +2231,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.showUpdate = true;
       this.showModal();
     },
-    remove: function remove(id) {
+    remove: function remove(id, index) {
       var _this2 = this;
 
       Swal.fire({
@@ -2279,9 +2246,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }).then(function (result) {
         if (result.isConfirmed) {
           axios["delete"]("api/person/".concat(id, "/destroy")).then(function (response) {
-            Swal.fire("Registro eliminado !.", "success");
+            Swal.fire({
+              icon: "success",
+              text: "Registro eliminado !"
+            });
 
-            _this2.getClients();
+            _this2.clients.splice(index, 1);
           })["catch"](function (e) {
             Swal.fire({
               icon: "error",
@@ -2295,66 +2265,83 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     onSubmit: function onSubmit() {
       var _this3 = this;
 
-      if (this.client.id !== "" & this.client.name !== "" & this.client.l_name !== "" & this.client.s_name !== "" & this.client.address !== "" & this.client.phone !== "" & this.client.email !== "") {
-        var data = this.client;
-        var headers = {
-          "content-type": "application/json"
-        };
-
+      if (this.validate()) {
+        // Store or update
         if (this.showUpdate) {
-          axios.put("/api/person/".concat(data.id, "/update"), {
-            id: data.id,
-            name: data.name,
-            l_name: data.l_name,
-            s_name: data.s_name,
-            address: data.address,
-            phone: data.phone,
-            email: data.email
-          }, headers).then(function (response) {
-            //console.log(response);
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "Acualic\xE9 los datos de: ".concat(response.data.name),
-              showConfirmButton: false,
-              timer: 2500
-            });
-
-            _this3.clean();
-
-            _this3.showUpdate = false;
-          })["catch"](function (error) {
-            _this3.errorToStored = error.response.data;
-          });
+          this.toUpdate(this.client);
         } else {
-          axios.post("/api/person", {
-            name: data.name,
-            l_name: data.l_name,
-            s_name: data.s_name,
-            address: data.address,
-            phone: data.phone,
-            email: data.email
-          }, headers).then(function (response) {
-            Swal.fire({
-              position: "top-end",
-              icon: "success",
-              title: "He registrado a ".concat(response.data.name),
-              showConfirmButton: false,
-              timer: 2500
-            });
-
-            _this3.clean();
-          })["catch"](function (error) {
-            _this3.errorToStored = error.response.data;
-          });
+          this.toStore(this.client);
         }
 
-        this.clients = [];
         this.hideModal();
         setTimeout(function () {
           _this3.getClients();
-        }, 100);
+        }, 1000);
       }
+    },
+    toStore: function toStore(data) {
+      var _this4 = this;
+
+      axios.post("/api/person", {
+        name: data.name,
+        l_name: data.l_name,
+        s_name: data.s_name,
+        address: data.address,
+        phone: data.phone,
+        email: data.email
+      }).then(function (response) {
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "He registrado a ".concat(response.data.name),
+          showConfirmButton: false,
+          timer: 2500
+        });
+
+        _this4.clean();
+      })["catch"](function (error) {
+        _this4.errorToStored = error.response.data;
+      });
+    },
+    toUpdate: function toUpdate(data) {
+      var _this5 = this;
+
+      axios.put("/api/person/".concat(data.id, "/update"), {
+        id: data.id,
+        name: data.name,
+        l_name: data.l_name,
+        s_name: data.s_name,
+        address: data.address,
+        phone: data.phone,
+        email: data.email
+      }).then(function (response) {
+        //console.log(response);
+        Swal.fire({
+          position: "top-end",
+          icon: "success",
+          title: "Acualic\xE9 los datos de: ".concat(response.data.name),
+          showConfirmButton: false,
+          timer: 2500
+        });
+
+        _this5.clean();
+
+        _this5.showUpdate = false;
+        var table = $("#clients-table").DataTable();
+        table.destroy();
+      })["catch"](function (error) {
+        _this5.errorToStored = error.response.data;
+      });
+      this.showUpdate = false;
+    },
+    validate: function validate() {
+      var validated = false;
+
+      if (this.client.id !== "" & this.client.name !== "" & this.client.l_name !== "" & this.client.s_name !== "" & this.client.address !== "" & this.client.phone !== "") {
+        validated = true;
+      }
+
+      return validated;
     },
     clean: function clean() {
       this.client.name = "";
@@ -2362,7 +2349,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       this.client.s_name = "";
       this.client.address = "";
       this.client.phone = "";
-      this.client.email = "";
+      this.client.email = "na@mail.com";
+      this.showUpdate = false;
     },
     showModal: function showModal() {
       $("#modal-client").modal("show");
@@ -2516,59 +2504,46 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "CreditComponent"
+  name: "CreditComponent",
+  data: function data() {
+    return {
+      credits: [],
+      creditDetails: [],
+      showDetails: false
+    };
+  },
+  props: ["client_id"],
+  beforeMount: function beforeMount() {},
+  mounted: function mounted() {
+    var _this = this;
+
+    axios.get("/api/credit/".concat(this.client_id, "/client")).then(function (result) {
+      _this.credits = result.data;
+      setTimeout(function () {
+        $("#credit-table").DataTable({});
+      }, 1000);
+    })["catch"](function (err) {
+      console.log(err.response);
+    });
+  },
+  methods: {
+    getCreditDetails: function getCreditDetails(credit_id, total, created_at) {
+      var _this2 = this;
+
+      axios.get("/api/credit/".concat(credit_id, "/single")).then(function (result) {
+        _this2.creditDetails = result.data;
+        _this2.creditDetails.total = total;
+        _this2.creditDetails.created_at = created_at;
+        _this2.showDetails = true;
+      })["catch"](function (err) {
+        console.log(err.response);
+      });
+    },
+    hideDetails: function hideDetails() {
+      this.showDetails = false;
+    }
+  }
 });
 
 /***/ }),
@@ -2578,67 +2553,9 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Users/PaysComponent.vue?vue&type=script&lang=js& ***!
   \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-/* harmony default export */ __webpack_exports__["default"] = ({
-  name: "PaysComponent"
-});
+throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\laragon\\www\\store\\resources\\js\\components\\Users\\PaysComponent.vue: Unexpected token (60:15)\n\n\u001b[0m \u001b[90m 58 | \u001b[39m  data(){\u001b[0m\n\u001b[0m \u001b[90m 59 | \u001b[39m    \u001b[36mreturn\u001b[39m {\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 60 | \u001b[39m      \u001b[33mPayments\u001b[39m \u001b[33m=\u001b[39m []\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 61 | \u001b[39m    }\u001b[0m\n\u001b[0m \u001b[90m 62 | \u001b[39m  }\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 63 | \u001b[39m  mounted\u001b[33m:\u001b[39m {}\u001b[33m,\u001b[39m\u001b[0m\n    at Parser._raise (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:799:17)\n    at Parser.raiseWithData (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:792:17)\n    at Parser.raise (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:786:17)\n    at Parser.unexpected (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9089:16)\n    at Parser.checkExpressionErrors (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9187:12)\n    at Parser.parseMaybeAssign (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9779:12)\n    at Parser.parseExpressionBase (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9696:23)\n    at C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9690:39\n    at Parser.allowInAnd (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11442:16)\n    at Parser.parseExpression (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9690:17)\n    at Parser.parseReturnStatement (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11946:28)\n    at Parser.parseStatementContent (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11625:21)\n    at Parser.parseStatement (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11577:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12159:25)\n    at Parser.parseBlockBody (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12145:10)\n    at Parser.parseBlock (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12129:10)\n    at Parser.parseFunctionBody (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11108:24)\n    at Parser.parseFunctionBodyAndFinish (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11091:10)\n    at Parser.parseMethod (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11028:10)\n    at Parser.parseObjectMethod (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10953:19)\n    at Parser.parseObjPropValue (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10986:23)\n    at Parser.parsePropertyDefinition (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10910:10)\n    at Parser.parseObjectLike (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10802:25)\n    at Parser.parseExprAtom (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10332:23)\n    at Parser.parseExprSubscripts (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9976:23)\n    at Parser.parseUpdate (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9956:21)\n    at Parser.parseMaybeUnary (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9945:17)\n    at Parser.parseExprOps (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9815:23)\n    at Parser.parseMaybeConditional (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9789:23)\n    at Parser.parseMaybeAssign (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9752:21)\n    at C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9718:39\n    at Parser.allowInAnd (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11442:16)\n    at Parser.parseMaybeAssignAllowIn (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9718:17)\n    at Parser.parseExportDefaultExpression (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12801:24)\n    at Parser.parseExport (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12711:31)\n    at Parser.parseStatementContent (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11683:27)");
 
 /***/ }),
 
@@ -2794,19 +2711,85 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "ShoppingComponent",
+  data: function data() {
+    return {
+      BASE_URL: "http://store.test",
+      compras: [],
+      details: [],
+      showDetails: false
+    };
+  },
+  props: ["client_id"],
+  mounted: function mounted() {
+    this.getShoops();
+  },
+  beforeMount: function beforeMount() {
+    setTimeout(function () {
+      $("#compras-table").DataTable({
+        order: [[0, "desc"]]
+      });
+    }, 3000);
+  },
+  methods: {
+    getShoops: function getShoops() {
+      var _this = this;
+
+      axios.get("/api/sale/".concat(this.client_id, "/client")).then(function (result) {
+        _this.compras = result.data;
+      })["catch"](function (err) {
+        console.log(err.response);
+      });
+    },
+    getShoopDetails: function getShoopDetails(id, total, serie) {
+      var _this2 = this;
+
+      this.details = [];
+      axios.get("/api/sale/".concat(id, "/details")).then(function (result) {
+        _this2.details = result.data;
+        _this2.details.total = total;
+        _this2.details.serie = serie;
+        _this2.showDetails = true;
+      })["catch"](function (err) {
+        console.log(err.response);
+      });
+    },
+    disableSale: function disableSale(id) {
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar venta",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: function preConfirm(data) {
+          console.log(data);
+        }
+      });
+    },
+    closeDetails: function closeDetails() {
+      this.showDetails = false;
+      this.details = [];
+    }
+  }
+});
+
+/***/ }),
+
+/***/ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/errors/404.vue?vue&type=script&lang=js&":
+/*!****************************************************************************************************************************************************************!*\
+  !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/errors/404.vue?vue&type=script&lang=js& ***!
+  \****************************************************************************************************************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
 //
 //
 //
@@ -2835,11 +2818,11 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "ShoppingComponent",
-  data: function data() {
-    return {
-      compras: []
-    };
+  // name: "404",
+  methods: {
+    redirect: function redirect() {
+      this.$router.push("/");
+    }
   }
 });
 
@@ -2857,6 +2840,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _components_Users_ShoppingComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Users/ShoppingComponent */ "./resources/js/components/Users/ShoppingComponent.vue");
 /* harmony import */ var _components_Users_CreditComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Users/CreditComponent */ "./resources/js/components/Users/CreditComponent.vue");
 /* harmony import */ var _components_Users_PaysComponent__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../components/Users/PaysComponent */ "./resources/js/components/Users/PaysComponent.vue");
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -3386,765 +3375,6 @@ process.umask = function() { return 0; };
 
 /***/ }),
 
-/***/ "./node_modules/regenerator-runtime/runtime.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/regenerator-runtime/runtime.js ***!
-  \*****************************************************/
-/*! no static exports found */
-/***/ (function(module, exports, __webpack_require__) {
-
-/**
- * Copyright (c) 2014-present, Facebook, Inc.
- *
- * This source code is licensed under the MIT license found in the
- * LICENSE file in the root directory of this source tree.
- */
-
-var runtime = (function (exports) {
-  "use strict";
-
-  var Op = Object.prototype;
-  var hasOwn = Op.hasOwnProperty;
-  var undefined; // More compressible than void 0.
-  var $Symbol = typeof Symbol === "function" ? Symbol : {};
-  var iteratorSymbol = $Symbol.iterator || "@@iterator";
-  var asyncIteratorSymbol = $Symbol.asyncIterator || "@@asyncIterator";
-  var toStringTagSymbol = $Symbol.toStringTag || "@@toStringTag";
-
-  function define(obj, key, value) {
-    Object.defineProperty(obj, key, {
-      value: value,
-      enumerable: true,
-      configurable: true,
-      writable: true
-    });
-    return obj[key];
-  }
-  try {
-    // IE 8 has a broken Object.defineProperty that only works on DOM objects.
-    define({}, "");
-  } catch (err) {
-    define = function(obj, key, value) {
-      return obj[key] = value;
-    };
-  }
-
-  function wrap(innerFn, outerFn, self, tryLocsList) {
-    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
-    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
-    var generator = Object.create(protoGenerator.prototype);
-    var context = new Context(tryLocsList || []);
-
-    // The ._invoke method unifies the implementations of the .next,
-    // .throw, and .return methods.
-    generator._invoke = makeInvokeMethod(innerFn, self, context);
-
-    return generator;
-  }
-  exports.wrap = wrap;
-
-  // Try/catch helper to minimize deoptimizations. Returns a completion
-  // record like context.tryEntries[i].completion. This interface could
-  // have been (and was previously) designed to take a closure to be
-  // invoked without arguments, but in all the cases we care about we
-  // already have an existing method we want to call, so there's no need
-  // to create a new function object. We can even get away with assuming
-  // the method takes exactly one argument, since that happens to be true
-  // in every case, so we don't have to touch the arguments object. The
-  // only additional allocation required is the completion record, which
-  // has a stable shape and so hopefully should be cheap to allocate.
-  function tryCatch(fn, obj, arg) {
-    try {
-      return { type: "normal", arg: fn.call(obj, arg) };
-    } catch (err) {
-      return { type: "throw", arg: err };
-    }
-  }
-
-  var GenStateSuspendedStart = "suspendedStart";
-  var GenStateSuspendedYield = "suspendedYield";
-  var GenStateExecuting = "executing";
-  var GenStateCompleted = "completed";
-
-  // Returning this object from the innerFn has the same effect as
-  // breaking out of the dispatch switch statement.
-  var ContinueSentinel = {};
-
-  // Dummy constructor functions that we use as the .constructor and
-  // .constructor.prototype properties for functions that return Generator
-  // objects. For full spec compliance, you may wish to configure your
-  // minifier not to mangle the names of these two functions.
-  function Generator() {}
-  function GeneratorFunction() {}
-  function GeneratorFunctionPrototype() {}
-
-  // This is a polyfill for %IteratorPrototype% for environments that
-  // don't natively support it.
-  var IteratorPrototype = {};
-  IteratorPrototype[iteratorSymbol] = function () {
-    return this;
-  };
-
-  var getProto = Object.getPrototypeOf;
-  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-  if (NativeIteratorPrototype &&
-      NativeIteratorPrototype !== Op &&
-      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
-    // This environment has a native %IteratorPrototype%; use it instead
-    // of the polyfill.
-    IteratorPrototype = NativeIteratorPrototype;
-  }
-
-  var Gp = GeneratorFunctionPrototype.prototype =
-    Generator.prototype = Object.create(IteratorPrototype);
-  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
-  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-  GeneratorFunction.displayName = define(
-    GeneratorFunctionPrototype,
-    toStringTagSymbol,
-    "GeneratorFunction"
-  );
-
-  // Helper for defining the .next, .throw, and .return methods of the
-  // Iterator interface in terms of a single ._invoke method.
-  function defineIteratorMethods(prototype) {
-    ["next", "throw", "return"].forEach(function(method) {
-      define(prototype, method, function(arg) {
-        return this._invoke(method, arg);
-      });
-    });
-  }
-
-  exports.isGeneratorFunction = function(genFun) {
-    var ctor = typeof genFun === "function" && genFun.constructor;
-    return ctor
-      ? ctor === GeneratorFunction ||
-        // For the native GeneratorFunction constructor, the best we can
-        // do is to check its .name property.
-        (ctor.displayName || ctor.name) === "GeneratorFunction"
-      : false;
-  };
-
-  exports.mark = function(genFun) {
-    if (Object.setPrototypeOf) {
-      Object.setPrototypeOf(genFun, GeneratorFunctionPrototype);
-    } else {
-      genFun.__proto__ = GeneratorFunctionPrototype;
-      define(genFun, toStringTagSymbol, "GeneratorFunction");
-    }
-    genFun.prototype = Object.create(Gp);
-    return genFun;
-  };
-
-  // Within the body of any async function, `await x` is transformed to
-  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-  // `hasOwn.call(value, "__await")` to determine if the yielded value is
-  // meant to be awaited.
-  exports.awrap = function(arg) {
-    return { __await: arg };
-  };
-
-  function AsyncIterator(generator, PromiseImpl) {
-    function invoke(method, arg, resolve, reject) {
-      var record = tryCatch(generator[method], generator, arg);
-      if (record.type === "throw") {
-        reject(record.arg);
-      } else {
-        var result = record.arg;
-        var value = result.value;
-        if (value &&
-            typeof value === "object" &&
-            hasOwn.call(value, "__await")) {
-          return PromiseImpl.resolve(value.__await).then(function(value) {
-            invoke("next", value, resolve, reject);
-          }, function(err) {
-            invoke("throw", err, resolve, reject);
-          });
-        }
-
-        return PromiseImpl.resolve(value).then(function(unwrapped) {
-          // When a yielded Promise is resolved, its final value becomes
-          // the .value of the Promise<{value,done}> result for the
-          // current iteration.
-          result.value = unwrapped;
-          resolve(result);
-        }, function(error) {
-          // If a rejected Promise was yielded, throw the rejection back
-          // into the async generator function so it can be handled there.
-          return invoke("throw", error, resolve, reject);
-        });
-      }
-    }
-
-    var previousPromise;
-
-    function enqueue(method, arg) {
-      function callInvokeWithMethodAndArg() {
-        return new PromiseImpl(function(resolve, reject) {
-          invoke(method, arg, resolve, reject);
-        });
-      }
-
-      return previousPromise =
-        // If enqueue has been called before, then we want to wait until
-        // all previous Promises have been resolved before calling invoke,
-        // so that results are always delivered in the correct order. If
-        // enqueue has not been called before, then it is important to
-        // call invoke immediately, without waiting on a callback to fire,
-        // so that the async generator function has the opportunity to do
-        // any necessary setup in a predictable way. This predictability
-        // is why the Promise constructor synchronously invokes its
-        // executor callback, and why async functions synchronously
-        // execute code before the first await. Since we implement simple
-        // async functions in terms of async generators, it is especially
-        // important to get this right, even though it requires care.
-        previousPromise ? previousPromise.then(
-          callInvokeWithMethodAndArg,
-          // Avoid propagating failures to Promises returned by later
-          // invocations of the iterator.
-          callInvokeWithMethodAndArg
-        ) : callInvokeWithMethodAndArg();
-    }
-
-    // Define the unified helper method that is used to implement .next,
-    // .throw, and .return (see defineIteratorMethods).
-    this._invoke = enqueue;
-  }
-
-  defineIteratorMethods(AsyncIterator.prototype);
-  AsyncIterator.prototype[asyncIteratorSymbol] = function () {
-    return this;
-  };
-  exports.AsyncIterator = AsyncIterator;
-
-  // Note that simple async functions are implemented on top of
-  // AsyncIterator objects; they just return a Promise for the value of
-  // the final result produced by the iterator.
-  exports.async = function(innerFn, outerFn, self, tryLocsList, PromiseImpl) {
-    if (PromiseImpl === void 0) PromiseImpl = Promise;
-
-    var iter = new AsyncIterator(
-      wrap(innerFn, outerFn, self, tryLocsList),
-      PromiseImpl
-    );
-
-    return exports.isGeneratorFunction(outerFn)
-      ? iter // If outerFn is a generator, return the full iterator.
-      : iter.next().then(function(result) {
-          return result.done ? result.value : iter.next();
-        });
-  };
-
-  function makeInvokeMethod(innerFn, self, context) {
-    var state = GenStateSuspendedStart;
-
-    return function invoke(method, arg) {
-      if (state === GenStateExecuting) {
-        throw new Error("Generator is already running");
-      }
-
-      if (state === GenStateCompleted) {
-        if (method === "throw") {
-          throw arg;
-        }
-
-        // Be forgiving, per 25.3.3.3.3 of the spec:
-        // https://people.mozilla.org/~jorendorff/es6-draft.html#sec-generatorresume
-        return doneResult();
-      }
-
-      context.method = method;
-      context.arg = arg;
-
-      while (true) {
-        var delegate = context.delegate;
-        if (delegate) {
-          var delegateResult = maybeInvokeDelegate(delegate, context);
-          if (delegateResult) {
-            if (delegateResult === ContinueSentinel) continue;
-            return delegateResult;
-          }
-        }
-
-        if (context.method === "next") {
-          // Setting context._sent for legacy support of Babel's
-          // function.sent implementation.
-          context.sent = context._sent = context.arg;
-
-        } else if (context.method === "throw") {
-          if (state === GenStateSuspendedStart) {
-            state = GenStateCompleted;
-            throw context.arg;
-          }
-
-          context.dispatchException(context.arg);
-
-        } else if (context.method === "return") {
-          context.abrupt("return", context.arg);
-        }
-
-        state = GenStateExecuting;
-
-        var record = tryCatch(innerFn, self, context);
-        if (record.type === "normal") {
-          // If an exception is thrown from innerFn, we leave state ===
-          // GenStateExecuting and loop back for another invocation.
-          state = context.done
-            ? GenStateCompleted
-            : GenStateSuspendedYield;
-
-          if (record.arg === ContinueSentinel) {
-            continue;
-          }
-
-          return {
-            value: record.arg,
-            done: context.done
-          };
-
-        } else if (record.type === "throw") {
-          state = GenStateCompleted;
-          // Dispatch the exception by looping back around to the
-          // context.dispatchException(context.arg) call above.
-          context.method = "throw";
-          context.arg = record.arg;
-        }
-      }
-    };
-  }
-
-  // Call delegate.iterator[context.method](context.arg) and handle the
-  // result, either by returning a { value, done } result from the
-  // delegate iterator, or by modifying context.method and context.arg,
-  // setting context.delegate to null, and returning the ContinueSentinel.
-  function maybeInvokeDelegate(delegate, context) {
-    var method = delegate.iterator[context.method];
-    if (method === undefined) {
-      // A .throw or .return when the delegate iterator has no .throw
-      // method always terminates the yield* loop.
-      context.delegate = null;
-
-      if (context.method === "throw") {
-        // Note: ["return"] must be used for ES3 parsing compatibility.
-        if (delegate.iterator["return"]) {
-          // If the delegate iterator has a return method, give it a
-          // chance to clean up.
-          context.method = "return";
-          context.arg = undefined;
-          maybeInvokeDelegate(delegate, context);
-
-          if (context.method === "throw") {
-            // If maybeInvokeDelegate(context) changed context.method from
-            // "return" to "throw", let that override the TypeError below.
-            return ContinueSentinel;
-          }
-        }
-
-        context.method = "throw";
-        context.arg = new TypeError(
-          "The iterator does not provide a 'throw' method");
-      }
-
-      return ContinueSentinel;
-    }
-
-    var record = tryCatch(method, delegate.iterator, context.arg);
-
-    if (record.type === "throw") {
-      context.method = "throw";
-      context.arg = record.arg;
-      context.delegate = null;
-      return ContinueSentinel;
-    }
-
-    var info = record.arg;
-
-    if (! info) {
-      context.method = "throw";
-      context.arg = new TypeError("iterator result is not an object");
-      context.delegate = null;
-      return ContinueSentinel;
-    }
-
-    if (info.done) {
-      // Assign the result of the finished delegate to the temporary
-      // variable specified by delegate.resultName (see delegateYield).
-      context[delegate.resultName] = info.value;
-
-      // Resume execution at the desired location (see delegateYield).
-      context.next = delegate.nextLoc;
-
-      // If context.method was "throw" but the delegate handled the
-      // exception, let the outer generator proceed normally. If
-      // context.method was "next", forget context.arg since it has been
-      // "consumed" by the delegate iterator. If context.method was
-      // "return", allow the original .return call to continue in the
-      // outer generator.
-      if (context.method !== "return") {
-        context.method = "next";
-        context.arg = undefined;
-      }
-
-    } else {
-      // Re-yield the result returned by the delegate method.
-      return info;
-    }
-
-    // The delegate iterator is finished, so forget it and continue with
-    // the outer generator.
-    context.delegate = null;
-    return ContinueSentinel;
-  }
-
-  // Define Generator.prototype.{next,throw,return} in terms of the
-  // unified ._invoke helper method.
-  defineIteratorMethods(Gp);
-
-  define(Gp, toStringTagSymbol, "Generator");
-
-  // A Generator should always return itself as the iterator object when the
-  // @@iterator function is called on it. Some browsers' implementations of the
-  // iterator prototype chain incorrectly implement this, causing the Generator
-  // object to not be returned from this call. This ensures that doesn't happen.
-  // See https://github.com/facebook/regenerator/issues/274 for more details.
-  Gp[iteratorSymbol] = function() {
-    return this;
-  };
-
-  Gp.toString = function() {
-    return "[object Generator]";
-  };
-
-  function pushTryEntry(locs) {
-    var entry = { tryLoc: locs[0] };
-
-    if (1 in locs) {
-      entry.catchLoc = locs[1];
-    }
-
-    if (2 in locs) {
-      entry.finallyLoc = locs[2];
-      entry.afterLoc = locs[3];
-    }
-
-    this.tryEntries.push(entry);
-  }
-
-  function resetTryEntry(entry) {
-    var record = entry.completion || {};
-    record.type = "normal";
-    delete record.arg;
-    entry.completion = record;
-  }
-
-  function Context(tryLocsList) {
-    // The root entry object (effectively a try statement without a catch
-    // or a finally block) gives us a place to store values thrown from
-    // locations where there is no enclosing try statement.
-    this.tryEntries = [{ tryLoc: "root" }];
-    tryLocsList.forEach(pushTryEntry, this);
-    this.reset(true);
-  }
-
-  exports.keys = function(object) {
-    var keys = [];
-    for (var key in object) {
-      keys.push(key);
-    }
-    keys.reverse();
-
-    // Rather than returning an object with a next method, we keep
-    // things simple and return the next function itself.
-    return function next() {
-      while (keys.length) {
-        var key = keys.pop();
-        if (key in object) {
-          next.value = key;
-          next.done = false;
-          return next;
-        }
-      }
-
-      // To avoid creating an additional object, we just hang the .value
-      // and .done properties off the next function object itself. This
-      // also ensures that the minifier will not anonymize the function.
-      next.done = true;
-      return next;
-    };
-  };
-
-  function values(iterable) {
-    if (iterable) {
-      var iteratorMethod = iterable[iteratorSymbol];
-      if (iteratorMethod) {
-        return iteratorMethod.call(iterable);
-      }
-
-      if (typeof iterable.next === "function") {
-        return iterable;
-      }
-
-      if (!isNaN(iterable.length)) {
-        var i = -1, next = function next() {
-          while (++i < iterable.length) {
-            if (hasOwn.call(iterable, i)) {
-              next.value = iterable[i];
-              next.done = false;
-              return next;
-            }
-          }
-
-          next.value = undefined;
-          next.done = true;
-
-          return next;
-        };
-
-        return next.next = next;
-      }
-    }
-
-    // Return an iterator with no values.
-    return { next: doneResult };
-  }
-  exports.values = values;
-
-  function doneResult() {
-    return { value: undefined, done: true };
-  }
-
-  Context.prototype = {
-    constructor: Context,
-
-    reset: function(skipTempReset) {
-      this.prev = 0;
-      this.next = 0;
-      // Resetting context._sent for legacy support of Babel's
-      // function.sent implementation.
-      this.sent = this._sent = undefined;
-      this.done = false;
-      this.delegate = null;
-
-      this.method = "next";
-      this.arg = undefined;
-
-      this.tryEntries.forEach(resetTryEntry);
-
-      if (!skipTempReset) {
-        for (var name in this) {
-          // Not sure about the optimal order of these conditions:
-          if (name.charAt(0) === "t" &&
-              hasOwn.call(this, name) &&
-              !isNaN(+name.slice(1))) {
-            this[name] = undefined;
-          }
-        }
-      }
-    },
-
-    stop: function() {
-      this.done = true;
-
-      var rootEntry = this.tryEntries[0];
-      var rootRecord = rootEntry.completion;
-      if (rootRecord.type === "throw") {
-        throw rootRecord.arg;
-      }
-
-      return this.rval;
-    },
-
-    dispatchException: function(exception) {
-      if (this.done) {
-        throw exception;
-      }
-
-      var context = this;
-      function handle(loc, caught) {
-        record.type = "throw";
-        record.arg = exception;
-        context.next = loc;
-
-        if (caught) {
-          // If the dispatched exception was caught by a catch block,
-          // then let that catch block handle the exception normally.
-          context.method = "next";
-          context.arg = undefined;
-        }
-
-        return !! caught;
-      }
-
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        var record = entry.completion;
-
-        if (entry.tryLoc === "root") {
-          // Exception thrown outside of any try block that could handle
-          // it, so set the completion value of the entire function to
-          // throw the exception.
-          return handle("end");
-        }
-
-        if (entry.tryLoc <= this.prev) {
-          var hasCatch = hasOwn.call(entry, "catchLoc");
-          var hasFinally = hasOwn.call(entry, "finallyLoc");
-
-          if (hasCatch && hasFinally) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            } else if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else if (hasCatch) {
-            if (this.prev < entry.catchLoc) {
-              return handle(entry.catchLoc, true);
-            }
-
-          } else if (hasFinally) {
-            if (this.prev < entry.finallyLoc) {
-              return handle(entry.finallyLoc);
-            }
-
-          } else {
-            throw new Error("try statement without catch or finally");
-          }
-        }
-      }
-    },
-
-    abrupt: function(type, arg) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc <= this.prev &&
-            hasOwn.call(entry, "finallyLoc") &&
-            this.prev < entry.finallyLoc) {
-          var finallyEntry = entry;
-          break;
-        }
-      }
-
-      if (finallyEntry &&
-          (type === "break" ||
-           type === "continue") &&
-          finallyEntry.tryLoc <= arg &&
-          arg <= finallyEntry.finallyLoc) {
-        // Ignore the finally entry if control is not jumping to a
-        // location outside the try/catch block.
-        finallyEntry = null;
-      }
-
-      var record = finallyEntry ? finallyEntry.completion : {};
-      record.type = type;
-      record.arg = arg;
-
-      if (finallyEntry) {
-        this.method = "next";
-        this.next = finallyEntry.finallyLoc;
-        return ContinueSentinel;
-      }
-
-      return this.complete(record);
-    },
-
-    complete: function(record, afterLoc) {
-      if (record.type === "throw") {
-        throw record.arg;
-      }
-
-      if (record.type === "break" ||
-          record.type === "continue") {
-        this.next = record.arg;
-      } else if (record.type === "return") {
-        this.rval = this.arg = record.arg;
-        this.method = "return";
-        this.next = "end";
-      } else if (record.type === "normal" && afterLoc) {
-        this.next = afterLoc;
-      }
-
-      return ContinueSentinel;
-    },
-
-    finish: function(finallyLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.finallyLoc === finallyLoc) {
-          this.complete(entry.completion, entry.afterLoc);
-          resetTryEntry(entry);
-          return ContinueSentinel;
-        }
-      }
-    },
-
-    "catch": function(tryLoc) {
-      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
-        var entry = this.tryEntries[i];
-        if (entry.tryLoc === tryLoc) {
-          var record = entry.completion;
-          if (record.type === "throw") {
-            var thrown = record.arg;
-            resetTryEntry(entry);
-          }
-          return thrown;
-        }
-      }
-
-      // The context.catch method must only be called with a location
-      // argument that corresponds to a known catch block.
-      throw new Error("illegal catch attempt");
-    },
-
-    delegateYield: function(iterable, resultName, nextLoc) {
-      this.delegate = {
-        iterator: values(iterable),
-        resultName: resultName,
-        nextLoc: nextLoc
-      };
-
-      if (this.method === "next") {
-        // Deliberately forget the last sent value so that we don't
-        // accidentally pass it on to the delegate.
-        this.arg = undefined;
-      }
-
-      return ContinueSentinel;
-    }
-  };
-
-  // Regardless of whether this script is executing as a CommonJS module
-  // or not, return the runtime object so that we can declare the variable
-  // regeneratorRuntime in the outer scope, which allows this module to be
-  // injected easily by `bin/regenerator --include-runtime script.js`.
-  return exports;
-
-}(
-  // If this script is executing as a CommonJS module, use module.exports
-  // as the regeneratorRuntime namespace. Otherwise create a new empty
-  // object. Either way, the resulting object will be used to initialize
-  // the regeneratorRuntime variable at the top of this file.
-   true ? module.exports : undefined
-));
-
-try {
-  regeneratorRuntime = runtime;
-} catch (accidentalStrictMode) {
-  // This module should not be running in strict mode, so the above
-  // assignment should always work unless something is misconfigured. Just
-  // in case runtime.js accidentally runs in strict mode, we can escape
-  // strict mode using a global Function call. This could conceivably fail
-  // if a Content Security Policy forbids using Function, but in that case
-  // the proper solution is to fix the accidental strict mode problem. If
-  // you've misconfigured your bundler to force strict mode and applied a
-  // CSP to forbid Function, and you're not willing to fix either of those
-  // problems, please detail your unique predicament in a GitHub issue.
-  Function("r", "regeneratorRuntime = r")(runtime);
-}
-
-
-/***/ }),
-
 /***/ "./node_modules/setimmediate/setImmediate.js":
 /*!***************************************************!*\
   !*** ./node_modules/setimmediate/setImmediate.js ***!
@@ -4519,7 +3749,8 @@ var render = function() {
           _c(
             "table",
             {
-              staticClass: "table table-bordered table-striped mb-0",
+              staticClass:
+                "table table-bordered table-striped table-sm m-0 p-0",
               attrs: { id: "clients-table" }
             },
             [
@@ -4527,7 +3758,7 @@ var render = function() {
               _vm._v(" "),
               _c(
                 "tbody",
-                _vm._l(_vm.clients, function(client) {
+                _vm._l(_vm.clients, function(client, index) {
                   return _c("tr", { key: client.id }, [
                     _c(
                       "td",
@@ -4540,16 +3771,21 @@ var render = function() {
                             }
                           },
                           [
-                            _c("i", {
-                              staticClass:
-                                "btn btn-outline-primary btn-sm feather icon-external-link"
-                            })
+                            _c(
+                              "span",
+                              {
+                                staticClass:
+                                  "btn btn-outline-primary btn-sm text-sm m-0 p-1"
+                              },
+                              [
+                                _vm._v(
+                                  "\n                  " +
+                                    _vm._s(client.id) +
+                                    "\n                "
+                                )
+                              ]
+                            )
                           ]
-                        ),
-                        _vm._v(
-                          "\n              " +
-                            _vm._s(client.id) +
-                            "\n            "
                         )
                       ],
                       1
@@ -4567,22 +3803,10 @@ var render = function() {
                       domProps: { textContent: _vm._s(client.phone) }
                     }),
                     _vm._v(" "),
-                    _c("td", [
+                    _c("td", { staticClass: "text-center" }, [
                       !client.can_buy_credit
-                        ? _c("div", [
-                            _c(
-                              "span",
-                              { staticClass: "badge badge-light-danger" },
-                              [_vm._v("Rechazado")]
-                            )
-                          ])
-                        : _c("div", [
-                            _c(
-                              "span",
-                              { staticClass: "badge badge-light-primary" },
-                              [_vm._v("Aprobado")]
-                            )
-                          ])
+                        ? _c("div", [_vm._m(2, true)])
+                        : _c("div", [_vm._m(3, true)])
                     ]),
                     _vm._v(" "),
                     _c("td", {
@@ -4609,7 +3833,7 @@ var render = function() {
                           staticClass: "btn btn-danger btn-sm",
                           on: {
                             click: function($event) {
-                              return _vm.remove(client.id)
+                              return _vm.remove(client.id, index)
                             }
                           }
                         },
@@ -4676,7 +3900,7 @@ var render = function() {
                 },
                 [
                   _c("div", { staticClass: "row" }, [
-                    _vm._m(2),
+                    _vm._m(4),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-sm-4" }, [
                       _c("div", { staticClass: "form-group" }, [
@@ -4845,7 +4069,7 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm._m(3),
+                    _vm._m(5),
                     _vm._v(" "),
                     _c("div", { staticClass: "col-sm-4" }, [
                       _c("div", { staticClass: "form-group fill" }, [
@@ -4908,12 +4132,7 @@ var render = function() {
                             }
                           ],
                           staticClass: "form-control",
-                          attrs: {
-                            type: "text",
-                            id: "email",
-                            placeholder: "",
-                            required: ""
-                          },
+                          attrs: { type: "text", id: "email", placeholder: "" },
                           domProps: { value: _vm.client.email },
                           on: {
                             input: function($event) {
@@ -4927,12 +4146,12 @@ var render = function() {
                       ])
                     ]),
                     _vm._v(" "),
-                    _vm._m(4)
+                    _vm._m(6)
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "row align-items-center" }, [
                     _c("div", { staticClass: "col-sm-12" }, [
-                      _vm._m(5),
+                      _vm._m(7),
                       _vm._v(" "),
                       _c(
                         "span",
@@ -4941,7 +4160,7 @@ var render = function() {
                           on: { click: _vm.clean }
                         },
                         [
-                          _vm._m(6),
+                          _vm._m(8),
                           _vm._v(
                             "\n                  Limpiar\n                "
                           )
@@ -4981,21 +4200,39 @@ var staticRenderFns = [
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("thead", [
-      _c("tr", { attrs: { role: "row" } }, [
+      _c("tr", [
         _c("th", [_vm._v("Id")]),
         _vm._v(" "),
         _c("th", [_vm._v("Nombre")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Direccíon")]),
+        _c("th", [_vm._v("Dirección")]),
         _vm._v(" "),
         _c("th", [_vm._v("Telefono")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Crédito")]),
+        _c("th", { staticClass: "text-center" }, [
+          _c("i", { staticClass: "fas fa-cash-register" })
+        ]),
         _vm._v(" "),
         _c("th", [_vm._v("Desde")]),
         _vm._v(" "),
         _c("th", [_vm._v("Options")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "badge badge-light-danger" }, [
+      _c("i", { staticClass: "fas fa-sad-cry" })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("span", { staticClass: "badge badge-light-primary" }, [
+      _c("i", { staticClass: "fas fa-laugh-squint" })
     ])
   },
   function() {
@@ -5073,67 +4310,51 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
-}
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _c("h5", [_vm._v("Compras")])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "table-responsive" }, [
-                _c(
-                  "table",
-                  {
-                    staticClass: "table table-striped mb-0 dataTable no-footer",
-                    attrs: {
-                      id: "report-table",
-                      role: "grid",
-                      "aria-describedby": "report-table_info"
-                    }
-                  },
-                  [
-                    _c("thead", { staticClass: "text-center" }, [
-                      _c("tr", { attrs: { role: "row" } }, [
-                        _c("th", [_vm._v("Serie")]),
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-8" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-striped table-sm mb-0 dataTable no-footer",
+                  attrs: {
+                    id: "credit-table",
+                    role: "grid",
+                    "aria-describedby": "report-table_info"
+                  }
+                },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.credits, function(credit) {
+                      return _c("tr", { key: credit.id }, [
+                        _c("td", {
+                          domProps: { textContent: _vm._s(credit.id) }
+                        }),
                         _vm._v(" "),
-                        _c("th", [_vm._v("Fecha")]),
+                        _c("td", {
+                          domProps: {
+                            textContent: _vm._s(credit.user.username)
+                          }
+                        }),
                         _vm._v(" "),
-                        _c("th", [_vm._v("Vendedor")]),
+                        _c("td", [_vm._v("$" + _vm._s(credit.total))]),
                         _vm._v(" "),
-                        _c("th", [_vm._v("Total")]),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(credit.created_at) }
+                        }),
                         _vm._v(" "),
-                        _c("th", [_vm._v("Cancelar")])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c(
-                            "div",
-                            { staticClass: "d-flex align-items-center" },
-                            [_vm._v("123456")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_c("div", [_vm._v("02/12/2018")])]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", { staticClass: "row" }, [
-                            _vm._v("Mrs. Aliyah Donnelly Jr. Schowalter")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("$235.00")]),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(credit.take) }
+                        }),
                         _vm._v(" "),
                         _c("td", { staticClass: "text-center" }, [
                           _c("i", {
@@ -5143,220 +4364,207 @@ var staticRenderFns = [
                           _vm._v(" "),
                           _c("i", {
                             staticClass:
-                              "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
+                              "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
+                            on: {
+                              click: function($event) {
+                                return _vm.getCreditDetails(
+                                  credit.id,
+                                  credit.total,
+                                  credit.created_at
+                                )
+                              }
+                            }
                           })
                         ])
                       ])
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "col-md-4" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-10" }, [
-                  _c("h5", [_vm._v("Detalles")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-2" }, [
-                  _c("i", {
-                    staticClass:
-                      "p-1 mr-2 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded"
-                  })
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("ul", { staticClass: "list-group list-group-flush" }, [
-              _c("li", { staticClass: "list-group-item py-0" }, [
-                _c("div", { staticClass: "table-responsive" }, [
-                  _c("table", { staticClass: "table table-borderless mb-0" }, [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("img", {
-                            staticClass: "rounded mr-2",
-                            attrs: {
-                              src: "assets/images/product/prod-1.jpg",
-                              alt: "contact-img",
-                              title: "contact-img",
-                              height: "48"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "p",
-                            { staticClass: "m-0 d-inline-block align-middle" },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "text-body font-weight-semibold",
-                                  attrs: { href: "#!" }
-                                },
-                                [_vm._v("Rolling Chair")]
-                              ),
-                              _vm._v(" "),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c("small", [_vm._v("5 x $148.66")])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _vm._v("$743.00")
-                        ])
-                      ])
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "list-group-item py-0" }, [
-                _c("div", { staticClass: "table-responsive" }, [
-                  _c("table", { staticClass: "table table-borderless mb-0" }, [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("img", {
-                            staticClass: "rounded mr-2",
-                            attrs: {
-                              src: "assets/images/product/prod-2.jpg",
-                              alt: "contact-img",
-                              title: "contact-img",
-                              height: "48"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "p",
-                            { staticClass: "m-0 d-inline-block align-middle" },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "text-body font-weight-semibold",
-                                  attrs: { href: "#!" }
-                                },
-                                [_vm._v("Dining Chair")]
-                              ),
-                              _vm._v(" "),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c("small", [_vm._v("2 x $99.00")])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _vm._v("$198.00")
-                        ])
-                      ])
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "list-group-item py-0" }, [
-                _c("div", { staticClass: "table-responsive" }, [
-                  _c("table", { staticClass: "table table-borderless mb-0" }, [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("img", {
-                            staticClass: "rounded mr-2",
-                            attrs: {
-                              src: "assets/images/product/prod-3.jpg",
-                              alt: "contact-img",
-                              title: "contact-img",
-                              height: "48"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "p",
-                            { staticClass: "m-0 d-inline-block align-middle" },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "text-body font-weight-semibold",
-                                  attrs: { href: "#!" }
-                                },
-                                [_vm._v("Marvel T-shirts")]
-                              ),
-                              _vm._v(" "),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c("small", [_vm._v("1 x $129.99")])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _vm._v("$129.00")
-                        ])
-                      ])
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body py-2" }, [
-              _c("div", { staticClass: "table-responsive" }, [
-                _c(
-                  "table",
-                  {
-                    staticClass:
-                      "table table-borderless mb-0 w-auto table-sm float-right text-right"
-                  },
-                  [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("h6", { staticClass: "m-0" }, [
-                            _vm._v("Sub Total:")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("$1070")])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("td", [
-                          _c("h6", { staticClass: "m-0" }, [
-                            _vm._v("Shipping:")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("FREE")])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", { staticClass: "border-top" }, [
-                        _c("td", [
-                          _c("h5", { staticClass: "m-0" }, [_vm._v("Total:")])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "font-weight-semibold" }, [
-                          _vm._v("$1070")
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              ])
+                    }),
+                    0
+                  )
+                ]
+              )
             ])
           ])
         ])
+      ]),
+      _vm._v(" "),
+      _vm.showDetails
+        ? _c("div", { staticClass: "col-md-4" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-8" }, [
+                    _c("h5", [
+                      _vm._v(
+                        "Crédito del " + _vm._s(_vm.creditDetails.created_at)
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-1" }, [
+                    _c("i", {
+                      staticClass:
+                        "p-1 mr-2 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded",
+                      on: { click: _vm.hideDetails }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(2)
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "ul",
+                { staticClass: "list-group list-group-flush" },
+                _vm._l(_vm.creditDetails, function(credit) {
+                  return _c(
+                    "li",
+                    { key: credit.id, staticClass: "list-group-item py-0" },
+                    [
+                      _c("div", { staticClass: "table-responsive" }, [
+                        _c(
+                          "table",
+                          { staticClass: "table table-borderless mb-0" },
+                          [
+                            _c("tbody", [
+                              _c("tr", [
+                                _c("td", [
+                                  _c("img", {
+                                    staticClass: "rounded mr-2",
+                                    attrs: {
+                                      src: "/img/product/product-default.svg",
+                                      alt: "contact-img",
+                                      title: "contact-img",
+                                      height: "48"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass:
+                                        "m-0 d-inline-block align-middle"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          staticClass:
+                                            "text-body font-weight-semibold",
+                                          attrs: { href: "#" }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                          " +
+                                              _vm._s(credit.product.name) +
+                                              "\n                        "
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("small", [
+                                        _vm._v(
+                                          _vm._s(credit.pices) +
+                                            " x $" +
+                                            _vm._s(credit.cost)
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-right" }, [
+                                  _vm._v("$" + _vm._s(credit.sub_total))
+                                ])
+                              ])
+                            ])
+                          ]
+                        )
+                      ])
+                    ]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body py-2" }, [
+                _c("div", { staticClass: "table-responsive" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass:
+                        "table table-borderless mb-0 w-auto table-sm float-right text-right"
+                    },
+                    [
+                      _c("tbody", [
+                        _c("tr", { staticClass: "border-top" }, [
+                          _vm._m(3),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "font-weight-semibold" }, [
+                            _vm._v(
+                              "\n                    $" +
+                                _vm._s(_vm.creditDetails.total) +
+                                "\n                  "
+                            )
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ])
+        : _vm._e()
+    ])
+  ])
+}
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h5", [_vm._v("Créditos")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "text-center" }, [
+      _c("tr", { attrs: { role: "row" } }, [
+        _c("th", [_vm._v("id")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Vendedor")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Fecha")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Take")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Opciones")])
       ])
     ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-1 text-center" }, [
+      _c("i", {
+        staticClass:
+          "m-0 p-1 mr-auto feather icon-printer btn btn-secondary btn-sm shadow-sm rounded"
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("h5", { staticClass: "m-0" }, [_vm._v("Total:")])])
   }
 ]
 render._withStripped = true
@@ -5484,292 +4692,326 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-8" }, [
+        _c("div", { staticClass: "card" }, [
+          _vm._m(0),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-striped mb-0 dataTable no-footer",
+                  attrs: {
+                    id: "compras-table",
+                    role: "grid",
+                    "aria-describedby": "compras-table_info"
+                  }
+                },
+                [
+                  _vm._m(1),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.compras, function(item) {
+                      return _c("tr", { key: item.id }, [
+                        _c("td", [
+                          _c("div", {
+                            staticClass: "d-flex align-items-center",
+                            domProps: { textContent: _vm._s(item.serie) }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", {
+                            domProps: { textContent: _vm._s(item.created_at) }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", {
+                            staticClass: "row",
+                            domProps: {
+                              textContent: _vm._s(item.user.username)
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", {
+                          domProps: { textContent: _vm._s(item.total) }
+                        }),
+                        _vm._v(" "),
+                        _c("td", { staticClass: "text-center" }, [
+                          _c("i", {
+                            staticClass:
+                              "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
+                            on: {
+                              click: function($event) {
+                                return _vm.disableSale(item.id)
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c("i", {
+                            staticClass:
+                              "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
+                            on: {
+                              click: function($event) {
+                                return _vm.getShoopDetails(
+                                  item.id,
+                                  item.total,
+                                  item.serie
+                                )
+                              }
+                            }
+                          })
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.showDetails
+        ? _c("div", { staticClass: "col-md-4" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-8" }, [
+                    _c("h5", [_vm._v("Detalles: " + _vm._s(_vm.details.serie))])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-1 text-center" }, [
+                    _c("i", {
+                      staticClass:
+                        "m-0 p-1 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded",
+                      on: { click: _vm.closeDetails }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(2)
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "ul",
+                { staticClass: "list-group list-group-flush" },
+                _vm._l(_vm.details, function(item) {
+                  return _c(
+                    "li",
+                    { key: item.id, staticClass: "list-group-item py-0" },
+                    [
+                      _c("div", { staticClass: "table-responsive" }, [
+                        _c(
+                          "table",
+                          { staticClass: "table table-borderless mb-0" },
+                          [
+                            _c("tbody", [
+                              _c("tr", [
+                                _c("td", [
+                                  _c("img", {
+                                    staticClass: "rounded mr-2",
+                                    attrs: {
+                                      src:
+                                        _vm.BASE_URL +
+                                        "/img/product/product-default.svg",
+                                      alt: "contact-img",
+                                      title: "contact-img",
+                                      height: "48"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass:
+                                        "m-0 d-inline-block align-middle"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          staticClass:
+                                            "text-body font-weight-semibold",
+                                          attrs: { href: "product/" }
+                                        },
+                                        [_vm._v(_vm._s(item.product[0].name))]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("small", [
+                                        _vm._v(
+                                          _vm._s(item.quantity) +
+                                            " x $" +
+                                            _vm._s(item.price)
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-right" }, [
+                                  _vm._v("$" + _vm._s(item.sub_total))
+                                ])
+                              ])
+                            ])
+                          ]
+                        )
+                      ])
+                    ]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body py-2" }, [
+                _c("div", { staticClass: "table-responsive" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass:
+                        "table table-borderless mb-0 w-auto table-sm float-right text-right"
+                    },
+                    [
+                      _c("tbody", [
+                        _vm._m(3),
+                        _vm._v(" "),
+                        _c("tr", { staticClass: "border-top" }, [
+                          _vm._m(4),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "font-weight-semibold" }, [
+                            _vm._v("$" + _vm._s(_vm.details.total))
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ])
+        : _vm._e()
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "row" }, [
-        _c("div", { staticClass: "col-8" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _c("h5", [_vm._v("Compras")])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "table-responsive" }, [
-                _c(
-                  "table",
-                  {
-                    staticClass: "table table-striped mb-0 dataTable no-footer",
-                    attrs: {
-                      id: "report-table",
-                      role: "grid",
-                      "aria-describedby": "report-table_info"
-                    }
-                  },
-                  [
-                    _c("thead", { staticClass: "text-center" }, [
-                      _c("tr", { attrs: { role: "row" } }, [
-                        _c("th", [_vm._v("Serie")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Fecha")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Vendedor")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Total")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Cancelar")])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c(
-                            "div",
-                            { staticClass: "d-flex align-items-center" },
-                            [_vm._v("123456")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_c("div", [_vm._v("02/12/2018")])]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", { staticClass: "row" }, [
-                            _vm._v("Mrs. Aliyah Donnelly Jr. Schowalter")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("$235.00")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-center" }, [
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-                          }),
-                          _vm._v(" "),
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
-                          })
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ])
-        ]),
+    return _c("div", { staticClass: "card-header" }, [
+      _c("h5", [_vm._v("Compras")])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "text-center" }, [
+      _c("tr", { attrs: { role: "row" } }, [
+        _c("th", [_vm._v("Serie")]),
         _vm._v(" "),
-        _c("div", { staticClass: "col-md-4" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [
-              _c("div", { staticClass: "row" }, [
-                _c("div", { staticClass: "col-10" }, [
-                  _c("h5", [_vm._v("Detalles")])
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "col-2" }, [
-                  _c("i", {
-                    staticClass:
-                      "p-1 mr-2 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded"
-                  })
+        _c("th", [_vm._v("Fecha")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Vendedor")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Cancelar")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-1 text-center" }, [
+      _c("i", {
+        staticClass:
+          "m-0 p-1 mr-auto feather icon-printer btn btn-secondary btn-sm shadow-sm rounded"
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("tr", [_c("td")])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("h5", { staticClass: "m-0" }, [_vm._v("Total:")])])
+  }
+]
+render._withStripped = true
+
+
+
+/***/ }),
+
+/***/ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/errors/404.vue?vue&type=template&id=3a5c70d3&":
+/*!********************************************************************************************************************************************************************************************************!*\
+  !*** ./node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/views/errors/404.vue?vue&type=template&id=3a5c70d3& ***!
+  \********************************************************************************************************************************************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "render", function() { return render; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return staticRenderFns; });
+var render = function() {
+  var _vm = this
+  var _h = _vm.$createElement
+  var _c = _vm._self._c || _h
+  return _c("div", [
+    _c("div", { staticClass: "card" }, [
+      _c("div", { staticClass: "card-body" }, [
+        _c("div", { staticClass: "auth-wrapper bg-white" }, [
+          _c("div", { staticClass: "container" }, [
+            _c("div", { staticClass: "row justify-content-center" }, [
+              _c("div", { staticClass: "col-md-8" }, [
+                _c("div", { staticClass: "text-center" }, [
+                  _c("img", {
+                    staticClass: "img-fluid",
+                    attrs: { src: "/img/maintance/404.png", alt: "" }
+                  }),
+                  _vm._v(" "),
+                  _c("h5", { staticClass: "text-muted my-4" }, [
+                    _vm._v("Oops! Página no encontrada!")
+                  ]),
+                  _vm._v(" "),
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-primary mb-4 shadow rounded",
+                      on: { click: _vm.redirect }
+                    },
+                    [
+                      _c("i", { staticClass: "feather icon-compass mr-2" }),
+                      _vm._v("Sácame de aquí\n                ")
+                    ]
+                  )
                 ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("ul", { staticClass: "list-group list-group-flush" }, [
-              _c("li", { staticClass: "list-group-item py-0" }, [
-                _c("div", { staticClass: "table-responsive" }, [
-                  _c("table", { staticClass: "table table-borderless mb-0" }, [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("img", {
-                            staticClass: "rounded mr-2",
-                            attrs: {
-                              src: "assets/images/product/prod-1.jpg",
-                              alt: "contact-img",
-                              title: "contact-img",
-                              height: "48"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "p",
-                            { staticClass: "m-0 d-inline-block align-middle" },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "text-body font-weight-semibold",
-                                  attrs: { href: "#!" }
-                                },
-                                [_vm._v("Rolling Chair")]
-                              ),
-                              _vm._v(" "),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c("small", [_vm._v("5 x $148.66")])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _vm._v("$743.00")
-                        ])
-                      ])
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "list-group-item py-0" }, [
-                _c("div", { staticClass: "table-responsive" }, [
-                  _c("table", { staticClass: "table table-borderless mb-0" }, [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("img", {
-                            staticClass: "rounded mr-2",
-                            attrs: {
-                              src: "assets/images/product/prod-2.jpg",
-                              alt: "contact-img",
-                              title: "contact-img",
-                              height: "48"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "p",
-                            { staticClass: "m-0 d-inline-block align-middle" },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "text-body font-weight-semibold",
-                                  attrs: { href: "#!" }
-                                },
-                                [_vm._v("Dining Chair")]
-                              ),
-                              _vm._v(" "),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c("small", [_vm._v("2 x $99.00")])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _vm._v("$198.00")
-                        ])
-                      ])
-                    ])
-                  ])
-                ])
-              ]),
-              _vm._v(" "),
-              _c("li", { staticClass: "list-group-item py-0" }, [
-                _c("div", { staticClass: "table-responsive" }, [
-                  _c("table", { staticClass: "table table-borderless mb-0" }, [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("img", {
-                            staticClass: "rounded mr-2",
-                            attrs: {
-                              src: "assets/images/product/prod-3.jpg",
-                              alt: "contact-img",
-                              title: "contact-img",
-                              height: "48"
-                            }
-                          }),
-                          _vm._v(" "),
-                          _c(
-                            "p",
-                            { staticClass: "m-0 d-inline-block align-middle" },
-                            [
-                              _c(
-                                "a",
-                                {
-                                  staticClass: "text-body font-weight-semibold",
-                                  attrs: { href: "#!" }
-                                },
-                                [_vm._v("Marvel T-shirts")]
-                              ),
-                              _vm._v(" "),
-                              _c("br"),
-                              _vm._v(" "),
-                              _c("small", [_vm._v("1 x $129.99")])
-                            ]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-right" }, [
-                          _vm._v("$129.00")
-                        ])
-                      ])
-                    ])
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body py-2" }, [
-              _c("div", { staticClass: "table-responsive" }, [
-                _c(
-                  "table",
-                  {
-                    staticClass:
-                      "table table-borderless mb-0 w-auto table-sm float-right text-right"
-                  },
-                  [
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c("h6", { staticClass: "m-0" }, [
-                            _vm._v("Sub Total:")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("$1070")])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", [
-                        _c("td", [
-                          _c("h6", { staticClass: "m-0" }, [
-                            _vm._v("Shipping:")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("FREE")])
-                      ]),
-                      _vm._v(" "),
-                      _c("tr", { staticClass: "border-top" }, [
-                        _c("td", [
-                          _c("h5", { staticClass: "m-0" }, [_vm._v("Total:")])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "font-weight-semibold" }, [
-                          _vm._v("$1070")
-                        ])
-                      ])
-                    ])
-                  ]
-                )
               ])
             ])
           ])
         ])
       ])
     ])
-  }
-]
+  ])
+}
+var staticRenderFns = []
 render._withStripped = true
 
 
@@ -5834,7 +5076,8 @@ var render = function() {
                         ? _c("div", { staticClass: "certificated-badge" }, [
                             _c("i", {
                               staticClass:
-                                "fas fa-check-circle text-c-blue bg-icon"
+                                "fas fa-check-circle text-c-blue bg-icon",
+                              attrs: { title: "OK" }
                             })
                           ])
                         : _vm._e(),
@@ -5843,7 +5086,11 @@ var render = function() {
                         ? _c("div", { staticClass: "certificated-badge" }, [
                             _c("i", {
                               staticClass:
-                                "fas fa-exclamation-circle text-c-yellow bg-icon"
+                                "fas fa-exclamation-circle text-c-yellow bg-icon",
+                              attrs: {
+                                title:
+                                  "Precaución. \nHa este cliente no se le puede vender a crédito."
+                              }
                             })
                           ])
                         : _vm._e()
@@ -5861,11 +5108,11 @@ var render = function() {
               _vm._v(" "),
               _c("p", { staticClass: "mb-2 text-muted" }, [
                 _vm._v(
-                  "\n              " +
+                  "\n                " +
                     _vm._s(_vm.client.l_name) +
                     " " +
                     _vm._s(_vm.client.s_name) +
-                    "\n            "
+                    "\n              "
                 )
               ]),
               _vm._v(" "),
@@ -5878,7 +5125,7 @@ var render = function() {
                   },
                   [
                     _c("i", { staticClass: "feather icon-arrow-left" }),
-                    _vm._v("\n                back\n              ")
+                    _vm._v("\n                  back\n                ")
                   ]
                 )
               ])
@@ -5905,11 +5152,10 @@ var render = function() {
                   _c("div", { staticClass: "clearfix" }),
                   _vm._v(" "),
                   _c(
-                    "a",
+                    "span",
                     {
                       staticClass:
-                        "mb-1 text-muted d-flex align-items-end text-h-primary",
-                      attrs: { href: "mailto:demo@domain.com" }
+                        "mb-1 text-muted d-flex align-items-end text-h-primary"
                     },
                     [
                       _c("i", { staticClass: "feather icon-mail mr-2 f-18" }),
@@ -5928,7 +5174,9 @@ var render = function() {
                     },
                     [
                       _c("i", { staticClass: "feather icon-phone mr-2 f-18" }),
-                      _vm._v("\n                  " + _vm._s(_vm.client.phone))
+                      _vm._v(
+                        "\n                    " + _vm._s(_vm.client.phone)
+                      )
                     ]
                   )
                 ]),
@@ -5969,7 +5217,11 @@ var render = function() {
               "aria-labelledby": "compras-tab"
             }
           },
-          [_c("ShoppingComponent")],
+          [
+            _c("ShoppingComponent", {
+              attrs: { client_id: this.$route.params.id }
+            })
+          ],
           1
         ),
         _vm._v(" "),
@@ -5983,7 +5235,11 @@ var render = function() {
               "aria-labelledby": "credit-tab"
             }
           },
-          [_c("CreditComponent")],
+          [
+            _c("CreditComponent", {
+              attrs: { client_id: this.$route.params.id }
+            })
+          ],
           1
         ),
         _vm._v(" "),
@@ -5997,7 +5253,9 @@ var render = function() {
               "aria-labelledby": "pays-tab"
             }
           },
-          [_c("PaysComponent")],
+          [
+            _c("PaysComponent", { attrs: { client_id: this.$route.params.id } })
+          ],
           1
         )
       ]
@@ -6054,7 +5312,7 @@ var staticRenderFns = [
     return _c("div", { staticClass: "dropdown-menu" }, [
       _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
         _c("i", { staticClass: "feather icon-upload-cloud mr-2" }),
-        _vm._v("upload\n                    new")
+        _vm._v("upload\n                      new")
       ]),
       _vm._v(" "),
       _c("a", { staticClass: "dropdown-item", attrs: { href: "#" } }, [
@@ -6174,7 +5432,7 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
+    return _c("div", { staticClass: "card-header p-2" }, [
       _c("div", { staticClass: "row align-items-center m-l-0" }, [
         _c("div", { staticClass: "col-sm-6" }, [
           _c("h5", [_vm._v("Clientes")])
@@ -6184,7 +5442,7 @@ var staticRenderFns = [
           _c(
             "button",
             {
-              staticClass: "btn btn-primary shadow rounded m-3",
+              staticClass: "btn btn-primary shadow rounded mx-3 my-0",
               attrs: { "data-toggle": "modal", "data-target": "#modal-client" }
             },
             [
@@ -21522,7 +20780,8 @@ __webpack_require__.r(__webpack_exports__);
 
 window.Vue = vue__WEBPACK_IMPORTED_MODULE_0___default.a;
 vue__WEBPACK_IMPORTED_MODULE_0___default.a.use(vue_router__WEBPACK_IMPORTED_MODULE_1__["default"]);
-window.axios = axios__WEBPACK_IMPORTED_MODULE_2___default.a; // window.axios = require('axios');
+window.axios = axios__WEBPACK_IMPORTED_MODULE_2___default.a;
+window.axios.defaults.baseURL = "http://store.test"; // window.axios = require('axios');
 
 window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 
@@ -21904,11 +21163,84 @@ var routes = [{
   path: '/users',
   name: 'users',
   component: __webpack_require__(/*! ./views/users/Users.vue */ "./resources/js/views/users/Users.vue")["default"]
+}, {
+  path: '*',
+  // name: '404',
+  component: __webpack_require__(/*! ./views/errors/404.vue */ "./resources/js/views/errors/404.vue")["default"]
 }];
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
   routes: routes,
   mode: 'history'
 }));
+
+/***/ }),
+
+/***/ "./resources/js/views/errors/404.vue":
+/*!*******************************************!*\
+  !*** ./resources/js/views/errors/404.vue ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _404_vue_vue_type_template_id_3a5c70d3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./404.vue?vue&type=template&id=3a5c70d3& */ "./resources/js/views/errors/404.vue?vue&type=template&id=3a5c70d3&");
+/* harmony import */ var _404_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./404.vue?vue&type=script&lang=js& */ "./resources/js/views/errors/404.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport *//* harmony import */ var _node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../../../../node_modules/vue-loader/lib/runtime/componentNormalizer.js */ "./node_modules/vue-loader/lib/runtime/componentNormalizer.js");
+
+
+
+
+
+/* normalize component */
+
+var component = Object(_node_modules_vue_loader_lib_runtime_componentNormalizer_js__WEBPACK_IMPORTED_MODULE_2__["default"])(
+  _404_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_1__["default"],
+  _404_vue_vue_type_template_id_3a5c70d3___WEBPACK_IMPORTED_MODULE_0__["render"],
+  _404_vue_vue_type_template_id_3a5c70d3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"],
+  false,
+  null,
+  null,
+  null
+  
+)
+
+/* hot reload */
+if (false) { var api; }
+component.options.__file = "resources/js/views/errors/404.vue"
+/* harmony default export */ __webpack_exports__["default"] = (component.exports);
+
+/***/ }),
+
+/***/ "./resources/js/views/errors/404.vue?vue&type=script&lang=js&":
+/*!********************************************************************!*\
+  !*** ./resources/js/views/errors/404.vue?vue&type=script&lang=js& ***!
+  \********************************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_404_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/babel-loader/lib??ref--4-0!../../../../node_modules/vue-loader/lib??vue-loader-options!./404.vue?vue&type=script&lang=js& */ "./node_modules/babel-loader/lib/index.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/errors/404.vue?vue&type=script&lang=js&");
+/* empty/unused harmony star reexport */ /* harmony default export */ __webpack_exports__["default"] = (_node_modules_babel_loader_lib_index_js_ref_4_0_node_modules_vue_loader_lib_index_js_vue_loader_options_404_vue_vue_type_script_lang_js___WEBPACK_IMPORTED_MODULE_0__["default"]); 
+
+/***/ }),
+
+/***/ "./resources/js/views/errors/404.vue?vue&type=template&id=3a5c70d3&":
+/*!**************************************************************************!*\
+  !*** ./resources/js/views/errors/404.vue?vue&type=template&id=3a5c70d3& ***!
+  \**************************************************************************/
+/*! exports provided: render, staticRenderFns */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_404_vue_vue_type_template_id_3a5c70d3___WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! -!../../../../node_modules/vue-loader/lib/loaders/templateLoader.js??vue-loader-options!../../../../node_modules/vue-loader/lib??vue-loader-options!./404.vue?vue&type=template&id=3a5c70d3& */ "./node_modules/vue-loader/lib/loaders/templateLoader.js?!./node_modules/vue-loader/lib/index.js?!./resources/js/views/errors/404.vue?vue&type=template&id=3a5c70d3&");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "render", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_404_vue_vue_type_template_id_3a5c70d3___WEBPACK_IMPORTED_MODULE_0__["render"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "staticRenderFns", function() { return _node_modules_vue_loader_lib_loaders_templateLoader_js_vue_loader_options_node_modules_vue_loader_lib_index_js_vue_loader_options_404_vue_vue_type_template_id_3a5c70d3___WEBPACK_IMPORTED_MODULE_0__["staticRenderFns"]; });
+
+
 
 /***/ }),
 

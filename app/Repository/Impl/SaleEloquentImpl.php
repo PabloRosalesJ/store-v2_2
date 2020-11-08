@@ -1,6 +1,7 @@
 <?php namespace App\Repository\Impl;
 
 use App\Models\Sale;
+use App\Models\SaleDetails;
 use App\Models\IncomeDetail;
 use App\Repository\SaleRepository;
 use Illuminate\Database\Eloquent\Model;
@@ -47,10 +48,10 @@ class SaleEloquentImpl implements SaleRepository
     
     public function getSale($id)
     {
-       $sale_detail = Sale::find($id)
-                        ->where('status', 1)
-                        ->with('details')->get();
-        return $sale_detail;
+        $details = SaleDetails::where('sale_id', '=', $id)
+                    ->with('product')
+                    ->get();
+        return $details;
     }
     
     public function disableSale($id)

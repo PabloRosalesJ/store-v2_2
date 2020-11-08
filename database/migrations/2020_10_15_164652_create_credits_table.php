@@ -21,6 +21,7 @@ class CreateCreditsTable extends Migration
             $table->decimal('total', 11, 2);
             $table->boolean('status')->default(1);
             $table->timestamps();
+            $table->softDeletes();
 
             $table->foreign('people_id')->references('id')->on('people')->onDelete('cascade');
             $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');

@@ -4,12 +4,14 @@ namespace App\Providers;
 
 use App\Repository\IcomeRepository;
 use App\Repository\Impl\IcomeEloquentImpl;
+use App\Repository\Impl\PaymentEloquentImpl;
 use App\Repository\Impl\PersonEloquentImpl;
 use App\Repository\Impl\ProductEloquentImpl;
 use App\Repository\Impl\ProviderEloquentImpl;
 use App\Repository\Impl\SaleEloquentImpl;
 use App\Repository\Impl\USerEloquentImpl;
 use App\Repository\Impl\CreditEloquentImpl;
+use App\Repository\PaymentRepository;
 use App\Repository\PersonRepository;
 use App\Repository\ProductRepository;
 use App\Repository\ProviderRepository;
@@ -66,6 +68,11 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(
             CreditRepository::class,
             CreditEloquentImpl::class
+        );
+
+        $this->app->bind(
+            PaymentRepository::class,
+            PaymentEloquentImpl::class
         );
     }
 

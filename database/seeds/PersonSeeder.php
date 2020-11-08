@@ -32,7 +32,7 @@ class PersonSeeder extends Seeder
                 'address' => $faker->address ,
                 'phone' => $faker->phoneNumber,
                 'email' => $faker->unique()->safeEmail,
-                'created_at' => Carbon::now()
+                'created_at' => Carbon::now()->subDays(30 - $i)
 
             ]);
         }

@@ -6,13 +6,12 @@ use App\Models\Credit;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\Eloquent\Relations\belongsTo;
 
 class CreditEloquentImpl implements CreditRepository{
     public function all(){
-
         return Credit::where('status', 1)
-            ->with('user')
-            ->with('person')
+            ->with(['user:id,username', 'person:id,name,l_name,s_name'])
             ->get();
     }
 
@@ -38,15 +37,38 @@ class CreditEloquentImpl implements CreditRepository{
         $header = Credit::where('status', 1)
                         ->where('id', $credit_id)
                         ->with('user')
-                        ->with('person')
+                        ->with('person:id,name,l_name,s_name')
                         ->get();
 
         $credit_details = CredtiDetail::where('credit_id', $credit_id)
-                        ->with('product')
+                        // ->select(['product_id','pices', 'cost', 'sub_total'])
+                        ->with('product:id,name')
                         ->get();
 
         return compact('header', 'credit_details');
 
+    }
+
+    public function getSingleCredit(int $credit_id){
+        // return $id;
+        return CredtiDetail::where('credit_id', $credit_id)
+        // ->select(['product_id','pices', 'cost', 'sub_total'])
+        ->with('product:id,name')
+        ->get();
+    }
+
+    public function getCreditByClient(int $credit_id){
+        return Credit::where('people_id', $credit_id)
+                        ->where('status', 1)
+                        ->with(['user:id,username'])
+                        ->get();
+    }
+
+    public function getCreditByUser(int $credit_id){
+        return Credit::where('user_id', $credit_id)
+                        ->where('status', 1)
+                        ->with(['person:id,name,l_name,s_name'])
+                        ->get();
     }
 
     public function disableCredit(int $id){

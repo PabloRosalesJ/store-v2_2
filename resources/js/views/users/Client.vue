@@ -54,11 +54,16 @@
                     </div>
                     <!-- Credit info -->
                     <div v-if="client.status" class="certificated-badge">
-                      <i class="fas fa-check-circle text-c-blue bg-icon"></i>
+                      <i
+                        class="fas fa-check-circle text-c-blue bg-icon"
+                        title="OK"
+                      ></i>
                     </div>
                     <div v-if="!client.status" class="certificated-badge">
                       <i
                         class="fas fa-exclamation-circle text-c-yellow bg-icon"
+                        title="Precaución. 
+Ha este cliente no se le puede vender a crédito."
                       ></i>
                     </div>
                   </a>
@@ -102,11 +107,10 @@
                     >{{ client.created_at }}</span
                   >
                   <div class="clearfix"></div>
-                  <a
-                    href="mailto:demo@domain.com"
+                  <span
                     class="mb-1 text-muted d-flex align-items-end text-h-primary"
                     ><i class="feather icon-mail mr-2 f-18"></i
-                    >{{ client.email }}</a
+                    >{{ client.email }}</span
                   >
                   <div class="clearfix"></div>
                   <a
@@ -181,7 +185,9 @@
         role="tabpanel"
         aria-labelledby="compras-tab"
       >
-        <ShoppingComponent></ShoppingComponent>
+        <ShoppingComponent
+          :client_id="this.$route.params.id"
+        ></ShoppingComponent>
       </div>
       <div
         class="tab-pane fade"
@@ -189,7 +195,7 @@
         role="tabpanel"
         aria-labelledby="credit-tab"
       >
-        <CreditComponent></CreditComponent>
+        <CreditComponent :client_id="this.$route.params.id"></CreditComponent>
       </div>
       <div
         class="tab-pane fade"
@@ -197,7 +203,7 @@
         role="tabpanel"
         aria-labelledby="pays-tab"
       >
-        <PaysComponent></PaysComponent>
+        <PaysComponent :client_id="this.$route.params.id"></PaysComponent>
       </div>
     </div>
   </div>

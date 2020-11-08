@@ -1,14 +1,14 @@
 <template>
   <div>
     <div class="card">
-      <div class="card-header">
+      <div class="card-header p-2">
         <div class="row align-items-center m-l-0">
           <div class="col-sm-6">
             <h5>Clientes</h5>
           </div>
           <div class="col-sm-6 text-right">
             <button
-              class="btn btn-primary shadow rounded m-3"
+              class="btn btn-primary shadow rounded mx-3 my-0"
               data-toggle="modal"
               data-target="#modal-client"
             >

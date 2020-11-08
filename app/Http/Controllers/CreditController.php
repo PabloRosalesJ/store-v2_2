@@ -27,11 +27,25 @@ class CreditController extends Controller
         return response()->json($this->CreditRepository->store($request));
     }
 
+    public function client(int $credit_id)
+    {
+        return response()->json($this->CreditRepository->getCreditByClient($credit_id));
+    }
+
+    public function user(int $credit_id)
+    {
+        return response()->json($this->CreditRepository->getCreditByUser($credit_id));
+    }
+
     public function show(int $credit_id)
     {
         return response()->json($this->CreditRepository->getCredit($credit_id));
     }
-
+    
+    public function getSingleCredit(int $credit_id)
+    {
+        return response()->json($this->CreditRepository->getSingleCredit($credit_id));
+    }
     public function disable(int $id)
     {
         return response()->json($this->CreditRepository->disableCredit($id));

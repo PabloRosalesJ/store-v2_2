@@ -8,7 +8,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Person extends Model
 {
     use SoftDeletes;
-    public $timestamps = false;
     protected $fillable = [
         'name', 'l_name', 's_name', 'address', 'phone', 'email', 'status', 'can_buy_credit'
     ];
@@ -62,6 +61,15 @@ class Person extends Model
         return ucwords($value);
     }
 
+    // Set Fullname
+
+    public function getFullNameAttribute()
+    {
+        return "{$this->name} {$this->l_name} {$this->s_name}";
+    }
+
+
+    //Casting
     protected $casts = [
         'created_at' => 'datetime:d-m-Y',
     ];

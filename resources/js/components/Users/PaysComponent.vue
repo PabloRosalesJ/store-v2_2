@@ -55,6 +55,23 @@
 <script>
 export default {
   name: "PaysComponent",
+  data(){
+    return {
+      Payments = [],
+    }
+  },
+  mounted: {},
+  methods: {
+    getPayments() {
+      axios.
+        get()
+        .then((result) => {
+          
+        }).catch((err) => {
+          
+        });
+    },
+  },
 };
 </script>
 

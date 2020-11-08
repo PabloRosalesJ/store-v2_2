@@ -24,41 +24,44 @@
       <div class="table-responsive">
         <table
           id="clients-table"
-          class="table table-bordered table-striped mb-0"
+          class="table table-bordered table-striped table-sm m-0 p-0"
         >
           <thead>
-            <tr role="row">
+            <tr>
               <th>Id</th>
               <!-- <th>Avatar</th> -->
               <th>Nombre</th>
-              <th>Direccíon</th>
+              <th>Dirección</th>
               <th>Telefono</th>
-              <th>Crédito</th>
+              <th class="text-center"><i class="fas fa-cash-register"></i></th>
               <th>Desde</th>
               <th>Options</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="client of clients" :key="client.id">
+            <tr v-for="(client, index) of clients" :key="client.id">
               <td>
                 <router-link
                   :to="{ name: 'client', params: { id: client.id } }"
                 >
-                  <i
-                    class="btn btn-outline-primary btn-sm feather icon-external-link"
-                  ></i>
+                  <span class="btn btn-outline-primary btn-sm text-sm m-0 p-1">
+                    {{ client.id }}
+                  </span>
                 </router-link>
-                {{ client.id }}
               </td>
               <td>{{ client.name }} {{ client.l_name }}</td>
               <td v-text="client.address"></td>
               <td v-text="client.phone"></td>
-              <td>
+              <td class="text-center">
                 <div v-if="!client.can_buy_credit">
-                  <span class="badge badge-light-danger">Rechazado</span>
+                  <span class="badge badge-light-danger">
+                    <i class="fas fa-sad-cry"></i>
+                  </span>
                 </div>
                 <div v-else>
-                  <span class="badge badge-light-primary">Aprobado</span>
+                  <span class="badge badge-light-primary">
+                    <i class="fas fa-laugh-squint"></i>
+                  </span>
                 </div>
               </td>
               <td v-text="client.created_at"></td>
@@ -68,7 +71,7 @@
                 </button>
                 <button
                   class="btn btn-danger btn-sm"
-                  @click="remove(client.id)"
+                  @click="remove(client.id, index)"
                 >
                   Delete
                 </button>
@@ -190,7 +193,6 @@
                       class="form-control"
                       id="email"
                       placeholder=""
-                      required
                     />
                   </div>
                 </div>
@@ -244,31 +246,30 @@ export default {
         s_name: null,
         address: null,
         phone: null,
-        email: null,
+        email: "",
       },
       errorToStored: null,
       showUpdate: false,
+      tableTime: 50,
     };
   },
   mounted() {
     this.getClients();
   },
-  beforeMount() {
-    setTimeout(function () {
-      $("#clients-table").DataTable({
-        order: [[0, "desc"]],
-      });
-    }, 1500);
-  },
+  beforeMount() {},
   methods: {
-    async getClients() {
-      this.clients = [];
-      // let data = await axios.get("api/person");
-      // this.clients = await data.data;
+    getClients() {
+      //this.clients = [];
       axios
         .get("api/person")
         .then((response) => {
           this.clients = response.data;
+
+          setTimeout(function () {
+            $("#clients-table").DataTable({
+              order: [[0, "desc"]],
+            });
+          }, this.tableTime);
         })
         .catch((error) => {
           Swal.fire({
@@ -291,7 +292,7 @@ export default {
       this.showUpdate = true;
       this.showModal();
     },
-    remove(id) {
+    remove(id, index) {
       Swal.fire({
         title: "Esta seguro ?",
         text: "Esta acción no se podrá revertir!",
@@ -306,8 +307,11 @@ export default {
           axios
             .delete(`api/person/${id}/destroy`)
             .then((response) => {
-              Swal.fire("Registro eliminado !.", "success");
-              this.getClients();
+              Swal.fire({
+                icon: "success",
+                text: "Registro eliminado !",
+              });
+              this.clients.splice(index, 1);
             })
             .catch((e) => {
               Swal.fire({
@@ -320,86 +324,91 @@ export default {
       });
     },
     onSubmit() {
+      if (this.validate()) {
+        // Store or update
+        if (this.showUpdate) {
+          this.toUpdate(this.client);
+        } else {
+          this.toStore(this.client);
+        }
+
+        this.hideModal();
+
+        setTimeout(() => {
+          this.getClients();
+        }, 1000);
+      }
+    },
+    toStore(data) {
+      axios
+        .post("/api/person", {
+          name: data.name,
+          l_name: data.l_name,
+          s_name: data.s_name,
+          address: data.address,
+          phone: data.phone,
+          email: data.email,
+        })
+        .then((response) => {
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `He registrado a ${response.data.name}`,
+            showConfirmButton: false,
+            timer: 2500,
+          });
+          this.clean();
+        })
+        .catch((error) => {
+          this.errorToStored = error.response.data;
+        });
+    },
+    toUpdate(data) {
+      axios
+        .put(`/api/person/${data.id}/update`, {
+          id: data.id,
+          name: data.name,
+          l_name: data.l_name,
+          s_name: data.s_name,
+          address: data.address,
+          phone: data.phone,
+          email: data.email,
+        })
+        .then((response) => {
+          //console.log(response);
+          Swal.fire({
+            position: "top-end",
+            icon: "success",
+            title: `Acualicé los datos de: ${response.data.name}`,
+            showConfirmButton: false,
+            timer: 2500,
+          });
+
+          this.clean();
+          this.showUpdate = false;
+
+          var table = $("#clients-table").DataTable();
+          table.destroy();
+        })
+        .catch((error) => {
+          this.errorToStored = error.response.data;
+        });
+
+      this.showUpdate = false;
+    },
+    validate() {
+      var validated = false;
       if (
         (this.client.id !== "") &
         (this.client.name !== "") &
         (this.client.l_name !== "") &
         (this.client.s_name !== "") &
         (this.client.address !== "") &
-        (this.client.phone !== "") &
-        (this.client.email !== "")
+        (this.client.phone !== "")
       ) {
-        let data = this.client;
-
-        const headers = {
-          "content-type": "application/json",
-        };
-
-        if (this.showUpdate) {
-          axios
-            .put(
-              `/api/person/${data.id}/update`,
-              {
-                id: data.id,
-                name: data.name,
-                l_name: data.l_name,
-                s_name: data.s_name,
-                address: data.address,
-                phone: data.phone,
-                email: data.email,
-              },
-              headers
-            )
-            .then((response) => {
-              //console.log(response);
-              Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: `Acualicé los datos de: ${response.data.name}`,
-                showConfirmButton: false,
-                timer: 2500,
-              });
-              this.clean();
-              this.showUpdate = false;
-            })
-            .catch((error) => {
-              this.errorToStored = error.response.data;
-            });
-        } else {
-          axios
-            .post(
-              "/api/person",
-              {
-                name: data.name,
-                l_name: data.l_name,
-                s_name: data.s_name,
-                address: data.address,
-                phone: data.phone,
-                email: data.email,
-              },
-              headers
-            )
-            .then((response) => {
-              Swal.fire({
-                position: "top-end",
-                icon: "success",
-                title: `He registrado a ${response.data.name}`,
-                showConfirmButton: false,
-                timer: 2500,
-              });
-              this.clean();
-            })
-            .catch((error) => {
-              this.errorToStored = error.response.data;
-            });
-        }
-        this.clients = [];
-        this.hideModal();
-
-        setTimeout(() => {
-          this.getClients();
-        }, 100);
+        validated = true;
       }
+      return validated;
     },
     clean() {
       this.client.name = "";
@@ -407,7 +416,8 @@ export default {
       this.client.s_name = "";
       this.client.address = "";
       this.client.phone = "";
-      this.client.email = "";
+      this.client.email = "na@mail.com";
+      this.showUpdate = false;
     },
     showModal() {
       $("#modal-client").modal("show");

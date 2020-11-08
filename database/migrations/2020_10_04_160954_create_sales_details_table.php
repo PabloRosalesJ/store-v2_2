@@ -21,10 +21,10 @@ class CreateSalesDetailsTable extends Migration
             $table->decimal('price', 11, 2);
             $table->decimal('discount', 11, 2); 
             $table->decimal('sub_total', 11, 2);
+            $table->SoftDeletes();
 
             $table->foreign('sale_id')->references('id')->on('sales');
             $table->foreign('product_id')->references('id')->on('products');
-            $table->timestamps();
         });
     }
 

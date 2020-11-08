@@ -9,10 +9,10 @@
           <div class="card-body">
             <div class="table-responsive">
               <table
-                id="report-table"
+                id="compras-table"
                 class="table table-striped mb-0 dataTable no-footer"
                 role="grid"
-                aria-describedby="report-table_info"
+                aria-describedby="compras-table_info"
               >
                 <thead class="text-center">
                   <tr role="row">
@@ -24,22 +24,29 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr v-for="item of compras" :key="item.id">
                     <td>
-                      <div class="d-flex align-items-center">123456</div>
+                      <div
+                        class="d-flex align-items-center"
+                        v-text="item.serie"
+                      ></div>
                     </td>
                     <td>
-                      <div>02/12/2018</div>
+                      <div v-text="item.created_at"></div>
                     </td>
                     <td>
-                      <div class="row">Mrs. Aliyah Donnelly Jr. Schowalter</div>
+                      <div class="row" v-text="item.user.username"></div>
                     </td>
-                    <td>$235.00</td>
+                    <td v-text="item.total"></td>
                     <td class="text-center">
                       <i
+                        @click="disableSale(item.id)"
                         class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
                       ></i>
                       <i
+                        @click="
+                          getShoopDetails(item.id, item.total, item.serie)
+                        "
                         class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
                       ></i>
                     </td>
@@ -50,97 +57,56 @@
           </div>
         </div>
       </div>
-      <div class="col-md-4">
+      <div v-if="showDetails" class="col-md-4">
         <div class="card">
           <div class="card-header">
             <div class="row">
-              <div class="col-10">
-                <h5>Detalles</h5>
+              <div class="col-8">
+                <h5>Detalles: {{ details.serie }}</h5>
               </div>
-              <div class="col-2">
+              <div class="col-1 text-center">
                 <i
-                  class="p-1 mr-2 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded"
+                  @click="closeDetails"
+                  class="m-0 p-1 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded"
+                ></i>
+              </div>
+              <div class="col-1 text-center">
+                <i
+                  class="m-0 p-1 mr-auto feather icon-printer btn btn-secondary btn-sm shadow-sm rounded"
                 ></i>
               </div>
             </div>
           </div>
           <ul class="list-group list-group-flush">
-            <li class="list-group-item py-0">
+            <li
+              v-for="item of details"
+              :key="item.id"
+              class="list-group-item py-0"
+            >
               <div class="table-responsive">
                 <table class="table table-borderless mb-0">
                   <tbody>
                     <tr>
                       <td>
+                        <!-- http://store.test/img/admin_avatar.svg -->
                         <img
-                          src="assets/images/product/prod-1.jpg"
+                          :src="BASE_URL + '/img/product/product-default.svg'"
                           alt="contact-img"
                           title="contact-img"
                           class="rounded mr-2"
                           height="48"
                         />
                         <p class="m-0 d-inline-block align-middle">
-                          <a href="#!" class="text-body font-weight-semibold"
-                            >Rolling Chair</a
+                          <a
+                            href="product/"
+                            class="text-body font-weight-semibold"
+                            >{{ item.product[0].name }}</a
                           >
                           <br />
-                          <small>5 x $148.66</small>
+                          <small>{{ item.quantity }} x ${{ item.price }}</small>
                         </p>
                       </td>
-                      <td class="text-right">$743.00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </li>
-            <li class="list-group-item py-0">
-              <div class="table-responsive">
-                <table class="table table-borderless mb-0">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <img
-                          src="assets/images/product/prod-2.jpg"
-                          alt="contact-img"
-                          title="contact-img"
-                          class="rounded mr-2"
-                          height="48"
-                        />
-                        <p class="m-0 d-inline-block align-middle">
-                          <a href="#!" class="text-body font-weight-semibold"
-                            >Dining Chair</a
-                          >
-                          <br />
-                          <small>2 x $99.00</small>
-                        </p>
-                      </td>
-                      <td class="text-right">$198.00</td>
-                    </tr>
-                  </tbody>
-                </table>
-              </div>
-            </li>
-            <li class="list-group-item py-0">
-              <div class="table-responsive">
-                <table class="table table-borderless mb-0">
-                  <tbody>
-                    <tr>
-                      <td>
-                        <img
-                          src="assets/images/product/prod-3.jpg"
-                          alt="contact-img"
-                          title="contact-img"
-                          class="rounded mr-2"
-                          height="48"
-                        />
-                        <p class="m-0 d-inline-block align-middle">
-                          <a href="#!" class="text-body font-weight-semibold"
-                            >Marvel T-shirts</a
-                          >
-                          <br />
-                          <small>1 x $129.99</small>
-                        </p>
-                      </td>
-                      <td class="text-right">$129.00</td>
+                      <td class="text-right">${{ item.sub_total }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -155,21 +121,15 @@
                 <tbody>
                   <tr>
                     <td>
-                      <h6 class="m-0">Sub Total:</h6>
+                      <!-- <h6 class="m-0">Shipping:</h6> -->
                     </td>
-                    <td>$1070</td>
-                  </tr>
-                  <tr>
-                    <td>
-                      <h6 class="m-0">Shipping:</h6>
-                    </td>
-                    <td>FREE</td>
+                    <!-- <td>FREE</td> -->
                   </tr>
                   <tr class="border-top">
                     <td>
                       <h5 class="m-0">Total:</h5>
                     </td>
-                    <td class="font-weight-semibold">$1070</td>
+                    <td class="font-weight-semibold">${{ details.total }}</td>
                   </tr>
                 </tbody>
               </table>
@@ -186,8 +146,69 @@ export default {
   name: "ShoppingComponent",
   data() {
     return {
+      BASE_URL: process.env.MIX_APP_API_URL,
       compras: [],
+      details: [],
+      showDetails: false,
     };
+  },
+  props: ["client_id"],
+  mounted() {
+    this.getShoops();
+  },
+  beforeMount() {
+    setTimeout(() => {
+      $("#compras-table").DataTable({
+        order: [[0, "desc"]],
+      });
+    }, 3000);
+  },
+  methods: {
+    getShoops() {
+      axios
+        .get(`/api/sale/${this.client_id}/client`)
+        .then((result) => {
+          this.compras = result.data;
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    },
+    getShoopDetails(id, total, serie) {
+      this.details = [];
+      axios
+        .get(`/api/sale/${id}/details`)
+        .then((result) => {
+          this.details = result.data;
+          this.details.total = total;
+          this.details.serie = serie;
+          this.showDetails = true;
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    },
+    disableSale(id) {
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off",
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar venta",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: (data) => {
+          console.log(data);
+        },
+      });
+    },
+    closeDetails() {
+      this.showDetails = false;
+      this.details = [];
+    },
   },
 };
 </script>

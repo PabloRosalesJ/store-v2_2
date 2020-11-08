@@ -2,6 +2,9 @@
 
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
+use Illuminate\Support\Str;
+
+use App\Models\Category;
 
 class ProductSeeder extends Seeder
 {
@@ -14,8 +17,8 @@ class ProductSeeder extends Seeder
     {
         for ($i = 0; $i <= 30; $i++) {
             DB::table('products')->insert([
-                'category_id' => random_int(1, 4),
-                'bar_code' => $faker->sentence(1).$i,
+                'category_id' => Category::inRandomOrder()->first()->id,
+                'bar_code' => Str::random(10),
                 'name' => $faker->unique()->word().' '.$i,
                 'description' => $faker->sentence(3),
                 'image' => $faker->image(),

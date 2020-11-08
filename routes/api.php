@@ -81,7 +81,21 @@ Route::prefix('sale')->group(function () {
 Route::prefix('credit')->group(function () {
     Route::get('/', 'CreditController@index')->name('credit.index');
     Route::post('/', 'CreditController@store')->name('credit.store');
+    Route::get('/{credit_id}/client', 'CreditController@client')->name('credit.client');
+    Route::get('/{credit_id}/user', 'CreditController@user')->name('credit.user');
+    Route::get('/{credit_id}/single', 'CreditController@getSingleCredit')->name('credit.getSingleCredit');
     Route::get('/{credit_id}/details', 'CreditController@show')->name('credit.show');
     Route::put('/{credit_id}/disable', 'CreditController@disable')->name('credit.disable');
-    Route::get('/search/', 'CreditController@search')->name('credit.search');
+    Route::get('/{search}/', 'CreditController@search')->name('credit.search');
+});
+
+Route::prefix('payment')->group(function () {
+    Route::get('/', 'PaymentController@index')->name('payment.index');
+    Route::post('/', 'PaymentController@store')->name('payment.store');
+    Route::get('/{client_id}/client', 'PaymentController@getPaymentByClient')->name('payment.client');
+    Route::get('/{user_id}/user', 'PaymentController@getPaymentByUser')->name('payment.user');
+    Route::get('/{payment_id}/single', 'PaymentController@getSingleCredit')->name('payment.getSingleCredit');
+    Route::get('/{payment_id}/details', 'PaymentController@show')->name('payment.show');
+    Route::put('/{payment_id}/disable', 'PaymentController@disable')->name('payment.disable');
+    Route::get('/{search}/', 'PaymentController@search')->name('payment.search');
 });

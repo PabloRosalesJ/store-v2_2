@@ -2,6 +2,11 @@
 
 use Illuminate\Database\Seeder;
 
+use App\Models\Person;
+use App\Models\User;
+use App\Models\Credit;
+use App\Models\Product;
+
 class CreditSeeder extends Seeder
 {
     /**
@@ -13,22 +18,23 @@ class CreditSeeder extends Seeder
     {
         for ($i = 0; $i <= 50; $i++) {
             DB::table('credits')->insert([
-                'people_id' => random_int(1,32),
-                'user_id'   => 1,
-                'take'      => random_int(0,1),
-                'total'     => 50,
+                'people_id'  => Person::inRandomOrder()->first()->id,
+                'user_id'    => User::inRandomOrder()->first()->id,
+                'take'       => random_int(0,1),
+                'total'      => 50,
                 'created_at' => \Carbon\Carbon::now()->subDays($i)
             ]);
         }
 
-        for ($i = 0; $i <= 30; $i++) {
+        for ($i = 0; $i <= 300; $i++) {
+            $pices = random_int(1,20);
+            $cost = random_int(20,700);
             DB::table('credti_details')->insert([
-                'credit_id'  => random_int(1,10),
-                'product_id' => random_int(1,31),
-                'pices'      => random_int(1,5),
-                'cost'       => 50,
-                'sub_total'  => 300,
-                'created_at' => \Carbon\Carbon::now()->subDays($i)
+                'credit_id'  => Credit::inRandomOrder()->first()->id,
+                'product_id' => Product::inRandomOrder()->first()->id,
+                'pices'      => $pices,
+                'cost'       => $cost,
+                'sub_total'  => $cost * $pices,
             ]);
         }
     }

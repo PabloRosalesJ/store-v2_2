@@ -25,6 +25,11 @@ let routes = [
         path: '/users',
         name: 'users',
         component: require('./views/users/Users.vue').default
+    },
+    {
+        path: '*',
+        // name: '404',
+        component: require('./views/errors/404.vue').default
     }
 ]
 

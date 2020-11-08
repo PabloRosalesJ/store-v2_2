@@ -8,14 +8,18 @@ class PersonEloquentImpl implements PersonRepository
 {
     public function all()
     {
-        return Person::where('status',1)
-                    ->orderBy('id', 'desc')
+        return Person:://where('status',1)
+                    orderBy('id', 'desc')
                     ->get();
     }
 
     public function store(Request $request)
     {
         $person = new Person();
+        // $person->create(
+        //     $request->only(['name', 'l_name', 's_name', 'address', 'phone', 'email'])
+        //     )->save();
+
         $person->fill($request->only(['name', 'l_name', 's_name', 'address', 'phone', 'email']))->save();
         return $person;
     }

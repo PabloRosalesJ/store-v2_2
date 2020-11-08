@@ -3,6 +3,10 @@
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Carbon;
 
+use App\Models\User;
+use App\Models\Income;
+use App\Models\Product;
+
 class IncomeSeeder extends Seeder
 {
     /**
@@ -14,20 +18,24 @@ class IncomeSeeder extends Seeder
     {
         for ($i=0; $i < 200; $i++) { 
             DB::table('incomes')->insert([
-                'user_id' => random_int(1, 10),
+                'user_id' => User::inRandomOrder()->first()->id,
                 'number' => '000'.$i,
                 'total' => random_int(800, 1200),
-                'created_at' => Carbon::now()
+                'created_at' => Carbon::now()->subDays(200 - $i)
             ]);
         }
 
         for ($i=0; $i < 300; $i++) { 
+
+            $quantity = random_int(10,30);
+            $price = random_int(275, 300);
+
             DB::table('income_details')->insert([
-                'income_id' => random_int(1, 200),
-                'product_id' => random_int(1, 30),
-                'quantity' => random_int(10,30),
-                'price' => random_int(275, 300),
-                'sub_total' => random_int(4000, 4500),
+                'income_id' => Income::inRandomOrder()->first()->id,
+                'product_id' => Product::inRandomOrder()->first()->id,
+                'quantity' => $quantity,
+                'price' => $price,
+                'sub_total' => $quantity * $price,
             ]);
         }
     }

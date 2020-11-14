@@ -6,12 +6,7 @@
           <div class="card-header">Pagos</div>
           <div class="card-body">
             <div class="table-responsive">
-              <table
-                id="report-table"
-                class="table table-striped mb-0 dataTable no-footer"
-                role="grid"
-                aria-describedby="report-table_info"
-              >
+              <table id="payments-table" class="table table-sm table-hover">
                 <thead class="text-center">
                   <tr role="row">
                     <th>Serie</th>
@@ -22,17 +17,22 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr>
+                  <tr v-for="item of Payments" :key="item.id">
                     <td>
-                      <div class="d-flex align-items-center">123456</div>
+                      <div
+                        class="d-flex align-items-center"
+                        v-text="item.id"
+                      ></div>
                     </td>
                     <td>
-                      <div>02/12/2018</div>
+                      <div v-text="item.created_at"></div>
                     </td>
                     <td>
-                      <div class="row">Mrs. Aliyah Donnelly Jr. Schowalter</div>
+                      <div v-text="item.user.username"></div>
                     </td>
-                    <td>$235.00</td>
+                    <td>
+                      <div v-text="item.amount"></div>
+                    </td>
                     <td class="text-center">
                       <i
                         class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
@@ -55,20 +55,31 @@
 <script>
 export default {
   name: "PaysComponent",
-  data(){
+  data() {
     return {
-      Payments = [],
-    }
+      Payments: [],
+    };
   },
-  mounted: {},
+  props: ["client_id"],
+  mounted() {
+    this.getPayments();
+  },
+  beforeMount() {
+    setTimeout(() => {
+      $("#payments-table").DataTable({
+        order: [],
+      });
+    }, 3000);
+  },
   methods: {
     getPayments() {
-      axios.
-        get()
+      axios
+        .get(`/api/payment/${this.client_id}/client`)
         .then((result) => {
-          
-        }).catch((err) => {
-          
+          this.Payments = result.data;
+        })
+        .catch((err) => {
+          console.log(result.response);
         });
     },
   },

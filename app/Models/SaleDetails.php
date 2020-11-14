@@ -14,4 +14,9 @@ class SaleDetails extends Model
     {
         return $this->hasMany(Product::class, 'id', 'product_id');
     }
+
+    //Casting
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+    ];
 }

@@ -10,7 +10,7 @@
             <div class="table-responsive">
               <table
                 id="compras-table"
-                class="table table-striped mb-0 dataTable no-footer"
+                class="table table-sm table-hover mb-0"
                 role="grid"
                 aria-describedby="compras-table_info"
               >
@@ -159,7 +159,7 @@ export default {
   beforeMount() {
     setTimeout(() => {
       $("#compras-table").DataTable({
-        order: [[0, "desc"]],
+        order: [],
       });
     }, 3000);
   },

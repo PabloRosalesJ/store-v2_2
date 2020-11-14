@@ -75,6 +75,7 @@ class SaleEloquentImpl implements SaleRepository
     {
         $sales_user = Sale::where('user_id', $id)
                             ->where('status', 1)
+                            ->orderBy('created_at', 'desc')
                             ->with('people')
                             ->get();
         return $sales_user;
@@ -84,6 +85,7 @@ class SaleEloquentImpl implements SaleRepository
     {
         $sales_user = Sale::where('people_id', $id)
                             ->where('status', 1)
+                            ->orderBy('created_at', 'desc')
                             ->with('user')
                             ->get();
         return $sales_user;

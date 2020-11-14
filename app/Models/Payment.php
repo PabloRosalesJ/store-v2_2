@@ -15,4 +15,9 @@ class Payment extends Model
     public function client(){
         return $this->belongsTo(Person::class);
     }
+    
+    //Casting
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+    ];
 }

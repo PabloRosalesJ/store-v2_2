@@ -2521,7 +2521,9 @@ __webpack_require__.r(__webpack_exports__);
     axios.get("/api/credit/".concat(this.client_id, "/client")).then(function (result) {
       _this.credits = result.data;
       setTimeout(function () {
-        $("#credit-table").DataTable({});
+        $("#credit-table").DataTable({
+          order: []
+        });
       }, 1000);
     })["catch"](function (err) {
       console.log(err.response);
@@ -2553,9 +2555,94 @@ __webpack_require__.r(__webpack_exports__);
   !*** ./node_modules/babel-loader/lib??ref--4-0!./node_modules/vue-loader/lib??vue-loader-options!./resources/js/components/Users/PaysComponent.vue?vue&type=script&lang=js& ***!
   \******************************************************************************************************************************************************************************/
 /*! exports provided: default */
-/***/ (function(module, exports) {
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
 
-throw new Error("Module build failed (from ./node_modules/babel-loader/lib/index.js):\nSyntaxError: C:\\laragon\\www\\store\\resources\\js\\components\\Users\\PaysComponent.vue: Unexpected token (60:15)\n\n\u001b[0m \u001b[90m 58 | \u001b[39m  data(){\u001b[0m\n\u001b[0m \u001b[90m 59 | \u001b[39m    \u001b[36mreturn\u001b[39m {\u001b[0m\n\u001b[0m\u001b[31m\u001b[1m>\u001b[22m\u001b[39m\u001b[90m 60 | \u001b[39m      \u001b[33mPayments\u001b[39m \u001b[33m=\u001b[39m []\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m    | \u001b[39m               \u001b[31m\u001b[1m^\u001b[22m\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 61 | \u001b[39m    }\u001b[0m\n\u001b[0m \u001b[90m 62 | \u001b[39m  }\u001b[33m,\u001b[39m\u001b[0m\n\u001b[0m \u001b[90m 63 | \u001b[39m  mounted\u001b[33m:\u001b[39m {}\u001b[33m,\u001b[39m\u001b[0m\n    at Parser._raise (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:799:17)\n    at Parser.raiseWithData (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:792:17)\n    at Parser.raise (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:786:17)\n    at Parser.unexpected (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9089:16)\n    at Parser.checkExpressionErrors (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9187:12)\n    at Parser.parseMaybeAssign (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9779:12)\n    at Parser.parseExpressionBase (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9696:23)\n    at C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9690:39\n    at Parser.allowInAnd (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11442:16)\n    at Parser.parseExpression (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9690:17)\n    at Parser.parseReturnStatement (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11946:28)\n    at Parser.parseStatementContent (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11625:21)\n    at Parser.parseStatement (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11577:17)\n    at Parser.parseBlockOrModuleBlockBody (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12159:25)\n    at Parser.parseBlockBody (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12145:10)\n    at Parser.parseBlock (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12129:10)\n    at Parser.parseFunctionBody (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11108:24)\n    at Parser.parseFunctionBodyAndFinish (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11091:10)\n    at Parser.parseMethod (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11028:10)\n    at Parser.parseObjectMethod (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10953:19)\n    at Parser.parseObjPropValue (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10986:23)\n    at Parser.parsePropertyDefinition (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10910:10)\n    at Parser.parseObjectLike (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10802:25)\n    at Parser.parseExprAtom (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:10332:23)\n    at Parser.parseExprSubscripts (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9976:23)\n    at Parser.parseUpdate (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9956:21)\n    at Parser.parseMaybeUnary (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9945:17)\n    at Parser.parseExprOps (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9815:23)\n    at Parser.parseMaybeConditional (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9789:23)\n    at Parser.parseMaybeAssign (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9752:21)\n    at C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9718:39\n    at Parser.allowInAnd (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11442:16)\n    at Parser.parseMaybeAssignAllowIn (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:9718:17)\n    at Parser.parseExportDefaultExpression (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12801:24)\n    at Parser.parseExport (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:12711:31)\n    at Parser.parseStatementContent (C:\\laragon\\www\\store\\node_modules\\@babel\\parser\\lib\\index.js:11683:27)");
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PaysComponent",
+  data: function data() {
+    return {
+      Payments: []
+    };
+  },
+  props: ["client_id"],
+  mounted: function mounted() {
+    this.getPayments();
+  },
+  beforeMount: function beforeMount() {
+    setTimeout(function () {
+      $("#payments-table").DataTable({
+        order: []
+      });
+    }, 3000);
+  },
+  methods: {
+    getPayments: function getPayments() {
+      var _this = this;
+
+      axios.get("/api/payment/".concat(this.client_id, "/client")).then(function (result) {
+        _this.Payments = result.data;
+      })["catch"](function (err) {
+        console.log(result.response);
+      });
+    }
+  }
+});
 
 /***/ }),
 
@@ -2728,7 +2815,7 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     setTimeout(function () {
       $("#compras-table").DataTable({
-        order: [[0, "desc"]]
+        order: []
       });
     }, 3000);
   },
@@ -4588,86 +4675,101 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _vm._m(0)
+  return _c("div", [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-10" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [_vm._v("Pagos")]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-sm table-hover",
+                  attrs: { id: "payments-table" }
+                },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.Payments, function(item) {
+                      return _c("tr", { key: item.id }, [
+                        _c("td", [
+                          _c("div", {
+                            staticClass: "d-flex align-items-center",
+                            domProps: { textContent: _vm._s(item.id) }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", {
+                            domProps: { textContent: _vm._s(item.created_at) }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", {
+                            domProps: {
+                              textContent: _vm._s(item.user.username)
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("div", {
+                            domProps: { textContent: _vm._s(item.amount) }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(1, true)
+                      ])
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
 }
 var staticRenderFns = [
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", [
-      _c("div", { staticClass: "row justify-content-center" }, [
-        _c("div", { staticClass: "col-10" }, [
-          _c("div", { staticClass: "card" }, [
-            _c("div", { staticClass: "card-header" }, [_vm._v("Pagos")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "card-body" }, [
-              _c("div", { staticClass: "table-responsive" }, [
-                _c(
-                  "table",
-                  {
-                    staticClass: "table table-striped mb-0 dataTable no-footer",
-                    attrs: {
-                      id: "report-table",
-                      role: "grid",
-                      "aria-describedby": "report-table_info"
-                    }
-                  },
-                  [
-                    _c("thead", { staticClass: "text-center" }, [
-                      _c("tr", { attrs: { role: "row" } }, [
-                        _c("th", [_vm._v("Serie")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Fecha")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Vendedor")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Total")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Cancelar")])
-                      ])
-                    ]),
-                    _vm._v(" "),
-                    _c("tbody", [
-                      _c("tr", [
-                        _c("td", [
-                          _c(
-                            "div",
-                            { staticClass: "d-flex align-items-center" },
-                            [_vm._v("123456")]
-                          )
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_c("div", [_vm._v("02/12/2018")])]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", { staticClass: "row" }, [
-                            _vm._v("Mrs. Aliyah Donnelly Jr. Schowalter")
-                          ])
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("$235.00")]),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-center" }, [
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-                          }),
-                          _vm._v(" "),
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
-                          })
-                        ])
-                      ])
-                    ])
-                  ]
-                )
-              ])
-            ])
-          ])
-        ])
+    return _c("thead", { staticClass: "text-center" }, [
+      _c("tr", { attrs: { role: "row" } }, [
+        _c("th", [_vm._v("Serie")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Fecha")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Vendedor")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Cancelar")])
       ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", { staticClass: "text-center" }, [
+      _c("i", {
+        staticClass:
+          "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
+      }),
+      _vm._v(" "),
+      _c("i", {
+        staticClass:
+          "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
+      })
     ])
   }
 ]
@@ -4703,7 +4805,7 @@ var render = function() {
               _c(
                 "table",
                 {
-                  staticClass: "table table-striped mb-0 dataTable no-footer",
+                  staticClass: "table table-sm table-hover mb-0",
                   attrs: {
                     id: "compras-table",
                     role: "grid",

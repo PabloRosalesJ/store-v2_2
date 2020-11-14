@@ -35,6 +35,7 @@ class PaymentEloquentImpl implements PaymentRepository
     {
         return Payment::where('client_id', $client_id)
                         ->with('user')
+                        ->orderBy('created_at', 'desc')
                         ->get();
     }
 
@@ -42,6 +43,7 @@ class PaymentEloquentImpl implements PaymentRepository
     {
         return Payment::where('user_id', $user_id)
                         ->with('client')
+                        ->orderBy('created_at', 'desc')
                         ->get();
     }
 

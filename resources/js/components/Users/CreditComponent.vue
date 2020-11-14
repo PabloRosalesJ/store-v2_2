@@ -148,7 +148,9 @@ export default {
       .then((result) => {
         this.credits = result.data;
         setTimeout(() => {
-          $("#credit-table").DataTable({});
+          $("#credit-table").DataTable({
+            order: [],
+          });
         }, 1000);
       })
       .catch((err) => {

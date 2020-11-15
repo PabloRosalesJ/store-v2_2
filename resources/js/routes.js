@@ -7,12 +7,12 @@ let routes = [
         component: require('./components/ExampleComponent.vue').default
     },
     {
-        path: '/clients',
+        path: '/cliente',
         name: 'clients',
         component: require('./views/users/Clients.vue').default
     },
     {
-        path: '/client/:id',
+        path: '/cliente/:id',
         name: 'client',
         component: require('./views/users/Client.vue').default
     },
@@ -29,6 +29,11 @@ let routes = [
     {
         path: '*',
         // name: '404',
+        component: require('./views/errors/404.vue').default
+    },
+    {
+        // will match anything starting with `/user-`
+        path: '/client/*',
         component: require('./views/errors/404.vue').default
     }
 ]

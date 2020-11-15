@@ -2504,32 +2504,53 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "CreditComponent",
   data: function data() {
     return {
       credits: [],
       creditDetails: [],
-      showDetails: false
+      showDetails: false,
+      total: 0
     };
   },
   props: ["client_id"],
-  beforeMount: function beforeMount() {},
   mounted: function mounted() {
-    var _this = this;
-
-    axios.get("/api/credit/".concat(this.client_id, "/client")).then(function (result) {
-      _this.credits = result.data;
-      setTimeout(function () {
-        $("#credit-table").DataTable({
-          order: []
-        });
-      }, 1000);
-    })["catch"](function (err) {
-      console.log(err.response);
-    });
+    this.getCredits();
+  },
+  beforeMount: function beforeMount() {
+    setTimeout(function () {
+      $("#credit-table").DataTable({
+        order: []
+      });
+    }, 3000);
   },
   methods: {
+    getCredits: function getCredits() {
+      var _this = this;
+
+      this.credits = [];
+      axios.get("/api/credit/".concat(this.client_id, "/client")).then(function (result) {
+        _this.credits = result.data;
+      })["catch"](function (err) {//console.log(err.response);
+      });
+    },
     getCreditDetails: function getCreditDetails(credit_id, total, created_at) {
       var _this2 = this;
 
@@ -2538,12 +2559,61 @@ __webpack_require__.r(__webpack_exports__);
         _this2.creditDetails.total = total;
         _this2.creditDetails.created_at = created_at;
         _this2.showDetails = true;
-      })["catch"](function (err) {
-        console.log(err.response);
+      })["catch"](function (err) {//console.log(err.response);
       });
     },
     hideDetails: function hideDetails() {
       this.showDetails = false;
+    },
+    disableCredit: function disableCredit(id) {
+      var _this3 = this;
+
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar crédito",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: function preConfirm(data) {
+          axios.put("api/credit/".concat(id, "/disable"), {
+            pw: data
+          }).then(function (result) {
+            _this3.getCredits();
+
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Cancelado !",
+              showConfirmButton: false,
+              timer: 1500
+            }); // console.log(result);
+          })["catch"](function (err) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: "Credenciales incorrectas",
+              showConfirmButton: true
+            }); //console.log(err.response);
+          });
+        }
+      });
+    }
+  },
+  computed: {
+    total_sum: function total_sum() {
+      var _this4 = this;
+
+      this.credits.forEach(function (item) {
+        if (item.status === 1) {
+          _this4.total += parseInt(item.total);
+        }
+      });
+      return this.total;
     }
   }
 });
@@ -2613,11 +2683,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PaysComponent",
   data: function data() {
     return {
-      Payments: []
+      Payments: [],
+      total: 0
     };
   },
   props: ["client_id"],
@@ -2637,9 +2710,18 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("/api/payment/".concat(this.client_id, "/client")).then(function (result) {
         _this.Payments = result.data;
-      })["catch"](function (err) {
-        console.log(result.response);
+      })["catch"](function (err) {//console.log(result.response);
       });
+    }
+  },
+  computed: {
+    total_sum: function total_sum() {
+      var _this2 = this;
+
+      this.Payments.forEach(function (item) {
+        _this2.total += parseInt(item.amount);
+      });
+      return this.total;
     }
   }
 });
@@ -2798,6 +2880,62 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "ShoppingComponent",
   data: function data() {
@@ -2805,7 +2943,8 @@ __webpack_require__.r(__webpack_exports__);
       BASE_URL: "http://store.test",
       compras: [],
       details: [],
-      showDetails: false
+      showDetails: false,
+      total: 0
     };
   },
   props: ["client_id"],
@@ -2815,7 +2954,16 @@ __webpack_require__.r(__webpack_exports__);
   beforeMount: function beforeMount() {
     setTimeout(function () {
       $("#compras-table").DataTable({
-        order: []
+        order: [],
+        // dom: "Bfrtip",
+        buttons: [//"copy", "csv", "excel", "pdf", "print"
+        {
+          extend: "copy",
+          attr: {
+            id: "allan"
+          }
+        }, "csv", "excel", "pdf"] // buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdfHtml5"],
+
       });
     }, 3000);
   },
@@ -2823,10 +2971,10 @@ __webpack_require__.r(__webpack_exports__);
     getShoops: function getShoops() {
       var _this = this;
 
+      this.compras = [];
       axios.get("/api/sale/".concat(this.client_id, "/client")).then(function (result) {
         _this.compras = result.data;
-      })["catch"](function (err) {
-        console.log(err.response);
+      })["catch"](function (err) {//console.log(err.response);
       });
     },
     getShoopDetails: function getShoopDetails(id, total, serie) {
@@ -2838,11 +2986,12 @@ __webpack_require__.r(__webpack_exports__);
         _this2.details.total = total;
         _this2.details.serie = serie;
         _this2.showDetails = true;
-      })["catch"](function (err) {
-        console.log(err.response);
+      })["catch"](function (err) {//console.log(err.response);
       });
     },
     disableSale: function disableSale(id) {
+      var _this3 = this;
+
       Swal.fire({
         title: "Ingrese su contraseña.",
         input: "password",
@@ -2850,18 +2999,49 @@ __webpack_require__.r(__webpack_exports__);
           autocapitalize: "off"
         },
         showCancelButton: true,
-        confirmButtonText: "Cancelar venta",
+        confirmButtonText: "Cancelar compra",
         cancelButtonText: "Cerrar",
         confirmButtonColor: "#d33",
         showLoaderOnConfirm: true,
         preConfirm: function preConfirm(data) {
-          console.log(data);
+          axios.put("/api/sale/".concat(id, "/disable"), {
+            pw: data
+          }).then(function (result) {
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Cancelado !",
+              showConfirmButton: false,
+              timer: 1500
+            });
+
+            _this3.getShoops();
+          })["catch"](function (err) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: "Credenciales incorrectas",
+              showConfirmButton: true
+            }); //console.log(err.response);
+          });
         }
       });
     },
     closeDetails: function closeDetails() {
       this.showDetails = false;
       this.details = [];
+    }
+  },
+  computed: {
+    total_sum: function total_sum() {
+      var _this4 = this;
+
+      this.compras.forEach(function (item) {
+        if (item.status === 1) {
+          _this4.total += parseInt(item.total);
+        }
+      });
+      return this.total;
     }
   }
 });
@@ -3164,8 +3344,7 @@ __webpack_require__.r(__webpack_exports__);
 
       axios.get("".concat(this.BASE_URL, "/api/person/").concat(this.$route.params.id, "/show")).then(function (result) {
         _this.client = result.data;
-      })["catch"](function (error) {
-        console.log(error.response.data.message);
+      })["catch"](function (error) {//console.log(error.response.data.message);
       });
     },
     back: function back() {
@@ -4401,7 +4580,15 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-8" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row justify-content-between" }, [
+              _c("h5", { staticClass: "col-3" }, [_vm._v("Créditos")]),
+              _vm._v(" "),
+              _c("span", { staticClass: "col-2" }, [
+                _vm._v("Total: $" + _vm._s(_vm.total_sum) + ".00")
+              ])
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("div", { staticClass: "table-responsive" }, [
@@ -4410,60 +4597,86 @@ var render = function() {
                 {
                   staticClass:
                     "table table-striped table-sm mb-0 dataTable no-footer",
-                  attrs: {
-                    id: "credit-table",
-                    role: "grid",
-                    "aria-describedby": "report-table_info"
-                  }
+                  attrs: { id: "credit-table" }
                 },
                 [
-                  _vm._m(1),
+                  _vm._m(0),
                   _vm._v(" "),
                   _c(
                     "tbody",
                     _vm._l(_vm.credits, function(credit) {
-                      return _c("tr", { key: credit.id }, [
-                        _c("td", {
-                          domProps: { textContent: _vm._s(credit.id) }
-                        }),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: {
-                            textContent: _vm._s(credit.user.username)
+                      return _c(
+                        "tr",
+                        {
+                          key: credit.id,
+                          class: {
+                            "table-danger": !credit.status,
+                            "": credit.status
                           }
-                        }),
-                        _vm._v(" "),
-                        _c("td", [_vm._v("$" + _vm._s(credit.total))]),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: { textContent: _vm._s(credit.created_at) }
-                        }),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: { textContent: _vm._s(credit.take) }
-                        }),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-center" }, [
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
+                        },
+                        [
+                          _c("td", {
+                            domProps: { textContent: _vm._s(credit.id) }
                           }),
                           _vm._v(" "),
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
-                            on: {
-                              click: function($event) {
-                                return _vm.getCreditDetails(
-                                  credit.id,
-                                  credit.total,
-                                  credit.created_at
-                                )
-                              }
+                          _c("td", {
+                            domProps: {
+                              textContent: _vm._s(credit.user.username)
                             }
-                          })
-                        ])
-                      ])
+                          }),
+                          _vm._v(" "),
+                          _c("td", [_vm._v("$" + _vm._s(credit.total))]),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(credit.created_at) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(credit.take) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-center" }, [
+                            credit.status
+                              ? _c("div", [
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.disableCredit(credit.id)
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getCreditDetails(
+                                          credit.id,
+                                          credit.total,
+                                          credit.created_at
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              : _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [
+                                      _vm._v(
+                                        "Cancelado el " +
+                                          _vm._s(credit.updated_at)
+                                      )
+                                    ]
+                                  )
+                                ])
+                          ])
+                        ]
+                      )
                     }),
                     0
                   )
@@ -4495,7 +4708,7 @@ var render = function() {
                     })
                   ]),
                   _vm._v(" "),
-                  _vm._m(2)
+                  _vm._m(1)
                 ])
               ]),
               _vm._v(" "),
@@ -4586,7 +4799,7 @@ var render = function() {
                     [
                       _c("tbody", [
                         _c("tr", { staticClass: "border-top" }, [
-                          _vm._m(3),
+                          _vm._m(2),
                           _vm._v(" "),
                           _c("td", { staticClass: "font-weight-semibold" }, [
                             _vm._v(
@@ -4608,14 +4821,6 @@ var render = function() {
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h5", [_vm._v("Créditos")])
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -4679,7 +4884,15 @@ var render = function() {
     _c("div", { staticClass: "row justify-content-center" }, [
       _c("div", { staticClass: "col-10" }, [
         _c("div", { staticClass: "card" }, [
-          _c("div", { staticClass: "card-header" }, [_vm._v("Pagos")]),
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row justify-content-between" }, [
+              _c("h5", { staticClass: "col-3" }, [_vm._v("Pagos")]),
+              _vm._v(" "),
+              _c("span", { staticClass: "col-2" }, [
+                _vm._v("Total: $" + _vm._s(_vm.total_sum) + ".00")
+              ])
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
             _c("div", { staticClass: "table-responsive" }, [
@@ -4718,9 +4931,7 @@ var render = function() {
                         ]),
                         _vm._v(" "),
                         _c("td", [
-                          _c("div", {
-                            domProps: { textContent: _vm._s(item.amount) }
-                          })
+                          _c("div", [_vm._v("$" + _vm._s(item.amount) + ".00")])
                         ]),
                         _vm._v(" "),
                         _vm._m(1, true)
@@ -4752,7 +4963,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Total")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Cancelar")])
+        _c("th", [_vm._v("Opciones")])
       ])
     ])
   },
@@ -4764,11 +4975,6 @@ var staticRenderFns = [
       _c("i", {
         staticClass:
           "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-      }),
-      _vm._v(" "),
-      _c("i", {
-        staticClass:
-          "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
       })
     ])
   }
@@ -4798,9 +5004,19 @@ var render = function() {
     _c("div", { staticClass: "row" }, [
       _c("div", { staticClass: "col-8" }, [
         _c("div", { staticClass: "card" }, [
-          _vm._m(0),
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row justify-content-between" }, [
+              _c("h5", { staticClass: "col-3" }, [_vm._v("Compras")]),
+              _vm._v(" "),
+              _c("span", { staticClass: "col-2" }, [
+                _vm._v("Total: $" + _vm._s(_vm.total_sum) + ".00")
+              ])
+            ])
+          ]),
           _vm._v(" "),
           _c("div", { staticClass: "card-body" }, [
+            _vm._m(0),
+            _vm._v(" "),
             _c("div", { staticClass: "table-responsive" }, [
               _c(
                 "table",
@@ -4818,59 +5034,82 @@ var render = function() {
                   _c(
                     "tbody",
                     _vm._l(_vm.compras, function(item) {
-                      return _c("tr", { key: item.id }, [
-                        _c("td", [
-                          _c("div", {
-                            staticClass: "d-flex align-items-center",
-                            domProps: { textContent: _vm._s(item.serie) }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", {
-                            domProps: { textContent: _vm._s(item.created_at) }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", {
-                            staticClass: "row",
-                            domProps: {
-                              textContent: _vm._s(item.user.username)
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("td", {
-                          domProps: { textContent: _vm._s(item.total) }
-                        }),
-                        _vm._v(" "),
-                        _c("td", { staticClass: "text-center" }, [
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
-                            on: {
-                              click: function($event) {
-                                return _vm.disableSale(item.id)
-                              }
-                            }
-                          }),
+                      return _c(
+                        "tr",
+                        {
+                          key: item.id,
+                          class: {
+                            "table-danger": !item.status,
+                            "": item.status
+                          }
+                        },
+                        [
+                          _c("td", [
+                            _c("div", {
+                              staticClass: "d-flex align-items-center",
+                              domProps: { textContent: _vm._s(item.serie) }
+                            })
+                          ]),
                           _vm._v(" "),
-                          _c("i", {
-                            staticClass:
-                              "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
-                            on: {
-                              click: function($event) {
-                                return _vm.getShoopDetails(
-                                  item.id,
-                                  item.total,
-                                  item.serie
-                                )
+                          _c("td", [
+                            _c("div", {
+                              domProps: { textContent: _vm._s(item.created_at) }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("div", {
+                              staticClass: "row",
+                              domProps: {
+                                textContent: _vm._s(item.user.username)
                               }
-                            }
-                          })
-                        ])
-                      ])
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v("$" + _vm._s(item.total) + ".00")]),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-center" }, [
+                            item.status
+                              ? _c("div", [
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.disableSale(item.id)
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getShoopDetails(
+                                          item.id,
+                                          item.total,
+                                          item.serie
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              : _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [
+                                      _vm._v(
+                                        "Cancelado el " +
+                                          _vm._s(item.updated_at)
+                                      )
+                                    ]
+                                  )
+                                ])
+                          ])
+                        ]
+                      )
                     }),
                     0
                   )
@@ -5009,8 +5248,51 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "card-header" }, [
-      _c("h5", [_vm._v("Compras")])
+    return _c("div", { staticClass: "dt-buttons btn-group flex-wrap" }, [
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary buttons-copy buttons-html5",
+          attrs: { tabindex: "0", "aria-controls": "basic-btn", type: "button" }
+        },
+        [_c("span", [_vm._v("Copy")])]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary buttons-csv buttons-html5",
+          attrs: { tabindex: "0", "aria-controls": "basic-btn", type: "button" }
+        },
+        [_c("span", [_vm._v("CSV")])]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary buttons-excel buttons-html5",
+          attrs: { tabindex: "0", "aria-controls": "basic-btn", type: "button" }
+        },
+        [_c("span", [_vm._v("Excel")])]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary buttons-pdf buttons-html5",
+          attrs: { tabindex: "0", "aria-controls": "basic-btn", type: "button" }
+        },
+        [_c("span", [_vm._v("PDF")])]
+      ),
+      _vm._v(" "),
+      _c(
+        "button",
+        {
+          staticClass: "btn btn-secondary buttons-print",
+          attrs: { tabindex: "0", "aria-controls": "basic-btn", type: "button" }
+        },
+        [_c("span", [_vm._v("Print")])]
+      )
     ])
   },
   function() {
@@ -5027,7 +5309,7 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Total")]),
         _vm._v(" "),
-        _c("th", [_vm._v("Cancelar")])
+        _c("th", [_vm._v("Opciones")])
       ])
     ])
   },
@@ -21250,11 +21532,11 @@ var routes = [{
   name: 'root',
   component: __webpack_require__(/*! ./components/ExampleComponent.vue */ "./resources/js/components/ExampleComponent.vue")["default"]
 }, {
-  path: '/clients',
+  path: '/cliente',
   name: 'clients',
   component: __webpack_require__(/*! ./views/users/Clients.vue */ "./resources/js/views/users/Clients.vue")["default"]
 }, {
-  path: '/client/:id',
+  path: '/cliente/:id',
   name: 'client',
   component: __webpack_require__(/*! ./views/users/Client.vue */ "./resources/js/views/users/Client.vue")["default"]
 }, {
@@ -21268,6 +21550,10 @@ var routes = [{
 }, {
   path: '*',
   // name: '404',
+  component: __webpack_require__(/*! ./views/errors/404.vue */ "./resources/js/views/errors/404.vue")["default"]
+}, {
+  // will match anything starting with `/user-`
+  path: '/client/*',
   component: __webpack_require__(/*! ./views/errors/404.vue */ "./resources/js/views/errors/404.vue")["default"]
 }];
 /* harmony default export */ __webpack_exports__["default"] = (new vue_router__WEBPACK_IMPORTED_MODULE_0__["default"]({
@@ -21622,26 +21908,14 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./resources/sass/app.scss":
-/*!*********************************!*\
-  !*** ./resources/sass/app.scss ***!
-  \*********************************/
-/*! no static exports found */
-/***/ (function(module, exports) {
-
-// removed by extract-text-webpack-plugin
-
-/***/ }),
-
 /***/ 0:
-/*!*************************************************************!*\
-  !*** multi ./resources/js/app.js ./resources/sass/app.scss ***!
-  \*************************************************************/
+/*!***********************************!*\
+  !*** multi ./resources/js/app.js ***!
+  \***********************************/
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\laragon\www\store\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\laragon\www\store\resources\sass\app.scss */"./resources/sass/app.scss");
+module.exports = __webpack_require__(/*! C:\laragon\www\store\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

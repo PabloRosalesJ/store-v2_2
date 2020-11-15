@@ -16,7 +16,7 @@ interface CreditRepository{
 
     public function getCreditByUser(int $credit_id);
 
-    public function disableCredit(int $id);
+    public function disableCredit(Request $request, int $credit_id);
 
     public function searchCredit(Request $request);
 }

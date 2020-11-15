@@ -239,7 +239,7 @@ export default {
           this.client = result.data;
         })
         .catch((error) => {
-          console.log(error.response.data.message);
+          //console.log(error.response.data.message);
         });
     },
     back() {

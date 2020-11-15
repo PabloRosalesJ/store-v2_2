@@ -4,7 +4,10 @@
       <div class="col-8">
         <div class="card">
           <div class="card-header">
-            <h5>Compras</h5>
+            <div class="row justify-content-between">
+              <h5 class="col-3">Compras</h5>
+              <span class="col-2">Total: ${{ total_sum }}.00</span>
+            </div>
           </div>
           <div class="card-body">
             <div class="table-responsive">
@@ -20,11 +23,15 @@
                     <th>Fecha</th>
                     <th>Vendedor</th>
                     <th>Total</th>
-                    <th>Cancelar</th>
+                    <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item of compras" :key="item.id">
+                  <tr
+                    v-for="item of compras"
+                    :key="item.id"
+                    :class="{ 'table-danger': !item.status, '': item.status }"
+                  >
                     <td>
                       <div
                         class="d-flex align-items-center"
@@ -37,18 +44,25 @@
                     <td>
                       <div class="row" v-text="item.user.username"></div>
                     </td>
-                    <td v-text="item.total"></td>
+                    <td>${{ item.total }}.00</td>
                     <td class="text-center">
-                      <i
-                        @click="disableSale(item.id)"
-                        class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-                      ></i>
-                      <i
-                        @click="
-                          getShoopDetails(item.id, item.total, item.serie)
-                        "
-                        class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
-                      ></i>
+                      <div v-if="item.status">
+                        <i
+                          @click="disableSale(item.id)"
+                          class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
+                        ></i>
+                        <i
+                          @click="
+                            getShoopDetails(item.id, item.total, item.serie)
+                          "
+                          class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
+                        ></i>
+                      </div>
+                      <div v-else>
+                        <span class="badge badge-danger"
+                          >Cancelado el {{ item.updated_at }}</span
+                        >
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -150,6 +164,7 @@ export default {
       compras: [],
       details: [],
       showDetails: false,
+      total: 0,
     };
   },
   props: ["client_id"],
@@ -160,18 +175,28 @@ export default {
     setTimeout(() => {
       $("#compras-table").DataTable({
         order: [],
+        // dom: "Bfrtip",
+        buttons: [
+          //"copy", "csv", "excel", "pdf", "print"
+          { extend: "copy", attr: { id: "allan" } },
+          "csv",
+          "excel",
+          "pdf",
+        ],
+        // buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdfHtml5"],
       });
     }, 3000);
   },
   methods: {
     getShoops() {
+      this.compras = [];
       axios
         .get(`/api/sale/${this.client_id}/client`)
         .then((result) => {
           this.compras = result.data;
         })
         .catch((err) => {
-          console.log(err.response);
+          //console.log(err.response);
         });
     },
     getShoopDetails(id, total, serie) {
@@ -185,7 +210,7 @@ export default {
           this.showDetails = true;
         })
         .catch((err) => {
-          console.log(err.response);
+          //console.log(err.response);
         });
     },
     disableSale(id) {
@@ -196,18 +221,50 @@ export default {
           autocapitalize: "off",
         },
         showCancelButton: true,
-        confirmButtonText: "Cancelar venta",
+        confirmButtonText: "Cancelar compra",
         cancelButtonText: "Cerrar",
         confirmButtonColor: "#d33",
         showLoaderOnConfirm: true,
         preConfirm: (data) => {
-          console.log(data);
+          axios
+            .put(`/api/sale/${id}/disable`, {
+              pw: data,
+            })
+            .then((result) => {
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Cancelado !",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              this.getShoops();
+            })
+            .catch((err) => {
+              Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: "Credenciales incorrectas",
+                showConfirmButton: true,
+              });
+              //console.log(err.response);
+            });
         },
       });
     },
     closeDetails() {
       this.showDetails = false;
       this.details = [];
+    },
+  },
+  computed: {
+    total_sum() {
+      this.compras.forEach((item) => {
+        if (item.status === 1) {
+          this.total += parseInt(item.total);
+        }
+      });
+      return this.total;
     },
   },
 };

@@ -59,28 +59,28 @@ class CreditEloquentImpl implements CreditRepository{
 
     public function getCreditByClient(int $credit_id){
         return Credit::where('people_id', $credit_id)
-                        ->where('status', 1)
+                        // ->where('status', 1)
                         ->with(['user:id,username'])
                         ->get();
     }
 
     public function getCreditByUser(int $credit_id){
         return Credit::where('user_id', $credit_id)
-                        ->where('status', 1)
+                        // ->where('status', 1)
                         ->with(['person:id,name,l_name,s_name'])
                         ->get();
     }
 
-    public function disableCredit(int $id){
+    public function disableCredit(Request $request, int $credit_id){
 
-        return $id;
+        if ($request->pw === "12312300") {
+            $credit  = Credit::findOrFail($credit_id);
+            $credit->status = false;
+            $credit->save();
 
-        $credit  = Credit::findOrFail($id);
-        $credit->status = false;
-        $credit->save();
-
-        return http_response_code(200);
-
+            return response('Ok',200);
+        }
+        return \abort(403);
     }
 
     public function searchCredit(Request $request){

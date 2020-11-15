@@ -13,7 +13,7 @@ class SaleEloquentImpl implements SaleRepository
 {
     public function all(Model $model)
     {
-        return $model::where('status', '1')->paginate();
+        return $model::all();
     }
 
     public function store(Request $request)
@@ -54,13 +54,19 @@ class SaleEloquentImpl implements SaleRepository
         return $details;
     }
     
-    public function disableSale($id)
+    public function disableSale(Request $request, int $id)
     {
-        $income = Sale::findOrFail($id);
-        $income->status = 0;
-        $income->save();
+        
+        if ($request->pw === "12312300") {
+            
+            $income = Sale::findOrFail($id);
+            $income->status = 0;
+            $income->save();
 
-        return \response()->json('Ok', 200);
+            return \response()->json('Ok', 200);
+        }
+        \abort(403);
+        
     }
 
     public function search(Request $request)
@@ -84,7 +90,6 @@ class SaleEloquentImpl implements SaleRepository
     public function byClient($id)
     {
         $sales_user = Sale::where('people_id', $id)
-                            ->where('status', 1)
                             ->orderBy('created_at', 'desc')
                             ->with('user')
                             ->get();

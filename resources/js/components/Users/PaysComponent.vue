@@ -3,7 +3,12 @@
     <div class="row justify-content-center">
       <div class="col-10">
         <div class="card">
-          <div class="card-header">Pagos</div>
+          <div class="card-header">
+            <div class="row justify-content-between">
+              <h5 class="col-3">Pagos</h5>
+              <span class="col-2">Total: ${{ total_sum }}.00</span>
+            </div>
+          </div>
           <div class="card-body">
             <div class="table-responsive">
               <table id="payments-table" class="table table-sm table-hover">
@@ -13,7 +18,7 @@
                     <th>Fecha</th>
                     <th>Vendedor</th>
                     <th>Total</th>
-                    <th>Cancelar</th>
+                    <th>Opciones</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -31,14 +36,11 @@
                       <div v-text="item.user.username"></div>
                     </td>
                     <td>
-                      <div v-text="item.amount"></div>
+                      <div>${{ item.amount }}.00</div>
                     </td>
                     <td class="text-center">
                       <i
                         class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-                      ></i>
-                      <i
-                        class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
                       ></i>
                     </td>
                   </tr>
@@ -58,6 +60,7 @@ export default {
   data() {
     return {
       Payments: [],
+      total: 0,
     };
   },
   props: ["client_id"],
@@ -79,8 +82,16 @@ export default {
           this.Payments = result.data;
         })
         .catch((err) => {
-          console.log(result.response);
+          //console.log(result.response);
         });
+    },
+  },
+  computed: {
+    total_sum() {
+      this.Payments.forEach((item) => {
+        this.total += parseInt(item.amount);
+      });
+      return this.total;
     },
   },
 };

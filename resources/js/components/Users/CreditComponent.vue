@@ -4,15 +4,16 @@
       <div class="col-8">
         <div class="card">
           <div class="card-header">
-            <h5>Créditos</h5>
+            <div class="row justify-content-between">
+              <h5 class="col-3">Créditos</h5>
+              <span class="col-2">Total: ${{ total_sum }}.00</span>
+            </div>
           </div>
           <div class="card-body">
             <div class="table-responsive">
               <table
                 id="credit-table"
                 class="table table-striped table-sm mb-0 dataTable no-footer"
-                role="grid"
-                aria-describedby="report-table_info"
               >
                 <thead class="text-center">
                   <tr role="row">
@@ -25,26 +26,41 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="credit of credits" :key="credit.id">
+                  <tr
+                    v-for="credit of credits"
+                    :key="credit.id"
+                    :class="{
+                      'table-danger': !credit.status,
+                      '': credit.status,
+                    }"
+                  >
                     <td v-text="credit.id"></td>
                     <td v-text="credit.user.username"></td>
                     <td>${{ credit.total }}</td>
                     <td v-text="credit.created_at"></td>
                     <td v-text="credit.take"></td>
                     <td class="text-center">
-                      <i
-                        class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-                      ></i>
-                      <i
-                        @click="
-                          getCreditDetails(
-                            credit.id,
-                            credit.total,
-                            credit.created_at
-                          )
-                        "
-                        class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
-                      ></i>
+                      <div v-if="credit.status">
+                        <i
+                          @click="disableCredit(credit.id)"
+                          class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
+                        ></i>
+                        <i
+                          @click="
+                            getCreditDetails(
+                              credit.id,
+                              credit.total,
+                              credit.created_at
+                            )
+                          "
+                          class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
+                        ></i>
+                      </div>
+                      <div v-else>
+                        <span class="badge badge-danger"
+                          >Cancelado el {{ credit.updated_at }}</span
+                        >
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -138,26 +154,32 @@ export default {
       credits: [],
       creditDetails: [],
       showDetails: false,
+      total: 0,
     };
   },
   props: ["client_id"],
-  beforeMount() {},
   mounted() {
-    axios
-      .get(`/api/credit/${this.client_id}/client`)
-      .then((result) => {
-        this.credits = result.data;
-        setTimeout(() => {
-          $("#credit-table").DataTable({
-            order: [],
-          });
-        }, 1000);
-      })
-      .catch((err) => {
-        console.log(err.response);
+    this.getCredits();
+  },
+  beforeMount() {
+    setTimeout(() => {
+      $("#credit-table").DataTable({
+        order: [],
       });
+    }, 3000);
   },
   methods: {
+    getCredits() {
+      this.credits = [];
+      axios
+        .get(`/api/credit/${this.client_id}/client`)
+        .then((result) => {
+          this.credits = result.data;
+        })
+        .catch((err) => {
+          //console.log(err.response);
+        });
+    },
     getCreditDetails(credit_id, total, created_at) {
       axios
         .get(`/api/credit/${credit_id}/single`)
@@ -168,11 +190,61 @@ export default {
           this.showDetails = true;
         })
         .catch((err) => {
-          console.log(err.response);
+          //console.log(err.response);
         });
     },
     hideDetails() {
       this.showDetails = false;
+    },
+    disableCredit(id) {
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off",
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar crédito",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: (data) => {
+          axios
+            .put(`api/credit/${id}/disable`, {
+              pw: data,
+            })
+            .then((result) => {
+              this.getCredits();
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Cancelado !",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              // console.log(result);
+            })
+            .catch((err) => {
+              Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: "Credenciales incorrectas",
+                showConfirmButton: true,
+              });
+              //console.log(err.response);
+            });
+        },
+      });
+    },
+  },
+  computed: {
+    total_sum() {
+      this.credits.forEach((item) => {
+        if (item.status === 1) {
+          this.total += parseInt(item.total);
+        }
+      });
+      return this.total;
     },
   },
 };

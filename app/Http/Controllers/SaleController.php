@@ -31,9 +31,9 @@ class SaleController extends Controller
         return response()->json( $this->repository->getSale($id));
     }
     
-    public function disable(int $id)
+    public function disable(Request $request, int $id)
     {
-        return response()->json( $this->repository->disableSale($id));
+        return response()->json( $this->repository->disableSale($request, $id));
     }
     
     public function search(Request $request)

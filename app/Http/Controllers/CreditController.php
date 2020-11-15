@@ -46,9 +46,9 @@ class CreditController extends Controller
     {
         return response()->json($this->CreditRepository->getSingleCredit($credit_id));
     }
-    public function disable(int $id)
+    public function disable(Request $request, int $credit_id)
     {
-        return response()->json($this->CreditRepository->disableCredit($id));
+        return response()->json($this->CreditRepository->disableCredit($request, $credit_id));
     }
 
     public function search(Request $request)

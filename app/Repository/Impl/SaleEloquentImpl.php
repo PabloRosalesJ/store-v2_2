@@ -1,13 +1,16 @@
 <?php namespace App\Repository\Impl;
 
 use App\Models\Sale;
+use App\Models\Person;
 use App\Models\SaleDetails;
 use App\Models\IncomeDetail;
 use App\Repository\SaleRepository;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Carbon;
 
+use Barryvdh\DomPDF\Facade as PDF;
 
 class SaleEloquentImpl implements SaleRepository
 {
@@ -77,7 +80,7 @@ class SaleEloquentImpl implements SaleRepository
                     ->get();
     }
 
-    public function byUser($id)
+    public function byUser(Request $request, int $id)
     {
         $sales_user = Sale::where('user_id', $id)
                             ->where('status', 1)
@@ -87,13 +90,26 @@ class SaleEloquentImpl implements SaleRepository
         return $sales_user;
     }
     
-    public function byClient($id)
+    public function byClient(Request $request, int $id)
     {
+        if ($request->has('export')) {
+            if ($request->export == 'pdf') {
+                $now = Carbon::now();
+                $client = Person::findOrFail($id);
+
+                // return view('reports.clients.shops', compact('client', 'now'));
+                
+                $pdf = PDF::loadView('reports.clients.shops', compact('client', 'now'));
+                return $pdf->download('historial-compras-'.$client->FullName.'-'.$now->format("m/d/Y").'.pdf');
+            }
+        }
+
         $sales_user = Sale::where('people_id', $id)
                             ->orderBy('created_at', 'desc')
                             ->with('user')
                             ->get();
-        return $sales_user;
+        
+        return \response()->json($sales_user);
     }
 
 }

@@ -99,3 +99,4 @@ Route::prefix('payment')->group(function () {
     Route::put('/{payment_id}/disable', 'PaymentController@disable')->name('payment.disable');
     Route::get('/{search}/', 'PaymentController@search')->name('payment.search');
 });
+

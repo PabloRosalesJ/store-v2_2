@@ -11,7 +11,7 @@ class ProviderEloquentImpl implements ProviderRepository
 {
     public function all()
     {
-        return Provider::pagiate();
+        return Provider::with('person:id,name,l_name,s_name,phone,address,created_at')->get();
     }
 
     public function store(Request $request)

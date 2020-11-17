@@ -28,7 +28,7 @@ let routes = [
     },
     {
         path: '*',
-        // name: '404',
+        name: 'notFound',
         component: require('./views/errors/404.vue').default
     },
     {

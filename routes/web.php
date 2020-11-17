@@ -8,5 +8,10 @@ use Illuminate\Support\Facades\Route;
 Auth::routes();
 
 // Route::get('/home', 'HomeController@index')->name('home');
-
+// Route::get('report', function () {
+//    // return view('reports.clients.shops');
+//     $pdf = PDF::loadView('reports.clients.shops', []);
+//     return $pdf->download('customer-list.pdf');
+// });
+Route::get('/reports', 'TestReporter@index');
 Route::get('/{any?}','HomeController@index')->name('root')->where('any','.*');

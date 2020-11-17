@@ -1,91 +1,59 @@
 <template>
   <div>
-    <div
-      v-if="errorToStored"
-      class="alert alert-danger alert-dismissible fade show"
-      role="alert"
-    >
-      <strong>No se pudo almacenar el registro, debido a:</strong>
-      <ul>
-        <li v-for="error of errorToStored" :key="error.id">
-          {{ error }}
-        </li>
-      </ul>
-      <button
-        type="button"
-        class="close"
-        data-dismiss="alert"
-        aria-label="Close"
-      >
-        <span aria-hidden="true">×</span>
-      </button>
-    </div>
-    <div id="basic-btn_wrapper" class="dataTables_wrapper dt-bootstrap4">
-      <div class="table-responsive">
+    <div class="card-body">
+      <div class="dt-responsive table-responsive">
         <table
-          id="clients-table"
-          class="table table-bordered table-striped table-sm m-0 p-0"
+          id="footer-search"
+          class="table table-striped table-bordered nowrap table-sm"
         >
           <thead>
             <tr>
-              <th>Id</th>
-              <!-- <th>Avatar</th> -->
+              <th>id</th>
+              <th>Provedor</th>
               <th>Nombre</th>
+              <th>Teléfono</th>
               <th>Dirección</th>
-              <th>Telefono</th>
-              <th class="text-center"><i class="fas fa-cash-register"></i></th>
               <th>Desde</th>
-              <th>Options</th>
+              <th>Acciones</th>
             </tr>
           </thead>
           <tbody>
-            <tr v-for="(client, index) of clients" :key="client.id">
-              <td>
-                <router-link
-                  :to="{ name: 'client', params: { id: client.id } }"
-                >
-                  <span class="btn btn-outline-primary btn-sm text-sm m-0 p-1">
-                    {{ client.id }}
-                  </span>
-                </router-link>
-              </td>
-              <td>{{ client.name }} {{ client.l_name }}</td>
-              <td v-text="client.address"></td>
-              <td v-text="client.phone"></td>
-              <td class="text-center">
-                <div v-if="!client.can_buy_credit">
-                  <span class="badge badge-light-danger">
-                    <i class="fas fa-sad-cry"></i>
-                  </span>
-                </div>
-                <div v-else>
-                  <span class="badge badge-light-primary">
-                    <i class="fas fa-laugh-squint"></i>
-                  </span>
-                </div>
-              </td>
-              <td v-text="client.created_at"></td>
-              <td>
-                <button class="btn btn-info btn-sm" @click="edit(client)">
-                  Edit
-                </button>
-                <button
-                  class="btn btn-danger btn-sm"
-                  @click="remove(client.id, index)"
-                >
-                  Delete
-                </button>
-              </td>
+            <tr
+              class="m-0 p-0"
+              v-for="provider of providersList"
+              :key="provider.id"
+            >
+              <th class="m-0 p-0">{{ provider.provider_id }}</th>
+              <th class="m-0 p-0">{{ provider.provider_name }}</th>
+              <th class="m-0 p-0">{{ provider.person.name }}</th>
+              <th class="m-0 p-0">{{ provider.person.phone }}</th>
+              <th class="m-0 p-0" style="width: 50px">
+                {{ provider.person.address }}
+              </th>
+              <th class="m-0 p-0">{{ provider.person.created_at }}</th>
+              <th class="m-0 p-0">
+                <button class="btn btn-sm btn-info">Edit</button>
+                <button class="btn btn-sm btn-danger">Delete</button>
+              </th>
             </tr>
           </tbody>
+          <tfoot>
+            <tr>
+              <th>id</th>
+              <th>Provedor</th>
+              <th>Nombre</th>
+              <th>Teléfono</th>
+              <th>Dirección</th>
+              <th>Desde</th>
+            </tr>
+          </tfoot>
         </table>
       </div>
     </div>
-
     <!-- Modal -->
     <div
       class="modal fade"
-      id="modal-client"
+      id="modal-provider"
       tabindex="-1"
       role="dialog"
       aria-labelledby="myExtraLargeModalLabel"
@@ -94,7 +62,7 @@
       <div class="modal-dialog modal-xl">
         <div class="modal-content">
           <div class="modal-header">
-            <h5 class="modal-title">Cliente</h5>
+            <h5 class="modal-title">Provedor</h5>
             <button
               @click="clean"
               type="button"
@@ -109,7 +77,25 @@
             <form v-on:submit.prevent="onSubmit">
               <div class="row">
                 <div class="col-12">
-                  <h5>Información personal</h5>
+                  <h5>Información adicional</h5>
+                </div>
+                <div class="col-sm-12">
+                  <div class="form-group">
+                    <label class="floating-label" for="Name"
+                      >Nombre del provedor</label
+                    >
+                    <input
+                      v-model="client.name"
+                      type="text"
+                      class="form-control"
+                      id="name"
+                      placeholder=""
+                      required
+                    />
+                  </div>
+                </div>
+                <div class="col-12">
+                  <h5>Información de contacto</h5>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group">
@@ -167,9 +153,6 @@
                       required
                     ></textarea>
                   </div>
-                </div>
-                <div class="col-12">
-                  <h5>Información adicional</h5>
                 </div>
                 <div class="col-sm-4">
                   <div class="form-group fill">
@@ -235,10 +218,10 @@
 
 <script>
 export default {
-  name: "ClientsComponent",
+  name: "ProviderComponent",
   data() {
     return {
-      clients: [],
+      providersList: [],
       client: {
         id: 0,
         name: null,
@@ -248,37 +231,24 @@ export default {
         phone: null,
         email: "",
       },
-      errorToStored: null,
-      showUpdate: false,
-      tableTime: 50,
     };
   },
   mounted() {
-    this.getClients();
+    this.getProviders();
   },
-  beforeMount() {},
+  beforeMount() {
+    setTimeout(() => {
+      this.prepareTable();
+    }, 2500);
+  },
   methods: {
-    getClients() {
-      //this.clients = [];
+    getProviders() {
       axios
-        .get("api/person")
-        .then((response) => {
-          this.clients = response.data;
-
-          setTimeout(function () {
-            $("#clients-table").DataTable({
-              order: [[0, "desc"]],
-            });
-          }, this.tableTime);
+        .get(`/api/provider`)
+        .then((result) => {
+          this.providersList = result.data;
         })
-        .catch((error) => {
-          Swal.fire({
-            icon: "error",
-            title: "Oops...",
-            text: "No pudimos conectarnos con el servidor...",
-            footer: `${error.response.data.message} - <i class='feather icon-globe'></i>`,
-          });
-        });
+        .catch((err) => {});
     },
     edit(client) {
       this.client.id = client.id;
@@ -420,13 +390,19 @@ export default {
       this.showUpdate = false;
     },
     showModal() {
-      $("#modal-client").modal("show");
+      $("#modal-provider").modal("show");
     },
     hideModal() {
-      $("#modal-client").modal("hide");
+      $("#modal-provider").modal("hide");
+    },
+    prepareTable() {
+      var table = $("#footer-search").DataTable({
+        order: [[0, "desc"]],
+      });
     },
   },
 };
 </script>
 
-<style></style>
+<style>
+</style>

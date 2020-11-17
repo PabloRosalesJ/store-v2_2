@@ -11,12 +11,7 @@
           </div>
           <div class="card-body">
             <div class="table-responsive">
-              <table
-                id="compras-table"
-                class="table table-sm table-hover mb-0"
-                role="grid"
-                aria-describedby="compras-table_info"
-              >
+              <table id="compras-table" class="table table-sm table-hover mb-0">
                 <thead class="text-center">
                   <tr role="row">
                     <th>Serie</th>
@@ -67,6 +62,33 @@
                   </tr>
                 </tbody>
               </table>
+            </div>
+            <div class="row">
+              <!-- Data Export -->
+              <div
+                v-if="!load"
+                class="shadow-sm mt-3 ml-3 p-1 mb-1 bg-white rounded"
+              >
+                <i
+                  class="p-2 ml-2 btn btn-outline-success rounded fas fa-file-excel"
+                  title="Excel"
+                ></i>
+                <!-- <a
+                  :href="`${this.BASE_URL}/api/sale/${this.client_id}/client?export=pdf`"
+                > -->
+                <i
+                  @click="getPDF()"
+                  class="p-2 my-2 btn btn-outline-danger rounded fas fa-file-pdf"
+                  title="PDF"
+                ></i>
+                <!-- </a> -->
+              </div>
+              <div v-else>
+                <div class="spinner-border" role="status">
+                  <span class="sr-only">Loading...</span>
+                </div>
+                Un segundo ...
+              </div>
             </div>
           </div>
         </div>
@@ -165,6 +187,7 @@ export default {
       details: [],
       showDetails: false,
       total: 0,
+      load: false,
     };
   },
   props: ["client_id"],
@@ -175,15 +198,6 @@ export default {
     setTimeout(() => {
       $("#compras-table").DataTable({
         order: [],
-        // dom: "Bfrtip",
-        buttons: [
-          //"copy", "csv", "excel", "pdf", "print"
-          { extend: "copy", attr: { id: "allan" } },
-          "csv",
-          "excel",
-          "pdf",
-        ],
-        // buttons: ["copyHtml5", "excelHtml5", "csvHtml5", "pdfHtml5"],
       });
     }, 3000);
   },
@@ -255,6 +269,13 @@ export default {
     closeDetails() {
       this.showDetails = false;
       this.details = [];
+    },
+    getPDF() {
+      this.load = true;
+      window.location.href = `${this.BASE_URL}/api/sale/${this.client_id}/client?export=pdf`;
+      setTimeout(() => {
+        this.load = false;
+      }, 5000);
     },
   },
   computed: {

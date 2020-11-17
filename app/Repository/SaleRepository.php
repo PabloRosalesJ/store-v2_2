@@ -15,7 +15,7 @@ interface SaleRepository
 
     public function search(Request $request);
 
-    public function byUser(int $id);
+    public function byUser(Request $request,int $id);
 
-    public function byClient(int $id);
+    public function byClient(Request $request,int $id);
 }

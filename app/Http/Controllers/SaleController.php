@@ -12,7 +12,7 @@ class SaleController extends Controller
 
     public function __construct(SaleRepository $repository)
     {
-        $this->middleware('OnlyAjaxRequest');
+        $this->middleware('OnlyAjaxRequest')->except(['byClient']);
         $this->repository = $repository;
     }
     
@@ -41,13 +41,15 @@ class SaleController extends Controller
         return response()->json( $this->repository->search($request));
     }
 
-    public function byClient(int $id)
+    public function byClient(Request $request, int $id)
     {
-        return response()->json($this->repository->byClient($id));
+        return $this->repository->byClient($request, $id);
     }
     
-    public function byUser(int $id)
+    public function byUser(Request $request, int $id)
     {
-        return response()->json($this->repository->byUser($id));
+        return response()->json($this->repository->byUser($request, $id));
     }
+
+
 }

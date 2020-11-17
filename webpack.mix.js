@@ -19,29 +19,10 @@ mix
             'public/js/ripple.js',
             'public/js/pcoded.min.js',
             //dataTables
-            // 'public/js/plugins/jquery.dataTables.min.js',
-            // 'public/js/plugins/dataTables.bootstrap4.min.js',
-            
-            // 'public/js/plugins/buttons.colVis.min.js',
-            // 'public/js/plugins/buttons.print.min.js',
-            // 'public/js/plugins/pdfmake.min.js',
-            // 'public/js/plugins/jszip.min.js',
-            // 'public/js/plugins/dataTables.buttons.min.js',
-            // 'public/js/plugins/buttons.html5.min.js',
-            // 'public/js/plugins/buttons.bootstrap4.min.js',
-            // 'public/js/pages/data-export-custom.js',
-
-            // 'public/dtTables/jquery-3.5.1.js',
             'public/dtTables/jquery.dataTables.min.js',
-
             'public/dtTables/dataTables.buttons.min.js',
-            // 'public/dtTables/buttons.flash.min.js',
-            // 'public/dtTables/jszip.min.js',
-            // 'public/dtTables/pdfmake.min.js',
-            // 'public/dtTables/vfs_fonts.js',
-            // 'public/dtTables/buttons.html5.min.js',
-            // 'public/dtTables/buttons.print.min.js',
-
+                    
+            //sweetalert2
             'public/js/sweetalert2.all.min.js',
         ],
         'public/js/scripts.js')

@@ -12,6 +12,21 @@ class Person extends Model
         'name', 'l_name', 's_name', 'address', 'phone', 'email', 'status', 'can_buy_credit'
     ];
 
+    public function shops()
+    {
+        return $this->hasMany(Sale::class, 'people_id');
+    } 
+    
+    public function shopsDet()
+    {
+        return $this->hasManyThrough(
+            SaleDetails::class, 
+            Sale::class,
+            'people_id', 
+            'sale_id'
+        );
+    }
+
     /**
     *      ### Accessors & Mutators 
     * 

@@ -239,11 +239,15 @@ export default {
           this.client = result.data;
         })
         .catch((error) => {
-          //console.log(error.response.data.message);
+          console.log(error.response.data.message);
+          this.goToNotFound();
         });
     },
     back() {
       this.$router.go(-1);
+    },
+    goToNotFound() {
+      this.$router.push({ name: "notFound" });
     },
   },
 };

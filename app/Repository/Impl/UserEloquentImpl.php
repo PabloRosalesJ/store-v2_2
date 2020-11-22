@@ -11,7 +11,7 @@ class USerEloquentImpl implements UserRepository
 {
     public function all()
     {
-        return User::where('status', 1)->paginate();
+        return User::with('person')->get();
     }
 
     public function store(Request $request)
@@ -21,7 +21,9 @@ class USerEloquentImpl implements UserRepository
             $person = new Person();
             $user   = new User();
 
-            $person->fill($request->all())->save();
+            $person->fill($request
+                ->only(['name', 'l_name', 's_name', 'address', 'phone', 'email']))
+                ->save();
 
             $user->id       = $person->id;
             $user->username = $request->username;
@@ -52,11 +54,15 @@ class USerEloquentImpl implements UserRepository
             $person   = Person::findOrFail($id);
             $user = User::findOrFail($id);
 
-            $person->fill($request->all())->save();
+            $person->fill($request
+                ->only(['name', 'l_name', 's_name', 'address', 'phone', 'email']))
+                ->save();
 
             $user->id       = $person->id;
             $user->username = $request->username;
-            $user->password = $request->password;
+            if ($request->password !== "" || $request->password !== null) {
+                $user->password = $request->password;
+            }
             $user->save();
 
             DB::commit();

@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import ProvidersComponent from "../../components/Providers/ProvidersComponent";
+import ProvidersComponent from "../../components/Users/Providers/ProvidersComponent";
 export default {
   name: "Providers",
   components: {

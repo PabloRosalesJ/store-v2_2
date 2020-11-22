@@ -32,7 +32,7 @@ class UpdateUserRequest extends FormRequest
             'phone' => "numeric|nullable|unique:people,phone,".$id,
             'email' => "string|nullable|unique:people,email,$id",
             'username' => 'required|unique:users,username,'.$id, 
-            'password' => 'required|confirmed'
+            // 'password' => 'required|confirmed'
         ];
     }
 }

@@ -11,14 +11,17 @@ class ProviderEloquentImpl implements ProviderRepository
 {
     public function all()
     {
-        return Provider::with('person:id,name,l_name,s_name,phone,address,created_at')->get();
+        return Provider::orderBy('provider_id', 'desc')
+        ->with('person:id,name,l_name,s_name,phone,address,email,created_at')
+        ->get();
     }
 
     public function store(Request $request)
     {
         // Validating provider_name
         $validator = Validator::make($request->all(), [
-            'provider_name' => 'required|string'
+            'provider_name' => 'required|string',
+            // 'email' => 'email'
         ]);
 
         if ($validator->fails()) {
@@ -31,7 +34,7 @@ class ProviderEloquentImpl implements ProviderRepository
             $person   = new Person();
             $provider = new Provider();
 
-            $person->fill($request->all())->save();
+            $person->fill($request->only(['name', 'l_name','s_name', 'address', 'phone', 'email']))->save();
 
             $provider->provider_id   = $person->id;
             $provider->provider_name = $request->provider_name;
@@ -55,9 +58,11 @@ class ProviderEloquentImpl implements ProviderRepository
 
     public function updateProvider(Request $request)
     {
+        $request->all();
         // Validating provider_name
         $validator = Validator::make($request->all(), [
-            'provider_name' => 'required|string'
+            'provider_name' => 'required|string',
+            // 'email' => 'email'
         ]);
 
         if ($validator->fails()) {
@@ -70,7 +75,7 @@ class ProviderEloquentImpl implements ProviderRepository
             $provider = $this->getProvider($request->route('id'));
             $person   = Person::findOrFail($request->route('id'));
 
-            $person->fill($request->all())->save();
+            $person->fill($request->only(['name', 'l_name','s_name', 'address', 'phone', 'email']))->save();
             
             $provider->provider_name = $request->provider_name;
             $provider->save();
@@ -86,10 +91,18 @@ class ProviderEloquentImpl implements ProviderRepository
     
     public function destroyProvider($id)
     {
-        $provider = $this->getProvider($id);
-        $person = Person::find($id);
-        $person->delete();
-        return $provider->delete();
+        DB::beginTransaction();
+        try {
+            $provider = $this->getProvider($id);
+            $provider->delete();
+            $person = Person::findOrFail($id)->delete();
+            DB::commit();
+            return \response(true, 200);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return ["Error can't save this record." => $th];
+        }
+
     }
     
 

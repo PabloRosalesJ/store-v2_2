@@ -17,14 +17,19 @@ let routes = [
         component: require('./views/users/Client.vue').default
     },
     {
-        path: '/providers',
+        path: '/provedor',
         name: 'providers',
         component: require('./views/users/Providers.vue').default
     },
     {
-        path: '/users',
+        path: '/usuario',
         name: 'users',
         component: require('./views/users/Users.vue').default
+    },
+    {
+        path: '/usuario/:id',
+        name: 'usersShops',
+        component: require('./views/users/User.vue').default
     },
     {
         path: '*',

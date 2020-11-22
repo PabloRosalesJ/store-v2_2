@@ -13,7 +13,7 @@ class PaymentEloquentImpl implements PaymentRepository
 
     public function all()
     {
-        return Payment::all();
+        return Payment::withTrashed()->get();
     }
 
     public function store(Request $request)
@@ -23,7 +23,7 @@ class PaymentEloquentImpl implements PaymentRepository
 
     public function getPayment(int $payment_id)
     {
-        // TODO: Implement getPayment() method.
+        return Payment::findOrFail($payment_id);
     }
 
     public function getSinglePayment(int $id)
@@ -36,6 +36,7 @@ class PaymentEloquentImpl implements PaymentRepository
         return Payment::where('client_id', $client_id)
                         ->with('user')
                         ->orderBy('created_at', 'desc')
+                        ->withTrashed()
                         ->get();
     }
 
@@ -44,12 +45,21 @@ class PaymentEloquentImpl implements PaymentRepository
         return Payment::where('user_id', $user_id)
                         ->with('client')
                         ->orderBy('created_at', 'desc')
+                        ->withTrashed()
                         ->get();
     }
 
-    public function disablePayment(int $id)
+    public function disablePayment(Request $request, int $payment_id)
     {
-        // TODO: Implement disablePayment() method.
+        if ($request->pw === "12312300") {
+            
+            $payment = $this->getPayment($payment_id);
+            $payment->delete();
+
+            return \response()->json('Ok', 200);
+        }
+        \abort(403);
+
     }
 
     public function searchPayment(Request $request)

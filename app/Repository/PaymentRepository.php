@@ -20,7 +20,7 @@ interface PaymentRepository
 
     public function getPaymentByUser(int $user_id);
 
-    public function disablePayment(int $id);
+    public function disablePayment(Request $request, int $payment_ids);
 
     public function searchPayment(Request $request);
 }

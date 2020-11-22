@@ -22,12 +22,33 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item of compras" :key="item.id">
-                    <th>Serie</th>
-                    <th>Fecha</th>
-                    <th>Cliente</th>
-                    <th>Total</th>
-                    <th>Operaciones</th>
+                  <tr v-for="item of compras" 
+                    :key="item.id" 
+                    :class="{ 'table-danger': !item.status, '': item.status }"
+                  >
+                    <td>{{ item.serie }}</td>
+                    <td>{{ item.created_at }}</td>
+                    <td>{{ item.people.name }} {{ item.people.l_name }}</td>
+                    <td>${{ item.total }}</td>
+                    <td class="text-center">
+                      <div v-if="item.status">
+                        <i
+                          @click="disableSale(item.id)"
+                          class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
+                        ></i>
+                        <i
+                          @click="
+                            getShoopDetails(item.id, item.total, item.serie)
+                          "
+                          class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
+                        ></i>
+                      </div>
+                      <div v-else>
+                        <span class="badge badge-danger"
+                          >Cancelado el {{ item.updated_at }}</span
+                        >
+                      </div>
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -148,7 +169,7 @@
 
 <script>
 export default {
-  name: "ShoppingComponent",
+  name: "ShoppingComponentInUser",
   data() {
     return {
       BASE_URL: process.env.MIX_APP_API_URL,

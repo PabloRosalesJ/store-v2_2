@@ -22,7 +22,10 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item of Payments" :key="item.id">
+                  <tr v-for="item of Payments" 
+                    :key="item.id"
+                    :class="{ 'table-danger': item.deleted_at, '': !item.deleted_at }"
+                    >
                     <td>
                       <div
                         class="d-flex align-items-center"
@@ -39,9 +42,14 @@
                       <div>${{ item.amount }}.00</div>
                     </td>
                     <td class="text-center">
-                      <i
+                      <div v-if="item.deleted_at">
+                        <span class="badge badge-danger">Cancelado desde {{ item.deleted_at }}</span>                        
+                      </div>
+                      <div v-else>
+                        <i @click="remove(item.id)"
                         class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
                       ></i>
+                      </div>
                     </td>
                   </tr>
                 </tbody>
@@ -84,6 +92,46 @@ export default {
         .catch((err) => {
           //console.log(result.response);
         });
+    },
+    remove(id) {
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off",
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar compra",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: (data) => {
+          axios
+            .put(`/api/payment/${id}/disable`, {
+              pw: data,
+            })
+            .then((result) => {
+              console.log(result);
+              Swal.fire({
+                position: "top-end",
+                icon: "success",
+                title: "Cancelado !",
+                showConfirmButton: false,
+                timer: 1500,
+              });
+              this.getPayments();
+            })
+            .catch((err) => {
+              Swal.fire({
+                position: "top-end",
+                icon: "warning",
+                title: "Credenciales incorrectas",
+                showConfirmButton: true,
+              });
+              console.log(err.response);
+            });
+        },
+      });
     },
   },
   computed: {

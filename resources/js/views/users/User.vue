@@ -197,7 +197,7 @@ Ha este cliente no se le puede vender a crédito."
         role="tabpanel"
         aria-labelledby="credit-tab"
       >
-        <CreditComponent :client_id="this.$route.params.id"></CreditComponent>
+        <CreditComponent :user_id="this.$route.params.id"></CreditComponent>
       </div>
       <div
         class="tab-pane fade"
@@ -205,7 +205,7 @@ Ha este cliente no se le puede vender a crédito."
         role="tabpanel"
         aria-labelledby="pays-tab"
       >
-        <PaysComponent :client_id="this.$route.params.id"></PaysComponent>
+        <PaysComponent :user_id="this.$route.params.id"></PaysComponent>
       </div>
     </div>
   </div>

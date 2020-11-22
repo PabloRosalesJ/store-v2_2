@@ -45,8 +45,8 @@ class PaymentController extends Controller
         return response()->json($this->repository);
     }
 
-    public function destroy(Payment $payment)
+    public function disable(Request $request, int $payment_id)
     {
-        return response()->json($this->repository);
+        return response()->json($this->repository->disablePayment($request, $payment_id));
     }
 }

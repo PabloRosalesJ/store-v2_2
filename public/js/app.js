@@ -2685,6 +2685,14 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "PaysComponent",
   data: function data() {
@@ -2712,14 +2720,54 @@ __webpack_require__.r(__webpack_exports__);
         _this.Payments = result.data;
       })["catch"](function (err) {//console.log(result.response);
       });
+    },
+    remove: function remove(id) {
+      var _this2 = this;
+
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar compra",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: function preConfirm(data) {
+          axios.put("/api/payment/".concat(id, "/disable"), {
+            pw: data
+          }).then(function (result) {
+            console.log(result);
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Cancelado !",
+              showConfirmButton: false,
+              timer: 1500
+            });
+
+            _this2.getPayments();
+          })["catch"](function (err) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: "Credenciales incorrectas",
+              showConfirmButton: true
+            });
+            console.log(err.response);
+          });
+        }
+      });
     }
   },
   computed: {
     total_sum: function total_sum() {
-      var _this2 = this;
+      var _this3 = this;
 
       this.Payments.forEach(function (item) {
-        _this2.total += parseInt(item.amount);
+        _this3.total += parseInt(item.amount);
       });
       return this.total;
     }
@@ -3516,7 +3564,247 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "CreditComponentInUser",
+  data: function data() {
+    return {
+      credits: [],
+      creditDetails: [],
+      showDetails: false,
+      total: 0
+    };
+  },
+  props: ["user_id"],
+  mounted: function mounted() {
+    this.getCredits();
+  },
+  beforeMount: function beforeMount() {
+    setTimeout(function () {
+      $("#credit-table").DataTable({
+        order: []
+      });
+    }, 3000);
+  },
+  methods: {
+    getCredits: function getCredits() {
+      var _this = this;
+
+      this.credits = [];
+      axios.get("/api/credit/".concat(this.user_id, "/user")).then(function (result) {
+        _this.credits = result.data;
+      })["catch"](function (err) {//console.log(err.response);
+      });
+    },
+    getCreditDetails: function getCreditDetails(credit_id, total, created_at) {
+      var _this2 = this;
+
+      axios.get("/api/credit/".concat(credit_id, "/single")).then(function (result) {
+        _this2.creditDetails = result.data;
+        _this2.creditDetails.total = total;
+        _this2.creditDetails.created_at = created_at;
+        _this2.showDetails = true;
+      })["catch"](function (err) {//console.log(err.response);
+      });
+    },
+    hideDetails: function hideDetails() {
+      this.showDetails = false;
+    },
+    disableCredit: function disableCredit(id) {
+      var _this3 = this;
+
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar crédito",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: function preConfirm(data) {
+          axios.put("api/credit/".concat(id, "/disable"), {
+            pw: data
+          }).then(function (result) {
+            _this3.getCredits();
+
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Cancelado !",
+              showConfirmButton: false,
+              timer: 1500
+            }); // console.log(result);
+          })["catch"](function (err) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: "Credenciales incorrectas",
+              showConfirmButton: true
+            }); //console.log(err.response);
+          });
+        }
+      });
+    }
+  },
+  computed: {
+    total_sum: function total_sum() {
+      var _this4 = this;
+
+      this.credits.forEach(function (item) {
+        if (item.status === 1) {
+          _this4.total += parseInt(item.total);
+        }
+      });
+      return this.total;
+    }
+  }
+});
 
 /***/ }),
 
@@ -3533,7 +3821,146 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-/* harmony default export */ __webpack_exports__["default"] = ({});
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+/* harmony default export */ __webpack_exports__["default"] = ({
+  name: "PaysComponentInUser",
+  data: function data() {
+    return {
+      Payments: [],
+      total: 0
+    };
+  },
+  props: ["user_id"],
+  mounted: function mounted() {
+    this.getPayments();
+  },
+  beforeMount: function beforeMount() {
+    setTimeout(function () {
+      $("#payments-table").DataTable({
+        order: []
+      });
+    }, 3000);
+  },
+  methods: {
+    getPayments: function getPayments() {
+      var _this = this;
+
+      axios.get("/api/payment/".concat(this.user_id, "/user")).then(function (result) {
+        _this.Payments = result.data;
+      })["catch"](function (err) {//console.log(result.response);
+      });
+    },
+    remove: function remove(id) {
+      var _this2 = this;
+
+      Swal.fire({
+        title: "Ingrese su contraseña.",
+        input: "password",
+        inputAttributes: {
+          autocapitalize: "off"
+        },
+        showCancelButton: true,
+        confirmButtonText: "Cancelar compra",
+        cancelButtonText: "Cerrar",
+        confirmButtonColor: "#d33",
+        showLoaderOnConfirm: true,
+        preConfirm: function preConfirm(data) {
+          axios.put("/api/payment/".concat(id, "/disable"), {
+            pw: data
+          }).then(function (result) {
+            console.log(result);
+            Swal.fire({
+              position: "top-end",
+              icon: "success",
+              title: "Cancelado !",
+              showConfirmButton: false,
+              timer: 1500
+            });
+
+            _this2.getPayments();
+          })["catch"](function (err) {
+            Swal.fire({
+              position: "top-end",
+              icon: "warning",
+              title: "Credenciales incorrectas",
+              showConfirmButton: true
+            });
+            console.log(err.response);
+          });
+        }
+      });
+    }
+  },
+  computed: {
+    total_sum: function total_sum() {
+      var _this3 = this;
+
+      this.Payments.forEach(function (item) {
+        _this3.total += parseInt(item.amount);
+      });
+      return this.total;
+    }
+  }
+});
 
 /***/ }),
 
@@ -3694,8 +4121,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: "ShoppingComponent",
+  name: "ShoppingComponentInUser",
   data: function data() {
     return {
       BASE_URL: "http://store.test",
@@ -6524,34 +6972,71 @@ var render = function() {
                   _c(
                     "tbody",
                     _vm._l(_vm.Payments, function(item) {
-                      return _c("tr", { key: item.id }, [
-                        _c("td", [
-                          _c("div", {
-                            staticClass: "d-flex align-items-center",
-                            domProps: { textContent: _vm._s(item.id) }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", {
-                            domProps: { textContent: _vm._s(item.created_at) }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", {
-                            domProps: {
-                              textContent: _vm._s(item.user.username)
-                            }
-                          })
-                        ]),
-                        _vm._v(" "),
-                        _c("td", [
-                          _c("div", [_vm._v("$" + _vm._s(item.amount) + ".00")])
-                        ]),
-                        _vm._v(" "),
-                        _vm._m(1, true)
-                      ])
+                      return _c(
+                        "tr",
+                        {
+                          key: item.id,
+                          class: {
+                            "table-danger": item.deleted_at,
+                            "": !item.deleted_at
+                          }
+                        },
+                        [
+                          _c("td", [
+                            _c("div", {
+                              staticClass: "d-flex align-items-center",
+                              domProps: { textContent: _vm._s(item.id) }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("div", {
+                              domProps: { textContent: _vm._s(item.created_at) }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("div", {
+                              domProps: {
+                                textContent: _vm._s(item.user.username)
+                              }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("div", [
+                              _vm._v("$" + _vm._s(item.amount) + ".00")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-center" }, [
+                            item.deleted_at
+                              ? _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [
+                                      _vm._v(
+                                        "Cancelado desde " +
+                                          _vm._s(item.deleted_at)
+                                      )
+                                    ]
+                                  )
+                                ])
+                              : _c("div", [
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.remove(item.id)
+                                      }
+                                    }
+                                  })
+                                ])
+                          ])
+                        ]
+                      )
                     }),
                     0
                   )
@@ -6581,17 +7066,6 @@ var staticRenderFns = [
         _vm._v(" "),
         _c("th", [_vm._v("Opciones")])
       ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("td", { staticClass: "text-center" }, [
-      _c("i", {
-        staticClass:
-          "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-      })
     ])
   }
 ]
@@ -7604,9 +8078,292 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("user -> credit")])
+  return _c("div", [
+    _c("div", { staticClass: "row" }, [
+      _c("div", { staticClass: "col-8" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row justify-content-between" }, [
+              _c("h5", { staticClass: "col-3" }, [_vm._v("Créditos")]),
+              _vm._v(" "),
+              _c("span", { staticClass: "col-2" }, [
+                _vm._v("Total: $" + _vm._s(_vm.total_sum) + ".00")
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass:
+                    "table table-striped table-sm mb-0 dataTable no-footer",
+                  attrs: { id: "credit-table" }
+                },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.credits, function(credit) {
+                      return _c(
+                        "tr",
+                        {
+                          key: credit.id,
+                          class: {
+                            "table-danger": !credit.status,
+                            "": credit.status
+                          }
+                        },
+                        [
+                          _c("td", {
+                            domProps: { textContent: _vm._s(credit.id) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              " " +
+                                _vm._s(credit.person.name) +
+                                " " +
+                                _vm._s(credit.person.l_name)
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v("$" + _vm._s(credit.total))]),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(credit.created_at) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", {
+                            domProps: { textContent: _vm._s(credit.take) }
+                          }),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-center" }, [
+                            credit.status
+                              ? _c("div", [
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.disableCredit(credit.id)
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getCreditDetails(
+                                          credit.id,
+                                          credit.total,
+                                          credit.created_at
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              : _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [
+                                      _vm._v(
+                                        "Cancelado el " +
+                                          _vm._s(credit.updated_at)
+                                      )
+                                    ]
+                                  )
+                                ])
+                          ])
+                        ]
+                      )
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ])
+        ])
+      ]),
+      _vm._v(" "),
+      _vm.showDetails
+        ? _c("div", { staticClass: "col-md-4" }, [
+            _c("div", { staticClass: "card" }, [
+              _c("div", { staticClass: "card-header" }, [
+                _c("div", { staticClass: "row" }, [
+                  _c("div", { staticClass: "col-8" }, [
+                    _c("h5", [
+                      _vm._v(
+                        "Crédito del " + _vm._s(_vm.creditDetails.created_at)
+                      )
+                    ])
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "col-1" }, [
+                    _c("i", {
+                      staticClass:
+                        "p-1 mr-2 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded",
+                      on: { click: _vm.hideDetails }
+                    })
+                  ]),
+                  _vm._v(" "),
+                  _vm._m(1)
+                ])
+              ]),
+              _vm._v(" "),
+              _c(
+                "ul",
+                { staticClass: "list-group list-group-flush" },
+                _vm._l(_vm.creditDetails, function(credit) {
+                  return _c(
+                    "li",
+                    { key: credit.id, staticClass: "list-group-item py-0" },
+                    [
+                      _c("div", { staticClass: "table-responsive" }, [
+                        _c(
+                          "table",
+                          { staticClass: "table table-borderless mb-0" },
+                          [
+                            _c("tbody", [
+                              _c("tr", [
+                                _c("td", [
+                                  _c("img", {
+                                    staticClass: "rounded mr-2",
+                                    attrs: {
+                                      src: "/img/product/product-default.svg",
+                                      alt: "contact-img",
+                                      title: "contact-img",
+                                      height: "48"
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c(
+                                    "p",
+                                    {
+                                      staticClass:
+                                        "m-0 d-inline-block align-middle"
+                                    },
+                                    [
+                                      _c(
+                                        "a",
+                                        {
+                                          staticClass:
+                                            "text-body font-weight-semibold",
+                                          attrs: { href: "#" }
+                                        },
+                                        [
+                                          _vm._v(
+                                            "\n                          " +
+                                              _vm._s(credit.product.name) +
+                                              "\n                        "
+                                          )
+                                        ]
+                                      ),
+                                      _vm._v(" "),
+                                      _c("br"),
+                                      _vm._v(" "),
+                                      _c("small", [
+                                        _vm._v(
+                                          _vm._s(credit.pices) +
+                                            " x $" +
+                                            _vm._s(credit.cost)
+                                        )
+                                      ])
+                                    ]
+                                  )
+                                ]),
+                                _vm._v(" "),
+                                _c("td", { staticClass: "text-right" }, [
+                                  _vm._v("$" + _vm._s(credit.sub_total))
+                                ])
+                              ])
+                            ])
+                          ]
+                        )
+                      ])
+                    ]
+                  )
+                }),
+                0
+              ),
+              _vm._v(" "),
+              _c("div", { staticClass: "card-body py-2" }, [
+                _c("div", { staticClass: "table-responsive" }, [
+                  _c(
+                    "table",
+                    {
+                      staticClass:
+                        "table table-borderless mb-0 w-auto table-sm float-right text-right"
+                    },
+                    [
+                      _c("tbody", [
+                        _c("tr", { staticClass: "border-top" }, [
+                          _vm._m(2),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "font-weight-semibold" }, [
+                            _vm._v(
+                              "\n                    $" +
+                                _vm._s(_vm.creditDetails.total) +
+                                "\n                  "
+                            )
+                          ])
+                        ])
+                      ])
+                    ]
+                  )
+                ])
+              ])
+            ])
+          ])
+        : _vm._e()
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "text-center" }, [
+      _c("tr", { attrs: { role: "row" } }, [
+        _c("th", [_vm._v("id")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Cliente")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Fecha")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Take")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Opciones")])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-1 text-center" }, [
+      _c("i", {
+        staticClass:
+          "m-0 p-1 mr-auto feather icon-printer btn btn-secondary btn-sm shadow-sm rounded"
+      })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("td", [_c("h5", { staticClass: "m-0" }, [_vm._v("Total:")])])
+  }
+]
 render._withStripped = true
 
 
@@ -7628,9 +8385,135 @@ var render = function() {
   var _vm = this
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
-  return _c("div", [_vm._v("user -> payments")])
+  return _c("div", [
+    _c("div", { staticClass: "row justify-content-center" }, [
+      _c("div", { staticClass: "col-10" }, [
+        _c("div", { staticClass: "card" }, [
+          _c("div", { staticClass: "card-header" }, [
+            _c("div", { staticClass: "row justify-content-between" }, [
+              _c("h5", { staticClass: "col-3" }, [_vm._v("Pagos recibidos")]),
+              _vm._v(" "),
+              _c("span", { staticClass: "col-2" }, [
+                _vm._v("Total: $" + _vm._s(_vm.total_sum) + ".00")
+              ])
+            ])
+          ]),
+          _vm._v(" "),
+          _c("div", { staticClass: "card-body" }, [
+            _c("div", { staticClass: "table-responsive" }, [
+              _c(
+                "table",
+                {
+                  staticClass: "table table-sm table-hover",
+                  attrs: { id: "payments-table" }
+                },
+                [
+                  _vm._m(0),
+                  _vm._v(" "),
+                  _c(
+                    "tbody",
+                    _vm._l(_vm.Payments, function(item) {
+                      return _c(
+                        "tr",
+                        {
+                          key: item.id,
+                          class: {
+                            "table-danger": item.deleted_at,
+                            "": !item.deleted_at
+                          }
+                        },
+                        [
+                          _c("td", [
+                            _c("div", {
+                              staticClass: "d-flex align-items-center",
+                              domProps: { textContent: _vm._s(item.id) }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("div", {
+                              domProps: { textContent: _vm._s(item.created_at) }
+                            })
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("div", [
+                              _vm._v(
+                                " " +
+                                  _vm._s(item.client.name) +
+                                  " " +
+                                  _vm._s(item.client.l_name) +
+                                  " "
+                              )
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _c("div", [
+                              _vm._v("$" + _vm._s(item.amount) + ".00")
+                            ])
+                          ]),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-center" }, [
+                            item.deleted_at
+                              ? _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [
+                                      _vm._v(
+                                        "Cancelado desde " +
+                                          _vm._s(item.deleted_at)
+                                      )
+                                    ]
+                                  )
+                                ])
+                              : _c("div", [
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.remove(item.id)
+                                      }
+                                    }
+                                  })
+                                ])
+                          ])
+                        ]
+                      )
+                    }),
+                    0
+                  )
+                ]
+              )
+            ])
+          ])
+        ])
+      ])
+    ])
+  ])
 }
-var staticRenderFns = []
+var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", { staticClass: "text-center" }, [
+      _c("tr", { attrs: { role: "row" } }, [
+        _c("th", [_vm._v("id")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Fecha")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Cliente")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Total")]),
+        _vm._v(" "),
+        _c("th", [_vm._v("Opciones")])
+      ])
+    ])
+  }
+]
 render._withStripped = true
 
 
@@ -7680,17 +8563,72 @@ var render = function() {
                   _c(
                     "tbody",
                     _vm._l(_vm.compras, function(item) {
-                      return _c("tr", { key: item.id }, [
-                        _c("th", [_vm._v("Serie")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Fecha")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Cliente")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Total")]),
-                        _vm._v(" "),
-                        _c("th", [_vm._v("Operaciones")])
-                      ])
+                      return _c(
+                        "tr",
+                        {
+                          key: item.id,
+                          class: {
+                            "table-danger": !item.status,
+                            "": item.status
+                          }
+                        },
+                        [
+                          _c("td", [_vm._v(_vm._s(item.serie))]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v(_vm._s(item.created_at))]),
+                          _vm._v(" "),
+                          _c("td", [
+                            _vm._v(
+                              _vm._s(item.people.name) +
+                                " " +
+                                _vm._s(item.people.l_name)
+                            )
+                          ]),
+                          _vm._v(" "),
+                          _c("td", [_vm._v("$" + _vm._s(item.total))]),
+                          _vm._v(" "),
+                          _c("td", { staticClass: "text-center" }, [
+                            item.status
+                              ? _c("div", [
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.disableSale(item.id)
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("i", {
+                                    staticClass:
+                                      "p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded",
+                                    on: {
+                                      click: function($event) {
+                                        return _vm.getShoopDetails(
+                                          item.id,
+                                          item.total,
+                                          item.serie
+                                        )
+                                      }
+                                    }
+                                  })
+                                ])
+                              : _c("div", [
+                                  _c(
+                                    "span",
+                                    { staticClass: "badge badge-danger" },
+                                    [
+                                      _vm._v(
+                                        "Cancelado el " +
+                                          _vm._s(item.updated_at)
+                                      )
+                                    ]
+                                  )
+                                ])
+                          ])
+                        ]
+                      )
                     }),
                     0
                   )
@@ -9414,9 +10352,7 @@ var render = function() {
             }
           },
           [
-            _c("CreditComponent", {
-              attrs: { client_id: this.$route.params.id }
-            })
+            _c("CreditComponent", { attrs: { user_id: this.$route.params.id } })
           ],
           1
         ),
@@ -9431,9 +10367,7 @@ var render = function() {
               "aria-labelledby": "pays-tab"
             }
           },
-          [
-            _c("PaysComponent", { attrs: { client_id: this.$route.params.id } })
-          ],
+          [_c("PaysComponent", { attrs: { user_id: this.$route.params.id } })],
           1
         )
       ]
@@ -26057,7 +26991,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\laragon\www\store\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! J:\proyects\PHP\store\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

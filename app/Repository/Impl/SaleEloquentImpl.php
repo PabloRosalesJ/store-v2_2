@@ -83,7 +83,6 @@ class SaleEloquentImpl implements SaleRepository
     public function byUser(Request $request, int $id)
     {
         $sales_user = Sale::where('user_id', $id)
-                            ->where('status', 1)
                             ->orderBy('created_at', 'desc')
                             ->with('people')
                             ->get();

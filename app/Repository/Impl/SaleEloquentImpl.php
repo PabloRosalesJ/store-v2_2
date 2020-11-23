@@ -16,7 +16,8 @@ class SaleEloquentImpl implements SaleRepository
 {
     public function all(Model $model)
     {
-        return $model::all();
+        return $model::orderBy('id', 'desc')
+                ->with(['user:id,username', 'people:id,name,l_name,s_name'])->get();
     }
 
     public function store(Request $request)

@@ -22,10 +22,14 @@
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="item of Payments" 
+                  <tr
+                    v-for="item of Payments"
                     :key="item.id"
-                    :class="{ 'table-danger': item.deleted_at, '': !item.deleted_at }"
-                    >
+                    :class="{
+                      'table-danger': item.deleted_at,
+                      '': !item.deleted_at,
+                    }"
+                  >
                     <td>
                       <div
                         class="d-flex align-items-center"
@@ -35,20 +39,28 @@
                     <td>
                       <div v-text="item.created_at"></div>
                     </td>
-                    <td>
-                      <div> {{item.client.name}} {{item.client.l_name}} </div>
+                    <td v-if="item.client">
+                      {{ item.client.name }} {{ item.client.l_name }}
+                    </td>
+                    <td v-else>
+                      <span class="text-danger"
+                        >existe inconsistencia en los datos</span
+                      >
                     </td>
                     <td>
                       <div>${{ item.amount }}.00</div>
                     </td>
                     <td class="text-center">
                       <div v-if="item.deleted_at">
-                        <span class="badge badge-danger">Cancelado desde {{ item.deleted_at }}</span>                        
+                        <span class="badge badge-danger"
+                          >Cancelado desde {{ item.deleted_at }}</span
+                        >
                       </div>
                       <div v-else>
-                        <i @click="remove(item.id)"
-                        class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
-                      ></i>
+                        <i
+                          @click="remove(item.id)"
+                          class="p-1 mr-2 feather icon-minus-circle btn btn-outline-danger btn-sm shadow-sm rounded"
+                        ></i>
                       </div>
                     </td>
                   </tr>

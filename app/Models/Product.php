@@ -40,4 +40,9 @@ class Product extends Model
     {
         return ucfirst($value);
     }
+
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+        'updated_at' => 'datetime:d-m-Y',
+    ];
 }

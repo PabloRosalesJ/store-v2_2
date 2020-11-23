@@ -1,6 +1,7 @@
 import VueRouter from 'vue-router'
 
 let routes = [
+    //  #usuarios
     {
         path: '/',
         name: 'root',
@@ -31,6 +32,34 @@ let routes = [
         name: 'usersShops',
         component: require('./views/users/User.vue').default
     },
+
+    //  #Ventas
+    {
+        path: '/ventas',
+        name: 'allSales',
+        component: require('./views/sales/Sales.vue').default
+    },
+    {
+        path: '/creditos',
+        name: 'allCredits',
+        component: require('./views/sales/Credits.vue').default
+    },
+
+    //  #Almacén
+    {
+        path: '/categorias',
+        name: 'allCategories',
+        component: require('./views/store/Categories.vue').default
+    },{
+        path: '/productos',
+        name: 'allProducts',
+        component: require('./views/store/Products.vue').default
+    },{
+        path: '/ingresos',
+        name: 'allIncomes',
+        component: require('./views/store/Incomes.vue').default
+    },
+    
     {
         path: '*',
         name: 'notFound',

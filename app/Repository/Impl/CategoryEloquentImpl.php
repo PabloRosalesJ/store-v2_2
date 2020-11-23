@@ -9,7 +9,7 @@ class CategoryEloquentImpl implements CategoryRepository
 {
     public function all()
     {
-        $categories = Category::where('status', 1)->paginate();
+        $categories = Category::all();
         return $categories;
     }
 

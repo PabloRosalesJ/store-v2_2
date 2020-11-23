@@ -6,17 +6,31 @@
           <div class="card-header">
             <div class="row justify-content-between">
               <h5 class="col-3">Ventas realizadas</h5>
-              <span class="col-2">Total: ${{ total_sum }}.00</span>
+              <div class="col-2">
+                <div v-if="load_page" class="d-flex justify-content-center">
+                  <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+                <div v-else>
+                  <span>Total: ${{ total_sum }}.00</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="card-body">
-            <div class="table-responsive">
+            <div v-if="load_page" class="d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+            <div v-else class="table-responsive">
               <table id="compras-table" class="table table-sm table-hover">
                 <thead>
                   <tr>
                     <th>Serie</th>
                     <th>Fecha</th>
-                    <th>Cliente</th>
+                    <th>Movimiento</th>
                     <th>Total</th>
                     <th>Operaciones</th>
                   </tr>
@@ -29,8 +43,21 @@
                   >
                     <td>{{ item.serie }}</td>
                     <td>{{ item.created_at }}</td>
-                    <td v-if="item.people">
-                      {{ item.people.name }} {{ item.people.l_name }}
+                    <td v-if="item.people && item.user">
+                      <div class="row">
+                        <table>
+                          <tr>
+                            <td>Vendedor:</td>
+                            <td>{{ item.user.username }}</td>
+                          </tr>
+                          <tr>
+                            <td>Cliente:</td>
+                            <td>
+                              {{ item.people.name }} {{ item.people.l_name }}
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
                     </td>
                     <td v-else>
                       <span class="text-danger"
@@ -59,6 +86,15 @@
                     </td>
                   </tr>
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <th>Serie</th>
+                    <th>Fecha</th>
+                    <th>Movimiento</th>
+                    <th>Total</th>
+                    <th>Operaciones</th>
+                  </tr>
+                </tfoot>
               </table>
             </div>
             <div class="row">
@@ -186,26 +222,25 @@ export default {
       showDetails: false,
       total: 0,
       load: false,
+      load_page: true,
     };
   },
   props: ["client_id"],
-  mounted() {
+  beforeMount() {
     this.getShoops();
   },
-  beforeMount() {
-    setTimeout(() => {
-      $("#compras-table").DataTable({
-        order: [],
-      });
-    }, 3000);
+  mounted() {
+    this.activateTable();
   },
   methods: {
     getShoops() {
       this.compras = [];
       axios
-        .get(`/api/sale/${this.client_id}/user`)
+        .get(`/api/sale`)
         .then((result) => {
           this.compras = result.data;
+          $("#navbar_app").addClass("navbar-collapsed");
+          this.load_page = false;
         })
         .catch((err) => {
           console.log(err.response);
@@ -220,6 +255,7 @@ export default {
           this.details.total = total;
           this.details.serie = serie;
           this.showDetails = true;
+          document.documentElement.scrollTop = 0;
         })
         .catch((err) => {
           //console.log(err.response);
@@ -274,6 +310,15 @@ export default {
       setTimeout(() => {
         this.load = false;
       }, 5000);
+    },
+    activateTable() {
+      setTimeout(() => {
+        // $("#navbar_app").addClass("navbar-collapsed");
+        $("#compras-table").DataTable({
+          order: [],
+        });
+        // this.load_page = false;
+      }, 3000);
     },
   },
   computed: {

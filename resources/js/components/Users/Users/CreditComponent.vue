@@ -35,7 +35,14 @@
                     }"
                   >
                     <td v-text="credit.id"></td>
-                    <td> {{ credit.person.name }} {{ credit.person.l_name }}</td>
+                    <td v-if="item.person">
+                      {{ item.person.name }} {{ item.person.l_name }}
+                    </td>
+                    <td v-else>
+                      <span class="text-danger"
+                        >existe inconsistencia en los datos</span
+                      >
+                    </td>
                     <td>${{ credit.total }}</td>
                     <td v-text="credit.created_at"></td>
                     <td v-text="credit.take"></td>

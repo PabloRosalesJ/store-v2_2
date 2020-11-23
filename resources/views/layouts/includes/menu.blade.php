@@ -1,5 +1,5 @@
     <!-- [ navigation menu ] start -->
-    <nav class="pcoded-navbar menu-light ">
+    <nav class="pcoded-navbar menu-light " id="navbar_app">
         <div class="navbar-wrapper  ">
             <div class="navbar-content scroll-div ">
 
@@ -51,25 +51,33 @@
                     
                     <!-- Ventas -->
                     <li class="nav-item pcoded-hasmenu">
-                        <a href="#!" class="nav-link "><span class="pcoded-micon">
-                            <i class="feather icon-shopping-cart"></i>
-                            </span><span class="pcoded-mtext">Ventas</a>
+                        <a class="nav-link "><span class="pcoded-micon">
+                        <i class="feather icon-shopping-cart"></i>
+                        </span><span class="pcoded-mtext">Ventas</a>
                         <ul class="pcoded-submenu">
-                            <li><a href="widget-statistic.html">Categorias</a></li>
-                            <li><a href="widget-data.html">Productos</a></li>
-                            <li><a href="widget-chart.html">Ingresos</a></li>
+                            <li>
+                                <router-link :to="{name:'allSales'}">Ventas</router-link>
+                            </li>
+                            <li>
+                                <router-link :to="{name:'allCredits'}">Creéditos</router-link>
+                            </li>
                         </ul>
                     </li>
                     <!-- Ventas End--> 
 
                     <!-- Almacén -->
                     <li class="nav-item pcoded-hasmenu">
-                        <a href="#!" class="nav-link "><span class="pcoded-micon">
-                            <i class="feather icon-package"></i>
-                            </span><span class="pcoded-mtext">Almacén</span></a>
+                        <a class="nav-link "><span class="pcoded-micon">
+                        <i class="feather icon-package"></i>
+                        </span><span class="pcoded-mtext">Almacén</span></a>
                         <ul class="pcoded-submenu">
-                            <li><a href="index.html">Ventas</a></li>
-                            <li><a href="dashboard-sale.html">Creéditos</a></li>
+                            <li>
+                                <router-link :to="{name:'allCategories'}">Categorias</router-link>
+                            </li>
+                            <li><router-link :to="{name:'allProducts'}">Productos</router-link>
+                            </li>
+                            <li><router-link :to="{name:'allIncomes'}">Ingresos</router-link>
+                            </li>
                         </ul>
                     </li>
                     <!-- Almacén End-->

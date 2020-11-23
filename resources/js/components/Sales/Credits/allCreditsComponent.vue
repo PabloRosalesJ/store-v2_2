@@ -6,36 +6,64 @@
           <div class="card-header">
             <div class="row justify-content-between">
               <h5 class="col-3">Ventas realizadas</h5>
-              <span class="col-2">Total: ${{ total_sum }}.00</span>
+              <div class="col-2">
+                <div v-if="load_page" class="d-flex justify-content-center">
+                  <div class="spinner-border" role="status">
+                    <span class="sr-only">Loading...</span>
+                  </div>
+                </div>
+                <div v-else>
+                  <span>Total: ${{ total_sum }}.00</span>
+                </div>
+              </div>
             </div>
           </div>
           <div class="card-body">
-            <div class="table-responsive">
-              <table id="compras-table" class="table table-sm table-hover">
+            <div v-if="load_page" class="d-flex justify-content-center">
+              <div class="spinner-border" role="status">
+                <span class="sr-only">Loading...</span>
+              </div>
+            </div>
+            <div v-else class="table-responsive">
+              <table id="creditos-table" class="table table-sm table-hover">
                 <thead>
                   <tr>
-                    <th>Serie</th>
+                    <th>id</th>
                     <th>Fecha</th>
-                    <th>Cliente</th>
+                    <th>Movimiento</th>
                     <th>Total</th>
                     <th>Operaciones</th>
                   </tr>
                 </thead>
                 <tbody>
                   <tr
-                    v-for="item of compras"
+                    v-for="item of creditos"
                     :key="item.id"
                     :class="{ 'table-danger': !item.status, '': item.status }"
                   >
-                    <td>{{ item.serie }}</td>
+                    <td>{{ item.id }}</td>
                     <td>{{ item.created_at }}</td>
-                    <td v-if="item.people">
-                      {{ item.people.name }} {{ item.people.l_name }}
+                    <td v-if="item.person && item.user">
+                      <div class="row">
+                        <table>
+                          <tr>
+                            <td>Vendedor:</td>
+                            <td>{{ item.user.username }}</td>
+                          </tr>
+                          <tr>
+                            <td>Cliente:</td>
+                            <td>
+                              {{ item.person.name }} {{ item.person.l_name }}
+                            </td>
+                          </tr>
+                        </table>
+                      </div>
                     </td>
                     <td v-else>
-                      <span class="text-danger"
-                        >existe inconsistencia en los datos</span
-                      >
+                      <span class="text-danger">
+                        <!-- {{ item.user }} -->
+                        existe inconsistencia en los datos
+                      </span>
                     </td>
                     <td>${{ item.total }}</td>
                     <td class="text-center">
@@ -46,7 +74,11 @@
                         ></i>
                         <i
                           @click="
-                            getShoopDetails(item.id, item.total, item.serie)
+                            getCreditDetails(
+                              item.id,
+                              item.total,
+                              item.created_at
+                            )
                           "
                           class="p-1 mr-2 feather icon-external-link btn btn-outline-dark btn-sm shadow-sm rounded"
                         ></i>
@@ -59,6 +91,15 @@
                     </td>
                   </tr>
                 </tbody>
+                <tfoot>
+                  <tr>
+                    <th>id</th>
+                    <th>Fecha</th>
+                    <th>Movimiento</th>
+                    <th>Total</th>
+                    <th>Operaciones</th>
+                  </tr>
+                </tfoot>
               </table>
             </div>
             <div class="row">
@@ -96,12 +137,12 @@
           <div class="card-header">
             <div class="row">
               <div class="col-8">
-                <h5>Detalles: {{ details.serie }}</h5>
+                <h5>Crédito del {{ creditDetails.created_at }}</h5>
               </div>
-              <div class="col-1 text-center">
+              <div class="col-1">
                 <i
-                  @click="closeDetails"
-                  class="m-0 p-1 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded"
+                  @click="hideDetails"
+                  class="p-1 mr-2 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded"
                 ></i>
               </div>
               <div class="col-1 text-center">
@@ -113,8 +154,8 @@
           </div>
           <ul class="list-group list-group-flush">
             <li
-              v-for="item of details"
-              :key="item.id"
+              v-for="credit of creditDetails"
+              :key="credit.id"
               class="list-group-item py-0"
             >
               <div class="table-responsive">
@@ -122,25 +163,22 @@
                   <tbody>
                     <tr>
                       <td>
-                        <!-- http://store.test/img/admin_avatar.svg -->
                         <img
-                          :src="BASE_URL + '/img/product/product-default.svg'"
+                          src="/img/product/product-default.svg"
                           alt="contact-img"
                           title="contact-img"
                           class="rounded mr-2"
                           height="48"
                         />
                         <p class="m-0 d-inline-block align-middle">
-                          <a
-                            href="product/"
-                            class="text-body font-weight-semibold"
-                            >{{ item.product[0].name }}</a
-                          >
+                          <a href="#" class="text-body font-weight-semibold">
+                            {{ credit.product.name }}
+                          </a>
                           <br />
-                          <small>{{ item.quantity }} x ${{ item.price }}</small>
+                          <small>{{ credit.pices }} x ${{ credit.cost }}</small>
                         </p>
                       </td>
-                      <td class="text-right">${{ item.sub_total }}</td>
+                      <td class="text-right">${{ credit.sub_total }}</td>
                     </tr>
                   </tbody>
                 </table>
@@ -153,17 +191,13 @@
                 class="table table-borderless mb-0 w-auto table-sm float-right text-right"
               >
                 <tbody>
-                  <tr>
-                    <td>
-                      <!-- <h6 class="m-0">Shipping:</h6> -->
-                    </td>
-                    <!-- <td>FREE</td> -->
-                  </tr>
                   <tr class="border-top">
                     <td>
                       <h5 class="m-0">Total:</h5>
                     </td>
-                    <td class="font-weight-semibold">${{ details.total }}</td>
+                    <td class="font-weight-semibold">
+                      ${{ creditDetails.total }}
+                    </td>
                   </tr>
                 </tbody>
               </table>
@@ -181,45 +215,44 @@ export default {
   data() {
     return {
       BASE_URL: process.env.MIX_APP_API_URL,
-      compras: [],
-      details: [],
+      creditos: [],
+      creditDetails: [],
       showDetails: false,
       total: 0,
       load: false,
+      load_page: true,
     };
   },
   props: ["client_id"],
-  mounted() {
-    this.getShoops();
-  },
   beforeMount() {
-    setTimeout(() => {
-      $("#compras-table").DataTable({
-        order: [],
-      });
-    }, 3000);
+    this.getCredits();
+  },
+  mounted() {
+    this.activateTable();
   },
   methods: {
-    getShoops() {
-      this.compras = [];
+    getCredits() {
+      this.creditos = [];
       axios
-        .get(`/api/sale/${this.client_id}/user`)
+        .get(`/api/credit`)
         .then((result) => {
-          this.compras = result.data;
+          this.creditos = result.data;
+          $("#navbar_app").addClass("navbar-collapsed");
+          this.load_page = false;
         })
         .catch((err) => {
           console.log(err.response);
         });
     },
-    getShoopDetails(id, total, serie) {
-      this.details = [];
+    getCreditDetails(credit_id, total, created_at) {
       axios
-        .get(`/api/sale/${id}/details`)
+        .get(`/api/credit/${credit_id}/single`)
         .then((result) => {
-          this.details = result.data;
-          this.details.total = total;
-          this.details.serie = serie;
+          this.creditDetails = result.data;
+          this.creditDetails.total = total;
+          this.creditDetails.created_at = created_at;
           this.showDetails = true;
+          document.documentElement.scrollTop = 0;
         })
         .catch((err) => {
           //console.log(err.response);
@@ -275,10 +308,19 @@ export default {
         this.load = false;
       }, 5000);
     },
+    activateTable() {
+      setTimeout(() => {
+        // $("#navbar_app").addClass("navbar-collapsed");
+        $("#creditos-table").DataTable({
+          order: [],
+        });
+        // this.load_page = false;
+      }, 3000);
+    },
   },
   computed: {
     total_sum() {
-      this.compras.forEach((item) => {
+      this.creditos.forEach((item) => {
         if (item.status === 1) {
           this.total += parseInt(item.total);
         }

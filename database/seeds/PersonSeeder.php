@@ -3,6 +3,7 @@
 use Illuminate\Database\Seeder;
 use Faker\Generator as Faker;
 use Illuminate\Support\Carbon;
+use App\Models\Person;
 
 class PersonSeeder extends Seeder
 {
@@ -43,11 +44,18 @@ class PersonSeeder extends Seeder
             'password' => bcrypt('12312300'),
         ]);        
         
-        for ($i=1; $i <= 10; $i++) { 
+        for ($i=0; $i <= 10; $i++) { 
             DB::table('users')->insert([
-                'id' => $i,
+                'id' => Person::inRandomOrder()->first()->id,
                 'username' => $faker->unique()->name,
-                'password' => bcrypt('12312300'),
+                'password' => '$2y$10$VL6Of56NHeuuG/kFhpIzrevLmWo2CqJ/Itc/KM4f1pZc2fOag92i2',
+            ]);
+        }
+
+        for ($i=1; $i <= 10; $i++) { 
+            DB::table('providers')->insert([
+                'provider_id' => Person::inRandomOrder()->first()->id,
+                'provider_name' => $faker->unique()->name,
             ]);
         }
     }

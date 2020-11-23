@@ -141,7 +141,7 @@
               </div>
               <div class="col-1">
                 <i
-                  @click="hideDetails"
+                  @click="hideCredits"
                   class="p-1 mr-2 mr-auto feather icon-check-square btn btn-success btn-sm shadow-sm rounded"
                 ></i>
               </div>
@@ -297,7 +297,7 @@ export default {
         },
       });
     },
-    closeDetails() {
+    hideCredits() {
       this.showDetails = false;
       this.details = [];
     },

@@ -20,13 +20,16 @@
           <tbody>
             <tr v-for="item of products" :key="item.id" class="m-0 p-0">
               <td class="align-middle m-0 p-0">
-                <button
-                  @click="showinfo(item.id)"
-                  title="Estadísticas"
-                  class="btn btn-sm btn-outline-primary m-1"
+                <router-link
+                  :to="{ name: 'productDetails', params: { id: item.id } }"
                 >
-                  {{ item.id }}
-                </button>
+                  <button
+                    title="Detalles"
+                    class="btn btn-sm btn-outline-primary m-1"
+                  >
+                    {{ item.id }}
+                  </button>
+                </router-link>
               </td>
               <td class="align-middle m-0 p-0">
                 <p class="m-0 p-0">
@@ -125,7 +128,6 @@ export default {
           console.log(err.response);
         });
     },
-    showinfo(id) {},
     enable(id) {
       axios
         .put(`/api/product/${id}/enable`)
@@ -162,7 +164,7 @@ export default {
     },
     remove(id) {
       Swal.fire({
-        title: "Elimianr?",
+        title: "Eliminar el id " + id + "?",
         text:
           "Se eliminaran los productos realcionado a esta categoria, no se perderán registros pasados",
         icon: "warning",
@@ -172,7 +174,15 @@ export default {
         confirmButtonText: "Eliminala! <i class='feather icon-trash-2'></i>",
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({ title: "Eliminado!", icon: "success" });
+          axios
+            .delete(`/api/product/${id}/destroy`)
+            .then((result) => {
+              this.getProducts();
+              Swal.fire({ title: "Eliminado!", icon: "success" });
+            })
+            .catch((err) => {
+              console.log(err.response);
+            });
         }
       });
     },

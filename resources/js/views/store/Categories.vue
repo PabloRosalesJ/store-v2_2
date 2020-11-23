@@ -25,7 +25,7 @@
 </template>
 
 <script>
-import CategoriesComponent from "../../components/Store/CategoriesComponent";
+import CategoriesComponent from "../../components/Store/Categories/CategoriesComponent";
 
 export default {
   name: "Categories",

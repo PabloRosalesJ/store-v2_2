@@ -4,10 +4,23 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\Category;
+use App\Models\Provider;
 
 class Product extends Model
 {
     use SoftDeletes;
+
+    public function category()
+    {
+        return $this->belongsTo(Category::class);
+    }
+
+    public function provider()
+    {
+        return $this->belongsTo(Provider::class, 'provider_id');
+    }
+
     protected $fillable = [
             'category_id', 'bar_code', 'name', 'description', 'image', 
             'buy_price', 'unit_price', 'wholesale_price', 'stock', 'status'

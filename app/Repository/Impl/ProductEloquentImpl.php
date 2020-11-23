@@ -21,7 +21,8 @@ class ProductEloquentImpl implements ProductRepository
     
     public function getProduct($id)
     {
-        return Product::findOrFail($id);
+        return Product::with(['category:id,name', 'provider:provider_id,provider_name'])
+                        ->findOrFail($id);
     }
 
     public function updateProduct(Request $request)

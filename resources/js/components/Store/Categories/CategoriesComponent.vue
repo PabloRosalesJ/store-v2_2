@@ -135,7 +135,7 @@ export default {
     },
     remove(id) {
       Swal.fire({
-        title: "Elimianr?",
+        title: "Eliminar el id "+id+"?",
         text:
           "Se eliminaran los productos realcionado a esta categoria, no se perderán registros pasados",
         icon: "warning",
@@ -145,7 +145,14 @@ export default {
         confirmButtonText: "Eliminala! <i class='feather icon-trash-2'></i>",
       }).then((result) => {
         if (result.isConfirmed) {
-          Swal.fire({ title: "Eliminado!", icon: "success" });
+          axios
+          .delete(`/api/category/${id}/destroy`)
+          .then((result) => {
+            Swal.fire({ title: "Eliminado!", icon: "success" });
+            this.getCategories()
+          }).catch((err) => {
+            console.log(err.response);
+          });
         }
       });
     },

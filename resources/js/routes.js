@@ -50,11 +50,18 @@ let routes = [
         path: '/categorias',
         name: 'allCategories',
         component: require('./views/store/Categories.vue').default
-    },{
+    },
+    {
         path: '/productos',
         name: 'allProducts',
         component: require('./views/store/Products.vue').default
-    },{
+    },
+    {
+        path: '/producto/:id',
+        name: 'productDetails',
+        component: require('./components/Store/Products/ProductDetailsComponent.vue').default
+    },
+    {
         path: '/ingresos',
         name: 'allIncomes',
         component: require('./views/store/Incomes.vue').default

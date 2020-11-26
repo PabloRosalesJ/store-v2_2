@@ -25,9 +25,9 @@ class ProductController extends Controller
         return response()->json($this->repository->store($request));
     }
     
-    public function show($id)
+    public function show(Request $request,$id)
     {
-        return response()->json($this->repository->getProduct($id));
+        return response()->json($this->repository->getProduct($request, $id));
     }
     
     public function update(Request $request)

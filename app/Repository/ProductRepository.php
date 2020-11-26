@@ -8,7 +8,7 @@ interface ProductRepository
 
     public function store(Request $request);
     
-    public function getProduct($id);
+    public function getProduct(Request $request,$id);
 
     public function updateProduct(Request $request);
     

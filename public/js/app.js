@@ -2998,55 +2998,8 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 /* harmony default export */ __webpack_exports__["default"] = ({
-  name: 'ProductsDetailsComponent',
+  name: "ProductsDetailsComponent",
   data: function data() {
     return {
       product: {}
@@ -3064,6 +3017,9 @@ __webpack_require__.r(__webpack_exports__);
       })["catch"](function (err) {
         console.log(err.response);
       });
+    },
+    back: function back() {
+      this.$router.go(-1);
     }
   }
 });
@@ -6304,7 +6260,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Store_Categories_CategoriesComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Store/Categories/CategoriesComponent */ "./resources/js/components/Store/Categories/CategoriesComponent.vue");
+/* harmony import */ var _components_Store_Categories_CategoriesComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Store/Categories/CategoriesComponent */ "./resources/js/components/Store/Categories/CategoriesComponent.vue");
 //
 //
 //
@@ -6335,7 +6291,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Categories",
   components: {
-    CategoriesComponent: _components_Store_Categories_CategoriesComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
+    CategoriesComponent: _components_Store_Categories_CategoriesComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
 });
 
@@ -6387,7 +6343,7 @@ __webpack_require__.r(__webpack_exports__);
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var _components_Store_Products_ProductsComponent__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../../components/Store/Products/ProductsComponent */ "./resources/js/components/Store/Products/ProductsComponent.vue");
+/* harmony import */ var _components_Store_Products_ProductsComponent__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ../../components/Store/Products/ProductsComponent */ "./resources/js/components/Store/Products/ProductsComponent.vue");
 //
 //
 //
@@ -6418,7 +6374,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   name: "Products",
   components: {
-    ProductsComponent: _components_Store_Products_ProductsComponent__WEBPACK_IMPORTED_MODULE_1__["default"]
+    ProductsComponent: _components_Store_Products_ProductsComponent__WEBPACK_IMPORTED_MODULE_0__["default"]
   }
 });
 
@@ -8662,31 +8618,96 @@ var render = function() {
             _vm._m(0),
             _vm._v(" "),
             _c("div", { staticClass: "col-lg-7" }, [
-              _c("form", { staticClass: "pl-lg-4" }, [
+              _c("div", { staticClass: "pl-lg-4" }, [
                 _c("h6", { staticClass: "text-muted" }, [
-                  _vm._v(_vm._s(_vm.product))
+                  _c(
+                    "button",
+                    {
+                      staticClass: "btn btn-sm m-0 p-0 shadow-sm redounded",
+                      attrs: { title: "back" },
+                      on: { click: _vm.back }
+                    },
+                    [_c("i", { staticClass: "feather icon-arrow-left" })]
+                  ),
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.product.provider.provider_name) +
+                      "\n              "
+                  )
                 ]),
                 _vm._v(" "),
-                _vm._m(1),
+                _c("h3", { staticClass: "mt-0" }, [
+                  _vm._v(
+                    "\n                " +
+                      _vm._s(_vm.product.name) +
+                      "\n                "
+                  ),
+                  _vm._m(1)
+                ]),
                 _vm._v(" "),
                 _c("p", { staticClass: "mb-1" }, [
-                  _vm._v("Added Date: 09/12/2018")
+                  _vm._v("Fecha de creación: " + _vm._s(_vm.product.created_at))
                 ]),
                 _vm._v(" "),
-                _vm._m(2),
+                _c("div", { staticClass: "mt-3" }, [
+                  _vm.product.stock > 1
+                    ? _c("h5", [
+                        _c("span", { staticClass: "badge badge-success" }, [
+                          _vm._v("Instock")
+                        ]),
+                        _vm._v(
+                          "\n                  " +
+                            _vm._s(_vm.product.stock) +
+                            " pz\n                "
+                        )
+                      ])
+                    : _c("h5", [
+                        _c("span", { staticClass: "badge badge-warning" }, [
+                          _vm._v("Outstock")
+                        ])
+                      ])
+                ]),
                 _vm._v(" "),
-                _vm._m(3),
+                _c("div", { staticClass: "mt-4" }, [
+                  _c("h6", [_vm._v("Precio:")]),
+                  _vm._v(" "),
+                  _c("h3", [
+                    _vm._v(
+                      "\n                  $" +
+                        _vm._s(_vm.product.unit_price) +
+                        "\n                  "
+                    ),
+                    _c(
+                      "span",
+                      { staticClass: "text-muted font-weight-normal h5" },
+                      [
+                        _c("small", [
+                          _vm._v(
+                            "mayoreo: $" +
+                              _vm._s(_vm.product.buy_price) +
+                              " | precio de compra:\n                      $" +
+                              _vm._s(_vm.product.wholesale_price)
+                          )
+                        ])
+                      ]
+                    )
+                  ])
+                ]),
                 _vm._v(" "),
-                _vm._m(4),
-                _vm._v(" "),
-                _vm._m(5)
+                _vm._m(2)
               ])
             ]),
             _vm._v(" "),
-            _vm._m(6)
+            _c("div", { staticClass: "col-lg-12" }, [
+              _c("div", { staticClass: "mt-4" }, [
+                _c("h6", [_vm._v("Descripción:")]),
+                _vm._v(" "),
+                _c("p", [_vm._v(_vm._s(_vm.product.description))])
+              ])
+            ])
           ]),
           _vm._v(" "),
-          _vm._m(7)
+          _vm._m(3)
         ])
       ])
     ])
@@ -8724,226 +8745,17 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("h3", { staticClass: "mt-0" }, [
-      _vm._v("Women Purple Sling Bag "),
-      _c(
-        "a",
-        { staticClass: "text-muted", attrs: { href: "javascript: void(0);" } },
-        [_c("i", { staticClass: "mdi mdi-square-edit-outline ml-2" })]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mt-3" }, [
-      _c("h5", [
-        _c("span", { staticClass: "badge badge-success" }, [_vm._v("Instock")])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mt-4" }, [
-      _c("h6", [_vm._v("Special price:")]),
-      _vm._v(" "),
-      _c("h3", [
-        _vm._v("$139.58 "),
-        _c("del", { staticClass: "text-muted font-weight-normal h5" }, [
-          _c("small", [_vm._v("$322.53")])
-        ]),
-        _vm._v(" "),
-        _c("small", { staticClass: "text-success h5" }, [_vm._v("86% off")])
-      ]),
-      _vm._v(" "),
-      _c("h5", [
-        _c("span", { staticClass: "badge badge-success" }, [
-          _vm._v("3.8 "),
-          _c("i", { staticClass: "feather icon-star-on" })
-        ]),
-        _vm._v(" 179 ratings and 43 reviews")
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "mt-4" }, [
-      _c("ul", { staticClass: "list-unstyled" }, [
-        _c("li", [
-          _c("div", { staticClass: "media" }, [
-            _c("i", { staticClass: "fas fa-tag text-success mr-2 mt-2" }),
-            _vm._v(" "),
-            _c("div", { staticClass: "media-body" }, [
-              _c("strong", {}, [_vm._v("Bank Offer")]),
-              _vm._v(" "),
-              _c("span", [
-                _vm._v("10% Instant Discount on ABCD Bank Credit & Debit Cards")
-              ]),
-              _vm._v(" "),
-              _c("a", { attrs: { href: "#!" } }, [_vm._v("T&C")])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "mt-2" }, [
-          _c("div", { staticClass: "media" }, [
-            _c("i", { staticClass: "fas fa-tag text-success mr-2 mt-2" }),
-            _vm._v(" "),
-            _c("div", { staticClass: "media-body" }, [
-              _c("strong", {}, [_vm._v("Bank Offer")]),
-              _vm._v(" "),
-              _c("span", [
-                _vm._v("5% Unlimited Cashback on Flipkart PQR Bank Credit Card")
-              ]),
-              _vm._v(" "),
-              _c("a", { attrs: { href: "#!" } }, [_vm._v("T&C")])
-            ])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("li", { staticClass: "mt-2" }, [
-          _c("div", { staticClass: "media" }, [
-            _c("i", { staticClass: "fas fa-tag text-success mr-2 mt-2" }),
-            _vm._v(" "),
-            _c("div", { staticClass: "media-body" }, [
-              _c("strong", {}, [_vm._v("Bank Offer")]),
-              _vm._v(" "),
-              _c("span", [
-                _vm._v("Extra 5% off* with XYZ Bank Buzz Credit Card")
-              ]),
-              _vm._v(" "),
-              _c("a", { attrs: { href: "#!" } }, [_vm._v("T&C")])
-            ])
-          ])
-        ])
-      ])
-    ])
+    return _c(
+      "a",
+      { staticClass: "text-muted", attrs: { href: "javascript: void(0);" } },
+      [_c("i", { staticClass: "mdi mdi-square-edit-outline ml-2" })]
+    )
   },
   function() {
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
     return _c("div", { staticClass: "row" }, [
-      _c("div", { staticClass: "col-sm-6" }, [
-        _c("h6", [_vm._v("Color")]),
-        _vm._v(" "),
-        _c(
-          "div",
-          {
-            staticClass: "btn-group btn-group-toggle mb-3",
-            attrs: { "data-toggle": "buttons" }
-          },
-          [
-            _c("label", { staticClass: "btn btn-primary hei-40 mr-2 active" }, [
-              _c("input", {
-                attrs: {
-                  type: "radio",
-                  name: "options",
-                  id: "option1",
-                  autocomplete: "off",
-                  checked: ""
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("label", { staticClass: "btn btn-success hei-40 mr-2" }, [
-              _c("input", {
-                attrs: {
-                  type: "radio",
-                  name: "options",
-                  id: "option2",
-                  autocomplete: "off"
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("label", { staticClass: "btn btn-warning hei-40 mr-2" }, [
-              _c("input", {
-                attrs: {
-                  type: "radio",
-                  name: "options",
-                  id: "option3",
-                  autocomplete: "off"
-                }
-              })
-            ]),
-            _vm._v(" "),
-            _c("label", { staticClass: "btn btn-danger hei-40 mr-2" }, [
-              _c("input", {
-                attrs: {
-                  type: "radio",
-                  name: "options",
-                  id: "option3",
-                  autocomplete: "off"
-                }
-              })
-            ])
-          ]
-        )
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-6 mt-md-0 mt-2" }, [
-        _c("h6", [_vm._v("Size")]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn btn-outline-secondary btn-sm" }, [
-          _vm._v("XS")
-        ]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn btn-outline-secondary btn-sm" }, [
-          _vm._v("S")
-        ]),
-        _vm._v(" "),
-        _c(
-          "button",
-          { staticClass: "btn btn-outline-secondary active btn-sm" },
-          [_vm._v("M")]
-        ),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn btn-outline-secondary btn-sm" }, [
-          _vm._v("L")
-        ]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn btn-outline-secondary btn-sm" }, [
-          _vm._v("XL")
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-6 mt-md-0 mt-2" }, [
-        _c("h6", [
-          _c("i", { staticClass: "feather icon-map-pin" }),
-          _vm._v(" Deliver to")
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c(
-            "label",
-            { staticClass: "floating-label", attrs: { for: "pincode" } },
-            [_vm._v("Enter delivery pincode")]
-          ),
-          _vm._v(" "),
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "password", id: "pincode", placeholder: "" }
-          })
-        ])
-      ]),
-      _vm._v(" "),
-      _c("div", { staticClass: "col-sm-6 text-sm-right mt-md-0 mt-2" }, [
-        _c("h6", [_vm._v("Quantity")]),
-        _vm._v(" "),
-        _c("div", { staticClass: "form-group" }, [
-          _c("input", {
-            staticClass: "form-control",
-            attrs: { type: "number", min: "1", value: "1", placeholder: "Qty" }
-          })
-        ])
-      ]),
-      _vm._v(" "),
       _c("div", { staticClass: "col-sm-6 mt-md-0 mt-2" }, [
         _c(
           "button",
@@ -8953,7 +8765,7 @@ var staticRenderFns = [
           },
           [
             _c("i", { staticClass: "fas fa-cart-plus mr-1" }),
-            _vm._v(" Add to cart")
+            _vm._v(" Agregar al carrito\n                  ")
           ]
         )
       ]),
@@ -8965,100 +8777,11 @@ var staticRenderFns = [
             staticClass: "btn btn-block btn-lg btn-danger mt-md-0 mt-2",
             attrs: { type: "button" }
           },
-          [_c("i", { staticClass: "fas fa-bolt mr-1" }), _vm._v(" Buy now")]
+          [
+            _c("i", { staticClass: "fas fa-bolt mr-1" }),
+            _vm._v(" Vender ahora\n                  ")
+          ]
         )
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-lg-12" }, [
-      _c("div", { staticClass: "mt-4" }, [
-        _c("h6", [_vm._v("Description:")]),
-        _vm._v(" "),
-        _c("p", [
-          _vm._v(
-            "This stylish Sling Bag SAHAL FASHION from is best to carry to work to add an element of style to your office wear.Made from premium. It is compact to store your important things with ease.Made From outer\n                                material PU and inner material From Fabric. Furthermore, they feature Turnlock closure are best suited for a casual and partywear occasion."
-          )
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "w-100" }, [
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Material")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("PU")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [
-              _vm._v("Number of Compartments")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("2")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Model Name")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("Sahalsling bag")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Bag Size")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("Reguler")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Closure")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("Magnetic Button")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Pattern")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("Solid")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Pack of")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("1")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Sales Package")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("1 sling bag")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Width")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("10 mm")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-2" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Height")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("27 mm")])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "row mb-3" }, [
-            _c("div", { staticClass: "col-4" }, [_vm._v("Weight")]),
-            _vm._v(" "),
-            _c("div", { staticClass: "col-8" }, [_vm._v("250 g")])
-          ])
-        ]),
-        _vm._v(" "),
-        _c("h6", [
-          _c("a", { attrs: { href: "#!" } }, [
-            _vm._v("Manufacturing, Packaging and Import Info")
-          ])
-        ])
       ])
     ])
   },
@@ -31432,7 +31155,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! J:\proyects\PHP\store\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\laragon\www\store\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

@@ -52,10 +52,10 @@ class SaleEloquentImpl implements SaleRepository
     
     public function getSale($id)
     {
-        $details = SaleDetails::where('sale_id', '=', $id)
+        return $details = SaleDetails::where('sale_id', '=', $id)
                     ->with('product')
                     ->get();
-        return $details;
+        
     }
     
     public function disableSale(Request $request, int $id)

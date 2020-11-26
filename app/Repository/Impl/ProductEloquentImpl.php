@@ -3,6 +3,7 @@
 use App\Repository\ProductRepository;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use App\Models\SaleDetails;
 
 class ProductEloquentImpl implements ProductRepository
 {
@@ -19,8 +20,15 @@ class ProductEloquentImpl implements ProductRepository
         return $product;
     }
     
-    public function getProduct($id)
+    public function getProduct(Request $request, $id)
     {
+        // Data for products->details->latest_shops_list
+        // [Ex]: api/product/(n_p)/show?limit=(n)
+        if ($request->has('limit')) {
+            return SaleDetails::where('product_id', $id)
+                                ->limit((int) $request->limit)
+                                ->get();
+        }
         return Product::with(['category:id,name', 'provider:provider_id,provider_name'])
                         ->findOrFail($id);
     }

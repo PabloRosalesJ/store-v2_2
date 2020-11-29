@@ -40,9 +40,19 @@ let routes = [
         component: require('./views/sales/Sales.vue').default
     },
     {
+        path: '/hacer-venta',
+        name: 'makeSale',
+        component: require('./views/sales/MakeSale.vue').default
+    },
+    {
         path: '/creditos',
         name: 'allCredits',
         component: require('./views/sales/Credits.vue').default
+    },
+    {
+        path: '/hacer-venta-credito',
+        name: 'makeCredit',
+        component: require('./views/sales/MakeCredit.vue').default
     },
 
     //  #Almacén

@@ -26,7 +26,9 @@ class ProductEloquentImpl implements ProductRepository
         // [Ex]: api/product/(n_p)/show?limit=(n)
         if ($request->has('limit')) {
             return SaleDetails::where('product_id', $id)
+                                ->orderBy('id', 'desc')
                                 ->limit((int) $request->limit)
+                                ->with('sale:id,people_id,user_id')
                                 ->get();
         }
         return Product::with(['category:id,name', 'provider:provider_id,provider_name'])

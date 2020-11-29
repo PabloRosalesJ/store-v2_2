@@ -90,95 +90,32 @@
             </div>
           </div>
           <div class="table-responsive mt-4">
-            <table class="table mb-0">
+            <h6 class="text-center">Últimas 5 ventas</h6>
+            <table class="table mb-0 table-sm">
               <thead class="thead-light">
                 <tr>
-                  <th>Seller</th>
-                  <th>Price</th>
-                  <th>Stock</th>
-                  <th>Revenue</th>
+                  <th>Vendedor</th>
+                  <th>Comprador</th>
+                  <th>Precio</th>
+                  <th>Piezas</th>
+                  <th>total</th>
                 </tr>
               </thead>
               <tbody>
-                <tr>
-                  <td>Octroyee mall USA</td>
-                  <td>$139.50</td>
-                  <td>
-                    <div class="mb-0">
-                      <span>478 </span>
-                      <div class="progress">
-                        <div
-                          class="progress-bar bg-success"
-                          role="progressbar"
-                          style="width: 56%"
-                          aria-valuenow="56"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
-                      </div>
-                    </div>
+                <tr v-for="l_shop of last_shops" :key="l_shop.id">
+                  <td> 
+                    <router-link :to="{ path: `/usuario/${l_shop.sale.user_id}`}">
+                      Vendedor {{l_shop.sale.user_id}}
+                    </router-link>
                   </td>
-                  <td>$1,89,547</td>
-                </tr>
-                <tr>
-                  <td>Chromin - Brazil</td>
-                  <td>$149.99</td>
-                  <td>
-                    <div class="mb-0">
-                      <span>73 </span>
-                      <div class="progress">
-                        <div
-                          class="progress-bar bg-danger"
-                          role="progressbar"
-                          style="width: 16%"
-                          aria-valuenow="16"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
-                      </div>
-                    </div>
+                  <td> 
+                    <router-link :to="{ path: `/cliente/${l_shop.sale.people_id}`}">
+                      Cliente {{l_shop.sale.people_id}}
+                    </router-link>
                   </td>
-                  <td>$87,245</td>
-                </tr>
-                <tr>
-                  <td>Milan - Navsari</td>
-                  <td>$106.87</td>
-                  <td>
-                    <div class="mb-0">
-                      <span>781 </span>
-                      <div class="progress">
-                        <div
-                          class="progress-bar bg-success"
-                          role="progressbar"
-                          style="width: 72%"
-                          aria-valuenow="72"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>$5,87,478</td>
-                </tr>
-                <tr>
-                  <td>Xendrasn - Japan</td>
-                  <td>$239.66</td>
-                  <td>
-                    <div class="mb-0">
-                      <span>815 </span>
-                      <div class="progress">
-                        <div
-                          class="progress-bar bg-success"
-                          role="progressbar"
-                          style="width: 89%"
-                          aria-valuenow="89"
-                          aria-valuemin="0"
-                          aria-valuemax="100"
-                        ></div>
-                      </div>
-                    </div>
-                  </td>
-                  <td>$55,781</td>
+                  <td> {{l_shop.price}} </td>
+                  <td> ${{l_shop.quantity}} </td>
+                  <td> ${{l_shop.sub_total}} </td>
                 </tr>
               </tbody>
             </table>
@@ -196,6 +133,7 @@ export default {
   data() {
     return {
       product: {},
+      last_shops:[]
     };
   },
   mounted() {
@@ -207,10 +145,21 @@ export default {
         .get(`/api/product/${this.$route.params.id}/show`)
         .then((result) => {
           this.product = result.data;
+          this.getLastShops();
         })
         .catch((err) => {
-          console.log(err.response);
+          this.$router.push({ name: "notFound" });
+          //console.log(err.response);
         });
+    },
+    getLastShops(){
+      axios
+      .get(`api/product/${this.$route.params.id}/show?limit=5`)
+      .then((result) => {
+        this.last_shops = result.data;
+      }).catch((err) => {
+        err.response
+      });
     },
     back() {
       this.$router.go(-1);

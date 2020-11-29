@@ -13,16 +13,13 @@
                     </div>
                     <div class="collapse" id="nav-user-link">
                         <ul class="list-inline">
-                            <li class="list-inline-item"><a href="user-profile.html" data-toggle="tooltip"
-                                    title="View Profile"><i class="feather icon-user"></i></a></li>
-                            <li class="list-inline-item"><a href="email_inbox.html"><i class="feather icon-mail"
-                                        data-toggle="tooltip" title="Messages"></i><small
-                                        class="badge badge-pill badge-primary">5</small></a></li>
-                            <li class="list-inline-item"><a href="auth-signin.html" data-toggle="tooltip" title="Logout"
-                                    class="text-danger"><i class="feather icon-power"></i></a></li>
+                            <li class="list-inline-item"><a href="user-profile.html" data-toggle="tooltip" title="View Profile"><i class="feather icon-user"></i></a></li>
+                            <li class="list-inline-item"><a href="email_inbox.html"><i class="feather icon-mail" data-toggle="tooltip" title="Messages"></i><small class="badge badge-pill badge-primary">5</small></a></li>
+                            <li class="list-inline-item"><a href="auth-signin.html" data-toggle="tooltip" title="Logout" class="text-danger"><i class="feather icon-power"></i></a></li>
                         </ul>
                     </div>
-                </div><!--Auuth user information End -->
+                </div>
+                <!--Auuth user information End -->
 
                 <ul class="nav pcoded-inner-navbar ">
 
@@ -33,7 +30,7 @@
                     <!-- Usuarios -->
                     <li class="nav-item pcoded-hasmenu">
                         <a class="nav-link "><span class="pcoded-micon">
-                            <i class="feather icon-users"></i>
+                                <i class="feather icon-users"></i>
                             </span><span class="pcoded-mtext">Usuarios</span></a>
                         <ul class="pcoded-submenu">
                             <li>
@@ -48,40 +45,55 @@
                         </ul>
                     </li>
                     <!-- Usuarios End-->
-                    
+
                     <!-- Ventas -->
                     <li class="nav-item pcoded-hasmenu">
                         <a class="nav-link "><span class="pcoded-micon">
-                        <i class="feather icon-shopping-cart"></i>
-                        </span><span class="pcoded-mtext">Ventas</a>
+                                <i class="feather icon-shopping-cart"></i>
+                            </span><span class="pcoded-mtext">Ventas</a>
                         <ul class="pcoded-submenu">
-                            <li>
-                                <router-link :to="{name:'allSales'}">Ventas</router-link>
+                            <li class="pcoded-hasmenu">
+                                <a href="#!">Ventas</a>
+                                <ul class="pcoded-submenu">
+                                    <li>
+                                        <router-link :to="{name:'allSales'}">Todas las ventas</router-link>
+                                    </li>
+                                    <li><router-link :to="{name:'makeSale'}">Realizar venta</router-link></li>
+                                </ul>
                             </li>
-                            <li>
-                                <router-link :to="{name:'allCredits'}">Creéditos</router-link>
+
+                            <li class="pcoded-hasmenu">
+                                <a href="#!">Créditos</a>
+                                <ul class="pcoded-submenu">
+                                    <li>
+                                        <router-link :to="{name:'allCredits'}">Todos los créditos</router-link>
+                                    </li>
+                                    <li><router-link :to="{name:'makeCredit'}">Realizar venta a crédito</router-link></li>
+                                </ul>
                             </li>
                         </ul>
                     </li>
-                    <!-- Ventas End--> 
+                    <!-- Ventas End-->
 
                     <!-- Almacén -->
                     <li class="nav-item pcoded-hasmenu">
                         <a class="nav-link "><span class="pcoded-micon">
-                        <i class="feather icon-package"></i>
-                        </span><span class="pcoded-mtext">Almacén</span></a>
+                                <i class="feather icon-package"></i>
+                            </span><span class="pcoded-mtext">Almacén</span></a>
                         <ul class="pcoded-submenu">
                             <li>
                                 <router-link :to="{name:'allCategories'}">Categorias</router-link>
                             </li>
-                            <li><router-link :to="{name:'allProducts'}">Productos</router-link>
+                            <li>
+                                <router-link :to="{name:'allProducts'}">Productos</router-link>
                             </li>
-                            <li><router-link :to="{name:'allIncomes'}">Ingresos</router-link>
+                            <li>
+                                <router-link :to="{name:'allIncomes'}">Ingresos</router-link>
                             </li>
                         </ul>
                     </li>
                     <!-- Almacén End-->
-                    
+
 
                 </ul>
 

@@ -90,9 +90,9 @@ class PersonEloquentImpl implements PersonRepository
         $person = Person::where('name','like' ,'%'.$query_search.'%')
         ->orWhere('l_name','like' ,'%'.$query_search.'%')
         ->orWhere('s_name','like' ,'%'.$query_search.'%')
-        ->orWhere('address','like' ,'%'.$query_search.'%')
-        ->orWhere('phone','like' ,'%'.$query_search.'%')
-        ->orWhere('email','like' ,'%'.$query_search.'%')
+        // ->orWhere('address','like' ,'%'.$query_search.'%')
+        // ->orWhere('phone','like' ,'%'.$query_search.'%')
+        // ->orWhere('email','like' ,'%'.$query_search.'%')
         ->get();
 
         return $person;

@@ -7,13 +7,13 @@
             <h4>Todas las ventas</h4>
           </div>
           <div class="col-sm-6 text-right">
-            <button
+            <!-- <button
               class="btn btn-primary shadow rounded mx-3 my-0"
               data-toggle="modal"
               data-target="#modal-user"
             >
               <i class="feather icon-plus-circle"></i> Añadir un usuario
-            </button>
+            </button> -->
           </div>
         </div>
       </div>

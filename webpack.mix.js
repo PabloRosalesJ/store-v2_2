@@ -18,6 +18,9 @@ mix
             'public/js/plugins/bootstrap.min.js',
             'public/js/ripple.js',
             'public/js/pcoded.min.js',
+
+            // 'public/js/plugins/select2.full.min.js',
+
             //dataTables
             'public/dtTables/jquery.dataTables.min.js',
             'public/dtTables/dataTables.buttons.min.js',
@@ -32,3 +35,8 @@ mix
         'public/dtTables/css/jquery.dataTables.min.css',
         'public/dtTables/css/buttons.dataTables.min.css'
     ], 'public/css/all.css');
+
+// mix.browserSync({
+//     proxy: 'http://store.test',
+//     opne: false
+// });

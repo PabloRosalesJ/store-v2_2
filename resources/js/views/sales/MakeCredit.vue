@@ -4,7 +4,7 @@
       <div class="card-header p-2">
         <div class="row align-items-center m-l-0">
           <div class="col-sm-6">
-            <h4>Todos los creditos</h4>
+            <h4>Realizar venta a crédito</h4>
           </div>
           <div class="col-sm-6 text-right">
             <!-- <button
@@ -18,18 +18,20 @@
         </div>
       </div>
       <div class="card-body">
-        <allCreditsComponent></allCreditsComponent>
+          
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import allCreditsComponent from "../../components/Sales/Credits/allCreditsComponent";
 export default {
-  name: "Credits",
-  components: {
-    allCreditsComponent,
+  name: "MakeCredit",
+  data() {
+    return {};
+  },
+  mounted: function () {
+    $("#navbar_app").addClass("navbar-collapsed");
   },
 };
 </script>

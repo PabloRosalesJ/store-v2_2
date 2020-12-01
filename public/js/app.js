@@ -6375,6 +6375,29 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6389,7 +6412,7 @@ __webpack_require__.r(__webpack_exports__);
       },
       productList: [],
       product: null,
-      picesSelected: 0,
+      picesSelected: 1,
       productOptions: {
         edit: true,
         go: false
@@ -6417,6 +6440,7 @@ __webpack_require__.r(__webpack_exports__);
     },
     getPerson: function getPerson(person) {
       this.client = person;
+      this.peopleList = null;
     },
     SelectClient: function SelectClient() {
       this.clientOptions.edit = false;
@@ -6425,6 +6449,8 @@ __webpack_require__.r(__webpack_exports__);
     EditClient: function EditClient() {
       this.clientOptions.edit = true;
       this.clientOptions.go = false;
+      this.peopleList = [];
+      this.productList = [];
     },
     searchProduct: function searchProduct(search, loading) {
       var _this2 = this;
@@ -13726,7 +13752,9 @@ var render = function() {
                   ? _c(
                       "div",
                       [
-                        _vm._v("\n                Buscar:\n                "),
+                        _vm._v(
+                          "\n                Buscar cliente:\n                "
+                        ),
                         _c("v-select", {
                           attrs: {
                             filterable: false,
@@ -13771,41 +13799,51 @@ var render = function() {
                 _vm._v(" "),
                 _vm.client
                   ? _c("div", { staticClass: "mt-3" }, [
+                      _c("table", [
+                        _c("tr", { staticClass: "m-0 p-0" }, [
+                          _c("td", [_vm._v("Nombre:")]),
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.client.name) +
+                              "\n                    "
+                          ),
+                          _c("td")
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", { staticClass: "m-0 p-0" }, [
+                          _c("td", [_vm._v("Apellidos:")]),
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.client.l_name) +
+                              "\n                    " +
+                              _vm._s(_vm.client.s_name) +
+                              "\n                    "
+                          ),
+                          _c("td")
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", { staticClass: "m-0 p-0" }, [
+                          _c("td", [_vm._v("Dirección:")]),
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.client.address) +
+                              "\n                    "
+                          ),
+                          _c("td")
+                        ]),
+                        _vm._v(" "),
+                        _c("tr", { staticClass: "m-0 p-0" }, [
+                          _c("td", [_vm._v("Teléfono:")]),
+                          _vm._v(
+                            "\n                    " +
+                              _vm._s(_vm.client.phone) +
+                              "\n                    "
+                          ),
+                          _c("td")
+                        ])
+                      ]),
+                      _vm._v(" "),
                       _c("hr"),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "m-0 p-0" }, [
-                        _c("strong", [_vm._v("Nombre:")]),
-                        _vm._v(
-                          " " + _vm._s(_vm.client.name) + "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "m-0 p-0" }, [
-                        _c("strong", [_vm._v("Apellidos:")]),
-                        _vm._v(
-                          " " +
-                            _vm._s(_vm.client.l_name) +
-                            "\n                  " +
-                            _vm._s(_vm.client.s_name) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "m-0 p-0" }, [
-                        _c("strong", [_vm._v("Dirección:")]),
-                        _vm._v(
-                          " " +
-                            _vm._s(_vm.client.address) +
-                            "\n                "
-                        )
-                      ]),
-                      _vm._v(" "),
-                      _c("p", { staticClass: "m-0 p-0" }, [
-                        _c("strong", [_vm._v("Teléfono:")]),
-                        _vm._v(
-                          " " + _vm._s(_vm.client.phone) + "\n                "
-                        )
-                      ]),
                       _vm._v(" "),
                       !_vm.clientOptions.go
                         ? _c(
@@ -13857,13 +13895,16 @@ var render = function() {
               _vm._v("Seleccionar producto")
             ]),
             _vm._v(" "),
+            _c("hr"),
+            _vm._v(" "),
             _vm.clientOptions.go
               ? _c("div", { staticClass: "row" }, [
                   _c(
                     "div",
                     { staticClass: "col-5" },
                     [
-                      _vm._v("\n              Buscar\n              "),
+                      _c("p", [_vm._v("Buscar Producto")]),
+                      _vm._v(" "),
                       _c("v-select", {
                         attrs: {
                           filterable: false,
@@ -13902,7 +13943,7 @@ var render = function() {
                       _vm._v(" "),
                       _vm.product
                         ? _c("div", { staticClass: "form-gropu" }, [
-                            _c("hr"),
+                            _c("br"),
                             _vm._v(" "),
                             _c(
                               "div",
@@ -13940,7 +13981,21 @@ var render = function() {
                               ]
                             ),
                             _vm._v(" "),
-                            _vm._m(1)
+                            _c("br"),
+                            _vm._v(" "),
+                            _vm.picesSelected >= 1
+                              ? _c(
+                                  "button",
+                                  {
+                                    staticClass: "btn btn-info btn-sm btn-block"
+                                  },
+                                  [
+                                    _vm._v(
+                                      "\n                  Agregar al carrito\n                "
+                                    )
+                                  ]
+                                )
+                              : _vm._e()
                           ])
                         : _vm._e()
                     ],
@@ -13948,61 +14003,49 @@ var render = function() {
                   ),
                   _vm._v(" "),
                   _c("div", { staticClass: "col-4" }, [
-                    _vm._v(
-                      "\n              Detalle del Producto\n              "
-                    ),
+                    _c("p", { staticClass: "text-center" }, [
+                      _vm._v("Detalle del Producto")
+                    ]),
+                    _vm._v(" "),
                     _vm.product
                       ? _c("div", [
                           _c(
                             "table",
-                            { staticClass: "m-0 p-0 text-sm table table-sm" },
+                            {
+                              staticClass:
+                                "m-0 p-0 text-sm table table-sm table-hover"
+                            },
                             [
                               _c("tr", { staticClass: "m-0 p-0" }, [
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v("Nombre")
-                                ]),
+                                _c("td", [_vm._v("Nombre")]),
                                 _vm._v(" "),
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v(_vm._s(_vm.product.name))
+                                _c("td", [_vm._v(_vm._s(_vm.product.name))])
+                              ]),
+                              _vm._v(" "),
+                              _c("tr", { staticClass: "m-0 p-0" }, [
+                                _c("td", [_vm._v("Precio")]),
+                                _vm._v(" "),
+                                _c("td", [
+                                  _vm._v("$" + _vm._s(_vm.product.unit_price))
                                 ])
                               ]),
                               _vm._v(" "),
                               _c("tr", { staticClass: "m-0 p-0" }, [
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v("Precio")
-                                ]),
+                                _c("td", [_vm._v("BarCode")]),
                                 _vm._v(" "),
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v(" $" + _vm._s(_vm.product.unit_price))
-                                ])
+                                _c("td", [_vm._v(_vm._s(_vm.product.bar_code))])
                               ]),
                               _vm._v(" "),
                               _c("tr", { staticClass: "m-0 p-0" }, [
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v("BarCode")
-                                ]),
+                                _c("td", [_vm._v("Stock")]),
                                 _vm._v(" "),
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v(_vm._s(_vm.product.bar_code))
-                                ])
+                                _c("td", [_vm._v(_vm._s(_vm.product.stock))])
                               ]),
                               _vm._v(" "),
                               _c("tr", { staticClass: "m-0 p-0" }, [
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v("Stock")
-                                ]),
+                                _c("td", [_vm._v("Descrip")]),
                                 _vm._v(" "),
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v(_vm._s(_vm.product.stock))
-                                ])
-                              ]),
-                              _vm._v(" "),
-                              _c("tr", { staticClass: "m-0 p-0" }, [
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
-                                  _vm._v("Descrip")
-                                ]),
-                                _vm._v(" "),
-                                _c("td", { staticClass: "m-0 p-0 text-sm" }, [
+                                _c("td", [
                                   _vm._v(_vm._s(_vm.product.description))
                                 ])
                               ])
@@ -14016,7 +14059,9 @@ var render = function() {
             _vm._v(" "),
             _c("h6", { staticClass: "text-center mt-1" }, [
               _vm._v("Lista del carrito")
-            ])
+            ]),
+            _vm._v(" "),
+            _c("hr")
           ])
         ])
       ])
@@ -14035,16 +14080,6 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-sm-6 text-right" })
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-group" }, [
-      _c("button", { staticClass: "btn btn-info btn-sm btn-block" }, [
-        _vm._v("\n                    Agregar al carrito\n                  ")
       ])
     ])
   }
@@ -32541,7 +32576,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! C:\xampp\htdocs\projects\store-v2_2\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! J:\proyects\PHP\store\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

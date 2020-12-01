@@ -25,7 +25,7 @@
                 <h6 class="text-center">Datos del Cliente</h6>
 
                 <div v-if="clientOptions.edit">
-                  Buscar:
+                  Buscar cliente:
                   <v-select
                     @search="searchPerson"
                     :filterable="false"
@@ -44,20 +44,42 @@
                 </div>
 
                 <div class="mt-3" v-if="client">
+                  <table>
+                    <tr class="m-0 p-0">
+                      <td>Nombre:</td>
+                      {{
+                        client.name
+                      }}
+                      <td></td>
+                    </tr>
+                    <tr class="m-0 p-0">
+                      <td>Apellidos:</td>
+                      {{
+                        client.l_name
+                      }}
+                      {{
+                        client.s_name
+                      }}
+                      <td></td>
+                    </tr>
+                    <tr class="m-0 p-0">
+                      <td>Dirección:</td>
+                      {{
+                        client.address
+                      }}
+                      <td></td>
+                    </tr>
+                    <tr class="m-0 p-0">
+                      <td>Teléfono:</td>
+                      {{
+                        client.phone
+                      }}
+                      <td></td>
+                    </tr>
+                  </table>
+
                   <hr />
-                  <p class="m-0 p-0">
-                    <strong>Nombre:</strong> {{ client.name }}
-                  </p>
-                  <p class="m-0 p-0">
-                    <strong>Apellidos:</strong> {{ client.l_name }}
-                    {{ client.s_name }}
-                  </p>
-                  <p class="m-0 p-0">
-                    <strong>Dirección:</strong> {{ client.address }}
-                  </p>
-                  <p class="m-0 p-0">
-                    <strong>Teléfono:</strong> {{ client.phone }}
-                  </p>
+
                   <button
                     v-if="!clientOptions.go"
                     @click="SelectClient()"
@@ -80,9 +102,10 @@
           </div>
           <div class="col-9">
             <h6 class="text-center">Seleccionar producto</h6>
+            <hr>
             <div class="row" v-if="clientOptions.go">
               <div class="col-5">
-                Buscar
+                <p>Buscar Producto</p>
                 <v-select
                   @search="searchProduct"
                   :filterable="false"
@@ -99,7 +122,7 @@
                 </v-select>
 
                 <div class="form-gropu" v-if="product">
-                  <hr>
+                  <br>
                   <div class="row align-items-center">
                     <div class="col-5">
                       <input
@@ -111,44 +134,44 @@
                     </div>
                     <div class="col-7">Total: ${{ ProductSelectTotal }}</div>
                   </div>
-
-                  <div class="form-group">
-                    <button class="btn btn-info btn-sm btn-block">
-                      Agregar al carrito
-                    </button>
-                  </div>
+                  <br>
+                  <button v-if="picesSelected >= 1"
+                    class="btn btn-info btn-sm btn-block">
+                    Agregar al carrito
+                  </button>
                 </div>
               </div>
 
               <div class="col-4">
-                Detalle del Producto
+                <p class="text-center">Detalle del Producto</p>
                 <div v-if="product">
-                  <table class="m-0 p-0 text-sm table table-sm">
+                  <table class="m-0 p-0 text-sm table table-sm table-hover">
                     <tr class="m-0 p-0">
-                      <td class="m-0 p-0 text-sm">Nombre</td>
-                      <td class="m-0 p-0 text-sm">{{ product.name }}</td>
+                      <td>Nombre</td>
+                      <td>{{ product.name }}</td>
                     </tr>
                     <tr class="m-0 p-0">
-                      <td class="m-0 p-0 text-sm">Precio</td>
-                      <td class="m-0 p-0 text-sm"> ${{ product.unit_price }}</td>
+                      <td>Precio</td>
+                      <td>${{ product.unit_price }}</td>
                     </tr>
                     <tr class="m-0 p-0">
-                      <td class="m-0 p-0 text-sm">BarCode</td>
-                      <td class="m-0 p-0 text-sm">{{ product.bar_code }}</td>
+                      <td>BarCode</td>
+                      <td>{{ product.bar_code }}</td>
                     </tr>
                     <tr class="m-0 p-0">
-                      <td class="m-0 p-0 text-sm">Stock</td>
-                      <td class="m-0 p-0 text-sm">{{ product.stock }}</td>
+                      <td>Stock</td>
+                      <td>{{ product.stock }}</td>
                     </tr>
                     <tr class="m-0 p-0">
-                      <td class="m-0 p-0 text-sm">Descrip</td>
-                      <td class="m-0 p-0 text-sm">{{ product.description }}</td>
+                      <td>Descrip</td>
+                      <td>{{ product.description }}</td>
                     </tr>
                   </table>
                 </div>
               </div>
             </div>
             <h6 class="text-center mt-1">Lista del carrito</h6>
+            <hr>
           </div>
         </div>
       </div>
@@ -169,7 +192,7 @@ export default {
       clientOptions: { edit: true, go: false },
       productList: [],
       product: null,
-      picesSelected: 0,
+      picesSelected: 1,
       productOptions: { edit: true, go: false },
     };
   },
@@ -195,6 +218,7 @@ export default {
     },
     getPerson(person) {
       this.client = person;
+      this.peopleList = null;
     },
     SelectClient() {
       this.clientOptions.edit = false;
@@ -203,6 +227,8 @@ export default {
     EditClient() {
       this.clientOptions.edit = true;
       this.clientOptions.go = false;
+      this.peopleList = [];
+      this.productList = [];
     },
     searchProduct(search, loading) {
       loading(true);

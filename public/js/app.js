@@ -6398,6 +6398,34 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -6416,7 +6444,8 @@ __webpack_require__.r(__webpack_exports__);
       productOptions: {
         edit: true,
         go: false
-      }
+      },
+      cart: []
     };
   },
   components: {
@@ -6445,12 +6474,11 @@ __webpack_require__.r(__webpack_exports__);
     SelectClient: function SelectClient() {
       this.clientOptions.edit = false;
       this.clientOptions.go = true;
+      this.peopleList = [];
     },
     EditClient: function EditClient() {
       this.clientOptions.edit = true;
       this.clientOptions.go = false;
-      this.peopleList = [];
-      this.productList = [];
     },
     searchProduct: function searchProduct(search, loading) {
       var _this2 = this;
@@ -6467,6 +6495,35 @@ __webpack_require__.r(__webpack_exports__);
     },
     getProduct: function getProduct(product) {
       this.product = product;
+    },
+    addToCart: function addToCart() {
+      var _product = this.product;
+
+      if (this.verifyCartBa(_product)) {
+        _product.picesSelected = this.picesSelected;
+        this.cart.push(_product);
+      }
+
+      this.productList = [];
+      this.product = null;
+      this.picesSelected = 1;
+    },
+    verifyCartBa: function verifyCartBa(product) {
+      var flag = true;
+      this.cart.forEach(function (element) {
+        if (element.id == product.id) {
+          element.picesSelected++;
+          flag = false;
+        }
+      });
+      return flag;
+    },
+    removeItem: function removeItem(index) {
+      this.cart.splice(index, 1);
+    },
+    cancel: function cancel() {
+      this.cart = [];
+      this.person = null, this.product = null;
     }
   },
   computed: {
@@ -13885,7 +13942,9 @@ var render = function() {
                             ]
                           )
                     ])
-                  : _vm._e()
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._m(1)
               ])
             ])
           ]),
@@ -13987,7 +14046,9 @@ var render = function() {
                               ? _c(
                                   "button",
                                   {
-                                    staticClass: "btn btn-info btn-sm btn-block"
+                                    staticClass:
+                                      "btn btn-info btn-sm btn-block",
+                                    on: { click: _vm.addToCart }
                                   },
                                   [
                                     _vm._v(
@@ -14061,6 +14122,44 @@ var render = function() {
               _vm._v("Lista del carrito")
             ]),
             _vm._v(" "),
+            _c("table", { staticClass: "table table-sm table-hover" }, [
+              _vm._m(2),
+              _vm._v(" "),
+              _vm.cart.length >= 1
+                ? _c(
+                    "tbody",
+                    _vm._l(_vm.cart, function(c, index) {
+                      return _c("tr", { key: c.id }, [
+                        _c("td", [_vm._v(_vm._s(c.name))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(c.description))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(c.unit_price))]),
+                        _vm._v(" "),
+                        _c("td", [_vm._v(_vm._s(c.picesSelected))]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _vm._v("$" + _vm._s(c.unit_price * c.picesSelected))
+                        ]),
+                        _vm._v(" "),
+                        _c("td", [
+                          _c("i", {
+                            staticClass:
+                              "feather icon-trash-2 m-1 p-1 btn btn-danger btn-sm",
+                            on: {
+                              click: function($event) {
+                                return _vm.removeItem(index)
+                              }
+                            }
+                          })
+                        ])
+                      ])
+                    }),
+                    0
+                  )
+                : _vm._e()
+            ]),
+            _vm._v(" "),
             _c("hr")
           ])
         ])
@@ -14080,6 +14179,39 @@ var staticRenderFns = [
         ]),
         _vm._v(" "),
         _c("div", { staticClass: "col-sm-6 text-right" })
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c(
+      "button",
+      { staticClass: "btn btn-sm btn-block btn-danger mt-3" },
+      [
+        _vm._v(" Cancelar venta "),
+        _c("i", { staticClass: "feather icon-x-square" })
+      ]
+    )
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("thead", [
+      _c("tr", [
+        _c("td", [_vm._v("Producto")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Descripción")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Precio")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Pz")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Subtotal")]),
+        _vm._v(" "),
+        _c("td", [_vm._v("Retirar")])
       ])
     ])
   }
@@ -32576,7 +32708,7 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-module.exports = __webpack_require__(/*! J:\proyects\PHP\store\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\projects\store-v2_2\resources\js\app.js */"./resources/js/app.js");
 
 
 /***/ })

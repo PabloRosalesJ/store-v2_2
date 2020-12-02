@@ -97,6 +97,9 @@
                     Editar
                   </button>
                 </div>
+
+                <button class="btn btn-sm btn-block btn-danger mt-3"> Cancelar venta <i class="feather icon-x-square"></i> </button>
+                
               </div>
             </div>
           </div>
@@ -136,6 +139,7 @@
                   </div>
                   <br>
                   <button v-if="picesSelected >= 1"
+                    @click="addToCart"
                     class="btn btn-info btn-sm btn-block">
                     Agregar al carrito
                   </button>
@@ -171,6 +175,30 @@
               </div>
             </div>
             <h6 class="text-center mt-1">Lista del carrito</h6>
+            <table class="table table-sm table-hover">
+              <thead>
+                <tr>
+                  <td>Producto</td>
+                  <td>Descripción</td>
+                  <td>Precio</td>
+                  <td>Pz</td>
+                  <td>Subtotal</td>
+                  <td>Retirar</td>
+                </tr>
+              </thead>
+              <tbody v-if="cart.length >= 1">
+                <tr v-for="(c, index) in cart" :key="c.id">
+                  <td>{{c.name}}</td>
+                  <td>{{c.description}}</td>
+                  <td>{{c.unit_price}}</td>
+                  <td>{{c.picesSelected}}</td>
+                  <td>${{c.unit_price * c.picesSelected}}</td>
+                  <td>
+                    <i @click="removeItem(index)" class="feather icon-trash-2 m-1 p-1 btn btn-danger btn-sm"></i>
+                  </td>
+                </tr>
+              </tbody>
+            </table>
             <hr>
           </div>
         </div>
@@ -194,6 +222,7 @@ export default {
       product: null,
       picesSelected: 1,
       productOptions: { edit: true, go: false },
+      cart:[],
     };
   },
   components: {
@@ -223,12 +252,12 @@ export default {
     SelectClient() {
       this.clientOptions.edit = false;
       this.clientOptions.go = true;
+      this.peopleList  = []
+
     },
     EditClient() {
       this.clientOptions.edit = true;
       this.clientOptions.go = false;
-      this.peopleList = [];
-      this.productList = [];
     },
     searchProduct(search, loading) {
       loading(true);
@@ -246,6 +275,37 @@ export default {
     getProduct(product) {
       this.product = product;
     },
+    addToCart(){
+      let _product = this.product;
+
+      if (this.verifyCartBa(_product)) {
+        _product.picesSelected = this.picesSelected;
+        this.cart.push(_product);
+      }
+      
+      this.productList = []
+      this.product = null
+      this.picesSelected = 1
+      
+    },
+    verifyCartBa(product){
+      let flag = true
+      this.cart.forEach(element => {
+        if (element.id == product.id) {
+          element.picesSelected ++
+          flag = false;
+        }
+      });
+      return flag;
+    },
+    removeItem(index){
+      this.cart.splice(index, 1)
+    },
+    cancel(){
+      this.cart = []
+      this.person = null,
+      this.product = null
+    }
   },
   computed: {
     ProductSelectTotal() {

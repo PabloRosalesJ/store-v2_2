@@ -15,7 +15,7 @@
 
 </head>
 
-<body>
+<body class="background-grd-blue">
     <div id="app">
         <!-- [ Pre-loader ] start -->
         <div class="loader-bg">

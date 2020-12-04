@@ -17,18 +17,19 @@ class CreditEloquentImpl implements CreditRepository{
 
     public function store(Request $request){
 
-        if ($request->take === 1){
-            // TODO
-        }
+        return $request->all();
+        // if ($request->take === 1){
+        //     // TODO
+        // }
 
-        $credit = Credit::create([
-            'people_id' => $request->people_id,
-            'user_id' => $request->user_id,
-            'take' => $request->take,
-            'total' => $request->total,
-        ]);
+        // $credit = Credit::create([
+        //     'people_id' => $request->people_id,
+        //     'user_id' => $request->user_id,
+        //     'take' => $request->take,
+        //     'total' => $request->total,
+        // ]);
 
-        return $credit;
+        // return $credit;
 
     }
 

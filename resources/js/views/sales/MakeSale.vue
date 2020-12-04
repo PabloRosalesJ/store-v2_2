@@ -4,7 +4,7 @@
       <div class="card-header p-2">
         <div class="row align-items-center m-l-0">
           <div class="col-sm-6">
-            <h4>Realizar Venta</h4>
+            <h4>Realizar venta</h4>
           </div>
           <div class="col-sm-6 text-right">
             <!-- <button
@@ -98,7 +98,11 @@
                   </button>
                 </div>
 
-                <button class="btn btn-sm btn-block btn-danger mt-3"> Cancelar venta <i class="feather icon-x-square"></i> </button>
+                <button v-if="cart.length >= 1"
+                  @click="cancel()"
+                  class="btn btn-sm btn-block btn-danger mt-3"> 
+                    Cancelar venta <i class="feather icon-x-square"></i> 
+                </button>
                 
               </div>
             </div>
@@ -119,10 +123,49 @@
                 >
                   <template slot="option" slot-scope="productList">
                     <div class="d-center">
-                      {{ productList.name }} ${{ productList.unit_price }}
+                      {{ productList.name }} | ${{ productList.unit_price }}
                     </div>
                   </template>
                 </v-select>
+
+                <div class="row">
+                  <div class="col-6">
+                    <label for="bar_code">Código de barrars</label>
+                    <v-select
+                      id="bar_code"
+                      @search="searchProductByBarCode"
+                      :filterable="false"
+                      label="name"
+                      :options="productList"
+                      placeholder="por código de barras..."
+                      @input="getProduct"
+                    >
+                      <template slot="option" slot-scope="productList">
+                        <div class="d-center">
+                          {{ productList.name }} | ${{ productList.unit_price }}
+                        </div>
+                      </template>
+                    </v-select>
+                  </div>
+                  <div class="col-6">
+                    <label for="price">Precio</label>
+                    <v-select
+                      id="price"
+                      @search="searchProductByPrice"
+                      :filterable="false"
+                      label="name"
+                      :options="productList"
+                      placeholder="por precio..."
+                      @input="getProduct"
+                    >
+                      <template slot="option" slot-scope="productList">
+                        <div class="d-center">
+                          {{ productList.name }} | ${{ productList.unit_price }}
+                        </div>
+                      </template>
+                    </v-select>
+                  </div>
+                </div>
 
                 <div class="form-gropu" v-if="product">
                   <br>
@@ -131,15 +174,23 @@
                       <input
                         v-model="picesSelected"
                         class="form-control form-control-sm"
-                        type="text"
+                        type="number"
                         placeholder="pz"
+                        :max="product.stock"
                       />
                     </div>
                     <div class="col-7">Total: ${{ ProductSelectTotal }}</div>
                   </div>
                   <br>
+                  <div v-if="picesSelected > product.stock"
+                   class="alert alert-sm alert-warning alert-dismissible fade show" role="alert">
+                    <strong>No tenemos las piezas suficientes.</strong> Solo podemos vender {{product.stock}} pz
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
                   <button v-if="picesSelected >= 1"
-                    @click="addToCart"
+                    @click="addToCartView"
                     class="btn btn-info btn-sm btn-block">
                     Agregar al carrito
                   </button>
@@ -175,31 +226,61 @@
               </div>
             </div>
             <h6 class="text-center mt-1">Lista del carrito</h6>
-            <table class="table table-sm table-hover">
-              <thead>
-                <tr>
-                  <td>Producto</td>
-                  <td>Descripción</td>
-                  <td>Precio</td>
-                  <td>Pz</td>
-                  <td>Subtotal</td>
-                  <td>Retirar</td>
-                </tr>
-              </thead>
-              <tbody v-if="cart.length >= 1">
-                <tr v-for="(c, index) in cart" :key="c.id">
-                  <td>{{c.name}}</td>
-                  <td>{{c.description}}</td>
-                  <td>{{c.unit_price}}</td>
-                  <td>{{c.picesSelected}}</td>
-                  <td>${{c.unit_price * c.picesSelected}}</td>
-                  <td>
-                    <i @click="removeItem(index)" class="feather icon-trash-2 m-1 p-1 btn btn-danger btn-sm"></i>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
+            
+            <div id="cart-sale" class="dataTables_wrapper dt-bootstrap4">
+              <div class="table-responsive">
+                <table class="table table-sm table-hover">
+                  <thead class="thead-light">
+                    <tr>
+                      <td>Producto</td>
+                      <td>Descripción</td>
+                      <td>Precio</td>
+                      <td>Pz</td>
+                      <td>Subtotal</td>
+                      <td>Retirar</td>
+                    </tr>
+                  </thead>
+                  <tbody v-if="cart.length >= 1">
+                    <tr v-for="(c, index) in cart" :key="c.id">
+                      <td>{{c.name}}</td>
+                      <td>{{c.description}}</td>
+                      <td>{{c.unit_price}}</td>
+                      <td>{{c.picesSelected}}</td>
+                      <td>${{c.unit_price * c.picesSelected}}</td>
+                      <td>
+                        <i @click="removeItem(index)" class="feather icon-trash-2 m-1 p-1 btn btn-danger btn-sm"></i>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
             <hr>
+            <div class="row" v-if="cart.length >= 1">
+            <!-- <div class="row"> -->
+              <div class="col-8">
+                <button @click="sale()"
+                  class="btn btn-success btn-block">
+                  Finalizar compra
+                </button>
+              </div>
+              <div class="col-4">
+                <table class="table table-sm">
+                  <tr class="m-0 p-0">
+                    <td class="m-0 p-0">Productos</td>
+                    <td class="m-0 p-0"> {{products}} </td>
+                  </tr>
+                  <tr class="m-0 p-0">
+                    <td class="m-0 p-0">Piezas</td>
+                    <td class="m-0 p-0"> {{pices}} </td>
+                  </tr>
+                  <tr class="m-0 p-0">
+                    <td class="m-0 p-0">Total</td>
+                    <td class="m-0 p-0"> $ {{total}} </td>
+                  </tr>
+                </table>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -223,6 +304,7 @@ export default {
       picesSelected: 1,
       productOptions: { edit: true, go: false },
       cart:[],
+      _cart:[]
     };
   },
   components: {
@@ -262,7 +344,33 @@ export default {
     searchProduct(search, loading) {
       loading(true);
       axios
-        .get(`/api/product/search/${search}`)
+        .get(`/api/product/search?name=${search}`)
+        .then((result) => {
+          q: search;
+          this.productList = result.data;
+          loading(false);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    },
+    searchProductByBarCode(search, loading) {
+      loading(true);
+      axios
+        .get(`/api/product/search?bar_code=${search}`)
+        .then((result) => {
+          q: search;
+          this.productList = result.data;
+          loading(false);
+        })
+        .catch((err) => {
+          console.log(err.response);
+        });
+    },
+    searchProductByPrice(search, loading) {
+      loading(true);
+      axios
+        .get(`/api/product/search?unit_price=${search}`)
         .then((result) => {
           q: search;
           this.productList = result.data;
@@ -275,11 +383,15 @@ export default {
     getProduct(product) {
       this.product = product;
     },
-    addToCart(){
+    addToCartView(){
       let _product = this.product;
 
       if (this.verifyCartBa(_product)) {
-        _product.picesSelected = this.picesSelected;
+        if (this.picesSelected > this.product.stock) {
+          _product.picesSelected = this.product.stock
+        } else{
+          _product.picesSelected = this.picesSelected;
+        }
         this.cart.push(_product);
       }
       
@@ -303,14 +415,74 @@ export default {
     },
     cancel(){
       this.cart = []
-      this.person = null,
+      this.client = null,
+      this.peopleList = []
       this.product = null
+      this.productList = []
+
+      this.clientOptions.edit = !this.clientOptions.edit
+      this.clientOptions.go = !this.clientOptions.go
+    },
+    sale(){
+      Swal.fire({
+        title: 'Finalizar venta?',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Finalizar!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          axios
+            .post('/api/sale', {
+              cart: this.cart,
+              client: this.client,
+              total: this.total,
+            })
+            .then((result) => {
+              Swal.fire(
+                'Éxito!',
+                'Venta finalizada con el folio: ' + result.data.serie,
+                'success'
+              )
+              this.cancel();
+              console.log(result.data);
+            }).catch((err) => {
+              Swal.fire(
+                'Oops...',
+                'Algo falló, intente nuevamente',
+                'error'
+              )
+              console.log(err.response);
+            });
+        }
+      })
     }
   },
   computed: {
     ProductSelectTotal() {
+      if (this.picesSelected > this.product.stock) {
+        return this.product.stock * this.product.unit_price;
+      }
       return this.picesSelected * this.product.unit_price;
     },
+    products(){
+      return this.cart.length
+    },
+    pices(){
+      let pices = 0;
+      for (let i = 0; i < this.cart.length; i++) {
+        pices = Number(pices) + Number(this.cart[i].picesSelected);
+      }
+      return pices
+    },
+    total(){
+      let total = 0
+      this.cart.forEach(item=>{
+        total += item.unit_price * item.picesSelected
+      })
+      return total
+    }
   },
 };
 </script>

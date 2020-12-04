@@ -66,16 +66,42 @@ class ProductEloquentImpl implements ProductRepository
 
     public function search(Request $request)
     {
-        $query_search = (string)$request->route('query');
+        $product = null;
         
-        $product = Product::where('name','like' ,'%'.$query_search.'%')
-                            ->orWhere('description','like' ,'%'.$query_search.'%')
-                            ->orWhere('bar_code','like' ,'%'.$query_search.'%')
-                            ->orWhere('buy_price','like' ,'%'.$query_search.'%')
-                            ->orWhere('unit_price','like' ,'%'.$query_search.'%')
-                            ->orWhere('wholesale_price','like' ,'%'.$query_search.'%')
-                            ->get();
+        if ($request->has('name')) {
+            $product = Product::where('name','like' ,'%'.$request->name.'%')
+                                ->where('status', true)
+                                ->get();
+        }
+        if ($request->has('bar_code')) {
+            $product = Product::where('bar_code','like' ,'%'.$request->bar_code.'%')
+                                ->where('status', true)
+                                ->get();
+        }
+        if ($request->has('unit_price')) {
+            $product = Product::where('unit_price','like' ,'%'.$request->unit_price.'%')
+                                ->where('status', true)
+                                ->get();
+        }
         
         return $product;
+    }
+
+    public static function inSale(array $cart)
+    {
+        $count = 0;
+        foreach ($cart as $key => $item) {
+            if (in_array('take', $item)) {                
+                $product = Product::findOrFail($item['id']);
+                $product->stock -= $item['picesSelected'];
+                $product->save();
+            }
+            $count ++;
+        }
+
+        if (count($cart) === $count) {
+            return true;
+        }
+        return false;
     }
 }

@@ -1,16 +1,20 @@
 <?php namespace App\Repository\Impl;
 
 use App\Models\Sale;
-use App\Models\Person;
-use App\Models\SaleDetails;
-use App\Models\IncomeDetail;
 use App\Repository\SaleRepository;
+use App\Models\SaleDetails;
+use App\Models\Person;
 use Illuminate\Database\Eloquent\Model;
+
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Carbon;
+use Illuminate\Support\Str;
+
+use App\Repository\Impl\ProductEloquentImpl;
 
 use Barryvdh\DomPDF\Facade as PDF;
+use Exception;
 
 class SaleEloquentImpl implements SaleRepository
 {
@@ -22,37 +26,43 @@ class SaleEloquentImpl implements SaleRepository
 
     public function store(Request $request)
     {
-        return $request->all();
-        // try {
-        //     //DB::beginTransaction();
+        try {
+            DB::beginTransaction();
             
-        //     $income = new Income();
-        //     $income->user_id = $request->user_id;
-        //     $income->number = $request->number;
-        //     $income->total = $request->total;
-        //     //$income->save();
+            $sale = new Sale();
+            $sale->people_id = $request->client['id'];
+            $sale->user_id = 1; // ToRefactor
+            $sale->serie = "V-".strtoupper(Str::random(4)).date('ym');
+            $sale->total = $request->total;
+            $sale->updated_at = null;
+            $sale->save();
 
-        //     $details = $request->details;
+            $cart = $request->cart;
 
-        //     foreach ($details as $key => $item) {
-        //         $detail = new IncomeDetail();
-        //         //$detail->income_id = $income->id;
-        //         $detail->product_id = $item['product_id'];
-        //         $detail->quantity = $item['quantity'];
-        //         $detail->price = $item['price'];
-        //         //$detail->save();
-        //     }
-        //     return [$income,$detail];
-        //     //DB::commit();
-        // } catch (\Throwable $th) {
-        //     DB::rollBack();
-        //     dd($th);
-        // }
+            foreach ($cart as $key => $item) {
+                $detail = new SaleDetails();
+                $detail->sale_id = $sale->id;
+                $detail->product_id = $item['id'];
+                $detail->quantity = $item['picesSelected'];
+                $detail->price = $item['unit_price'];
+                $detail->discount = 0;
+                $detail->sub_total = (float) $item['unit_price'] * (float) $item['picesSelected'];
+                $detail->save();
+            }
+            if (ProductEloquentImpl::inSale($cart)) {
+                DB::commit();
+                return $sale;
+            }
+            throw new Exception("Error Processing Request", 1);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return $th;
+        }
     }
     
     public function getSale($id)
     {
-        return $details = SaleDetails::where('sale_id', '=', $id)
+        return SaleDetails::where('sale_id', '=', $id)
                     ->with('product')
                     ->get();
         
@@ -76,7 +86,7 @@ class SaleEloquentImpl implements SaleRepository
     public function search(Request $request)
     {
         $query = (string)$request->route('query');
-        return Income::where('number', 'like', "%$query%")
+        return Sale::where('number', 'like', "%$query%")
                     ->Orwhere('total', 'like', "%$query%")
                     ->get();
     }

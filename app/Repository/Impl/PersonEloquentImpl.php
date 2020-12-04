@@ -87,7 +87,8 @@ class PersonEloquentImpl implements PersonRepository
     {
         $query_search = (string)$request->route('query');
 
-        $person = Person::where('name','like' ,'%'.$query_search.'%')
+        $person = Person::where('status', true)
+        ->where('name','like' ,'%'.$query_search.'%')
         ->orWhere('l_name','like' ,'%'.$query_search.'%')
         ->orWhere('s_name','like' ,'%'.$query_search.'%')
         // ->orWhere('address','like' ,'%'.$query_search.'%')

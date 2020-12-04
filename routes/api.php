@@ -23,7 +23,7 @@ Route::prefix('product')->group(function () {
     Route::put('/{id}/enable', 'ProductController@enableProduct')->name('product.enable');
     Route::put('/{id}/disable', 'ProductController@disableProduct')->name('product.disable');
     Route::delete('/{id}/destroy', 'ProductController@destroy')->name('product.destroy');
-    Route::get('/search/{query}', 'ProductController@search')->name('product.search');
+    Route::get('/search', 'ProductController@search')->name('product.search');
 });
 
 Route::prefix('person')->group(function () {

@@ -10,6 +10,11 @@ class Category extends Model
     use SoftDeletes;
     protected $fillable = ['name', 'description', 'status'];
 
+    public function product()
+    {
+        return $this->hasMany(Product::class);
+    }
+
     /**
      *      ### Accessors & Mutators 
      * 

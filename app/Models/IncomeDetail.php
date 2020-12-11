@@ -10,7 +10,7 @@ class IncomeDetail extends Model
 
     public $timestamps = false;
 
-    public function products()
+    public function product()
     {
         return $this->hasMany(Product::class, 'id', 'product_id');
     }

@@ -11,8 +11,9 @@ class IcomeEloquentImpl implements IcomeRepository
 {
     public function all(Model $model)
     {
-        return $model::where('state', '1')
-                    ->with('user')->paginate();
+        return $model::with('user')
+                    ->orderBy('id', 'desc')
+                    ->get();
     }
 
     public function store(Request $request)
@@ -46,19 +47,10 @@ class IcomeEloquentImpl implements IcomeRepository
     
     public function getIncome($id)
     {
-        $income = Income::findOrFail($id)
-                        ->with('user')
+
+        return IncomeDetail::with('product:id,name,description')
+                        ->where('income_id',$id)
                         ->get();
-        $details = DB::table('income_details')
-            ->where('income_id', $id)
-            ->join('incomes', 'income_details.income_id', '=', 'incomes.id')
-            ->join('products', 'income_details.product_id', '=', 'products.id')
-            ->select(
-                'income_details.quantity', 'income_details.price', 
-                'products.name', 'products.unit_price', 'products.buy_price', 'products.stock'
-                )
-            ->get();
-        return compact('income', 'details');
     }
     
     public function disableIncome($id)

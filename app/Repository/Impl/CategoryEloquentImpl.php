@@ -9,20 +9,24 @@ class CategoryEloquentImpl implements CategoryRepository
 {
     public function all()
     {
-        $categories = Category::all();
+        $categories = Category::orderBy('id', 'desc')->get();
         return $categories;
     }
 
     public function store(Request $request)
     {
-        $category = new Category();
-        $category->fill($request->all())->save();
+        // return $request->all();
+        $category = Category::create([
+            'name' => $request->name,
+            'description' => $request->description,
+        ]);
         return $category;      
     }
     
     public function getCategory($id)
     {
-        return Category::findOrFail($id);
+        return Category::with('product')
+                    ->findOrFail($id);
     }
 
     public function updateCategory(Request $request)

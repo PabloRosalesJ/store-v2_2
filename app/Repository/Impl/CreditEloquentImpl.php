@@ -4,6 +4,7 @@ use App\Models\CredtiDetail;
 use App\Repository\CreditRepository;
 use App\Models\Credit;
 use Carbon\Carbon;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Relations\belongsTo;
@@ -17,19 +18,41 @@ class CreditEloquentImpl implements CreditRepository{
 
     public function store(Request $request){
 
-        return $request->all();
-        // if ($request->take === 1){
-        //     // TODO
-        // }
+        try {
+            DB::beginTransaction();
 
-        // $credit = Credit::create([
-        //     'people_id' => $request->people_id,
-        //     'user_id' => $request->user_id,
-        //     'take' => $request->take,
-        //     'total' => $request->total,
-        // ]);
+            $credit = Credit::create([
+                'people_id' => $request->people_id,
+                'user_id' => 1, // ToRefactor
+                'take' => $request->take,
+                'total' => $request->total,
+            ]);
+            
+            $cart = $request->cart;
 
-        // return $credit;
+            foreach ($cart as $key => $item) {
+                $detail = new CredtiDetail();
+                $detail->credit_id = $credit->id;
+                $detail->product_id = $item['id'];
+                $detail->pices = $item['picesSelected'];
+                $detail->cost = $item['unit_price'];
+                $detail->sub_total = (float) $item['unit_price'] * (float) $item['picesSelected'];
+                $detail->save();
+            }
+
+            if (ProductEloquentImpl::inCredit($cart)) {
+                DB::commit();
+                return $credit;
+            }
+
+            throw new Exception("Error Processing Request", 1);
+
+        } catch (\Throwable $th) {
+
+            DB::rollBack();
+            return $th;
+
+        }
 
     }
 
@@ -54,7 +77,7 @@ class CreditEloquentImpl implements CreditRepository{
         // return $id;
         return CredtiDetail::where('credit_id', $credit_id)
         // ->select(['product_id','pices', 'cost', 'sub_total'])
-        ->with('product:id,name')
+        ->with('product:id,name,image')
         ->get();
     }
 

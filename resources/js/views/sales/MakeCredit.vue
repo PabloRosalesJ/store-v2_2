@@ -93,6 +93,21 @@
                 
               </div>
             </div>
+            <div class="card text-center">
+              <div class="card-block">
+                <button type="button" class="close" data-dismiss="alert" aria-hidden="true">&times;</button>
+                <i class="feather icon-sunset f-40"></i>
+                <h6 class="mt-3">Nota.</h6>
+                <p>Marcar la siguiente opción si es que se tomarán piezas de almacén al realizar el crédito</p>
+                <div class="form-group">
+                    <label for="demo">take? </label>
+                    <div class="switch switch-info d-inline m-r-10">
+                        <input type="checkbox" id="demo" disabled checked>
+                        <label for="demo" class="cr"></label>
+                    </div>
+                </div>
+              </div>
+            </div>
           </div>
           <div class="col-9">
             <h6 class="text-center">Seleccionar producto</h6>
@@ -386,7 +401,7 @@ export default {
       let _product = this.product;
 
       if (this.verifyCartBa(_product)) {
-        if (this.picesSelected > this.product.stock) {
+        if (this.picesSelected > this.product.stock && this.take) {
           _product.picesSelected = this.product.stock
         } else{
           _product.picesSelected = this.picesSelected;
@@ -444,7 +459,7 @@ export default {
             .then((result) => {
               Swal.fire(
                 'Éxito!',
-                'Venta finalizada con el folio: ' + result.data.serie,
+                'Credito generado con el id: ' + result.data.id,
                 'success'
               )
               this.cancel();
@@ -463,7 +478,7 @@ export default {
   },
   computed: {
     ProductSelectTotal() {
-      if (this.picesSelected > this.product.stock) {
+      if (this.picesSelected > this.product.stock && this.take) {
         return this.product.stock * this.product.unit_price;
       }
       return this.picesSelected * this.product.unit_price;

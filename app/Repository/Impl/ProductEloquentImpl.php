@@ -4,19 +4,46 @@ use App\Repository\ProductRepository;
 use App\Models\Product;
 use Illuminate\Http\Request;
 use App\Models\SaleDetails;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
+
 
 class ProductEloquentImpl implements ProductRepository
 {
     public function all()
     {   
-        $products = Product::all();
+        $products = Product::orderBy('id', 'desc')->get();
         return $products;
     }
 
     public function store(Request $request)
     {
+        $image = '';
+        
+        if($request->hasFile('image')){
+            $image = $request->file('image')->store('public');
+        }
+
+        if($request->bar_code === null){
+            $barcode = "P-".strtoupper(Str::random(4)).strtoupper(substr($request->name, 0, 3));
+        } else {
+            $barcode = $request->bar_code;
+        }
+
         $product = new Product();
-        $product->fill($request->all())->save();
+        $product->category_id = $request->category_id;
+        $product->provider_id = $request->provider_id;
+        $product->bar_code = $barcode;
+        $product->name = $request->name;
+        $product->description = $request->desc_category;
+        $product->image = $image;
+        $product->buy_price = $request->buy_price;
+        $product->unit_price = $request->unit_price;
+        $product->wholesale_price = $request->wholesale_price;
+        $product->stock = $request->stock;
+        $product->status = $request->status ? 1 : 0;
+        $product->save();
+        
         return $product;
     }
     
@@ -31,8 +58,11 @@ class ProductEloquentImpl implements ProductRepository
                                 ->with('sale:id,people_id,user_id')
                                 ->get();
         }
-        return Product::with(['category:id,name', 'provider:provider_id,provider_name'])
+        $product = Product::with(['category:id,name', 'provider:provider_id,provider_name'])
                         ->findOrFail($id);
+        $image = Storage::url($product->image);
+
+        return compact('product', 'image');
     }
 
     public function updateProduct(Request $request)
@@ -83,6 +113,7 @@ class ProductEloquentImpl implements ProductRepository
                                 ->where('status', true)
                                 ->get();
         }
+        $product[0]->image = Storage::url($product[0]->image);
         
         return $product;
     }
@@ -90,8 +121,23 @@ class ProductEloquentImpl implements ProductRepository
     public static function inSale(array $cart)
     {
         $count = 0;
-        foreach ($cart as $key => $item) {
-            if (in_array('take', $item)) {                
+        foreach ($cart as $key => $item) {   
+            $product = Product::findOrFail($item['id']);
+            $product->stock -= $item['picesSelected'];
+            $product->save();
+            $count ++;
+        }
+
+        if (count($cart) === $count) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function inCredit(array $cart) : bool{
+        $count = 0;
+        foreach ($cart as $key => $item) {   
+            if ($item['take']) {
                 $product = Product::findOrFail($item['id']);
                 $product->stock -= $item['picesSelected'];
                 $product->save();

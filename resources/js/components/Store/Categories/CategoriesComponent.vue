@@ -1,5 +1,27 @@
 <template>
   <div>
+    <div class="collapse" id="create-category" v-if="showCreate">
+      <div class="card card-body">
+        <div class="row">
+          <div class="col-4">
+            <div class="form-group fill">
+                <label class="floating-label" for="name_category">Nombre</label>
+                <input type="text" class="form-control" id="name_category" placeholder="Nombre" v-model="form.name">
+            </div>
+          </div>
+          <div class="col-6">
+            <div class="form-group fill">
+                <label class="floating-label" for="desc_category">Descripción</label>
+                <input type="text" class="form-control" id="desc_category" placeholder="Descripción" v-model="form.description">
+            </div>
+          </div>
+          <div class="col-2">
+            <button @click="save()"
+              class="btn btn-primary" id="save-category">Guardar</button>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="row justify-content-center">
       <div class="table table-responsive table-sm table-hover">
         <table id="categories-table" class="table mb-0">
@@ -78,6 +100,11 @@ export default {
   data() {
     return {
       categories: [],
+      showCreate: false,
+      form:{
+        name: '',
+        description: ''
+      }
     };
   },
   beforeMount() {
@@ -155,6 +182,21 @@ export default {
           });
         }
       });
+    },
+    show(){
+      this.showCreate = !this.showCreate;
+    },
+    save(){
+      axios
+        .post('/api/category', this.form)
+        .then((result) => {
+          console.log(result);
+          this.getCategories();
+        }).catch((err) => {
+          console.log(err.response);
+        });
+      // console.log(this.form);
+      this.showCreate = !this.showCreate;
     },
     activeTable() {
       setTimeout(() => {

@@ -25,7 +25,8 @@ class StoreProductRequest extends FormRequest
     {
         return [
             'category_id'     => 'required|integer',
-            'bar_code'        => 'required|min:10|unique:products,bar_code,'.$this->route('id'),
+            'provider_id'     => 'required|integer',
+            'bar_code'        => 'min:10|unique:products,bar_code,'.$this->route('id'),
             'name'            => 'required|unique:products,name,'.$this->route('id'),
             'description'     => 'nullable',
             'image'           => 'image|nullable',

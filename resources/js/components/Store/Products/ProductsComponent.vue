@@ -59,7 +59,7 @@
                 </span>
                 <span v-else class="badge badge-secondary">
                   <p hidden>{{ item.status }}</p>
-                  <i title="desactivo" class="feather icon-thumbs-down"></i>
+                  <i title="desactivado" class="feather icon-thumbs-down"></i>
                 </span>
               </td>
               <td class="table-action text-center">
@@ -110,6 +110,7 @@ export default {
       products: [],
     };
   },
+  props:['product'],
   beforeMount() {
     this.getProducts();
   },
@@ -193,7 +194,7 @@ export default {
         });
       }, 1500);
     },
-  },
+  }
 };
 </script>
 

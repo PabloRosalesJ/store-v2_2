@@ -22,7 +22,7 @@ class Product extends Model
     }
 
     protected $fillable = [
-            'category_id', 'bar_code', 'name', 'description', 'image', 
+            'category_id', 'provider_id', 'bar_code', 'name', 'description', 'image', 
             'buy_price', 'unit_price', 'wholesale_price', 'stock', 'status'
     ];
     
@@ -57,5 +57,6 @@ class Product extends Model
     protected $casts = [
         'created_at' => 'datetime:d-m-Y',
         'updated_at' => 'datetime:d-m-Y',
+        'status' => 'boolean',
     ];
 }

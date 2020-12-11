@@ -21,4 +21,9 @@ class Income extends Model
     {
         return $this->hasManyThrough(Product::class, IncomeDetail::class);
     }
+
+    protected $casts = [
+        'created_at' => 'datetime:d-m-Y',
+        'updated_at' => 'datetime:d-m-Y',
+    ];
 }

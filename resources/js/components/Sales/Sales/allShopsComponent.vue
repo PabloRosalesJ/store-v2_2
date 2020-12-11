@@ -157,10 +157,16 @@
                 <table class="table table-borderless mb-0">
                   <tbody>
                     <tr>
+                      
+                      <!-- {{ item.product[0].image.substring(7) }} -->
                       <td>
                         <!-- http://store.test/img/admin_avatar.svg -->
                         <img
-                          :src="BASE_URL + '/img/product/product-default.svg'"
+                          :src="
+                            item.product[0].image.substring(7) === ''
+                            ? '/img/product/product-default.svg'
+                            :'/storage/'+item.product[0].image.substring(7)
+                            "
                           alt="contact-img"
                           title="contact-img"
                           class="rounded mr-2"

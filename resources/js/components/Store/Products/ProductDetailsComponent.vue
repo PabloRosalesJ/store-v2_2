@@ -14,7 +14,7 @@
                 <div class="carousel-inner">
                   <div class="carousel-item active">
                     <img
-                      src="/img/product/product-default.svg"
+                      :src="image === '/storage/' ? '/img/product/product-default.svg' : image"
                       class="d-block w-100"
                       alt="Product images"
                     />
@@ -133,6 +133,7 @@ export default {
   data() {
     return {
       product: {},
+      image: '',
       last_shops:[]
     };
   },
@@ -144,7 +145,8 @@ export default {
       axios
         .get(`/api/product/${this.$route.params.id}/show`)
         .then((result) => {
-          this.product = result.data;
+          this.product = result.data.product;
+          this.image = result.data.image;
           this.getLastShops();
         })
         .catch((err) => {

@@ -76,7 +76,9 @@ let routes = [
         name: 'allIncomes',
         component: require('./views/store/Incomes.vue').default
     },
-    
+
+    { path: '/images/favicon.ico', redirect: '/' },
+
     {
         path: '*',
         name: 'notFound',

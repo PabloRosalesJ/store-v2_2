@@ -15,3 +15,6 @@ Auth::routes();
 // });
 Route::get('/reports', 'TestReporter@index');
 Route::get('/{any?}','HomeController@index')->name('root')->where('any','.*');
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');

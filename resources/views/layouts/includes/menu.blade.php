@@ -8,14 +8,25 @@
                     <div class="main-menu-header">
                         <img class="img-radius" src="{{ asset('img/admin_avatar.svg') }}" alt="User-Profile-Image">
                         <div class="user-details">
-                            <div id="more-details">UX Designer <i class="fa fa-caret-down"></i></div>
+                            <div id="more-details">{{ Auth::user()->username }} <i class="fa fa-caret-down"></i></div>
                         </div>
                     </div>
                     <div class="collapse" id="nav-user-link">
                         <ul class="list-inline">
                             <li class="list-inline-item"><a href="user-profile.html" data-toggle="tooltip" title="View Profile"><i class="feather icon-user"></i></a></li>
                             <li class="list-inline-item"><a href="email_inbox.html"><i class="feather icon-mail" data-toggle="tooltip" title="Messages"></i><small class="badge badge-pill badge-primary">5</small></a></li>
-                            <li class="list-inline-item"><a href="auth-signin.html" data-toggle="tooltip" title="Logout" class="text-danger"><i class="feather icon-power"></i></a></li>
+                            <li class="list-inline-item">
+                                <a href="{{ route('logout') }}" data-toggle="tooltip" title="Logout" class="text-danger"
+                                {{-- <a href="{{ route('logout') }}" data-toggle="tooltip" title="Logout" class="text-danger" --}}
+                                onclick="event.preventDefault();
+                                                document.getElementById('logout-form').submit();">
+                                    <i class="feather icon-power"></i>
+                                </a>
+
+                                <form id="logout-form" action="{{ route('logout') }}" method="POST" class="d-none">
+                                    @csrf
+                                </form>
+                            </li>
                         </ul>
                     </div>
                 </div>

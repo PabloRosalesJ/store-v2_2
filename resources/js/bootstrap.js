@@ -5,7 +5,7 @@
 //     window.$ = window.jQuery = require('jquery');
 
 //     require('bootstrap');
-// } catch (e) {} 
+// } catch (e) {}
 
 import Vue from 'vue';
 import VueRouter from 'vue-router';

@@ -8,10 +8,10 @@ const mix = require('laravel-mix');
  | Mix provides a clean, fluent API for defining some Webpack build steps
  | for your Laravel application. By default, we are compiling the Sass
  | file for the application as well as bundling up all the JS files.
- |"C:\laragon\www\store\public\js\sweetalert2.all.min.js"
+ |
  */
 
-mix
+ mix
     .scripts(
         [
             'public/js/vendor-all.min.js',
@@ -24,7 +24,7 @@ mix
             //dataTables
             'public/dtTables/jquery.dataTables.min.js',
             'public/dtTables/dataTables.buttons.min.js',
-                    
+
             //sweetalert2
             'public/js/sweetalert2.all.min.js',
         ],

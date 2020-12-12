@@ -35561,7 +35561,7 @@ __webpack_require__.r(__webpack_exports__);
 //     window.Popper = require('popper.js').default;
 //     window.$ = window.jQuery = require('jquery');
 //     require('bootstrap');
-// } catch (e) {} 
+// } catch (e) {}
 
 
 
@@ -36610,6 +36610,9 @@ var routes = [//  #usuarios
   path: '/almacén/ingresos',
   name: 'allIncomes',
   component: __webpack_require__(/*! ./views/store/Incomes.vue */ "./resources/js/views/store/Incomes.vue")["default"]
+}, {
+  path: '/images/favicon.ico',
+  redirect: '/'
 }, {
   path: '*',
   name: 'notFound',

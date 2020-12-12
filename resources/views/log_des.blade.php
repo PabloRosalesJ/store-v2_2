@@ -22,8 +22,8 @@
             <div class="h-100 d-md-flex align-items-center auth-side-img">
                 <div class="col-sm-10 auth-content w-auto">
                     <img src="assets/images/auth/auth-logo.png" alt="" class="img-fluid">
-                    <h1 class="text-white my-4">Welcome Back!</h1>
-                    <h4 class="text-white font-weight-normal">Signin to your account and get explore the Able pro Dashboard Template.<br/>Do not forget to play with live customizer</h4>
+                    <h1 class="text-white my-4">Hola de nuevo!</h1>
+                    <h4 class="text-white font-weight-normal">Inicia sesión para ingresar a Store.</h4>
                 </div>
             </div>
             <div class="auth-side-form">
@@ -33,9 +33,9 @@
 
                     <form action="action="{{ route('login') }}" method="post">
                     @csrf
-                    <h3 class="mb-4 f-w-400">Signin</h3>
+                    <h3 class="mb-4 f-w-400">Iniciar sesión</h3>
                     <div class="form-group mb-3">
-                        <label class="floating-label" for="Email">Email address</label>
+                        <label class="floating-label" for="Email">Email</label>
                         <input id="email" type="email" class="form-control @error('email') is-invalid @enderror" name="email" value="{{ old('email') }}" required autocomplete="email" autofocus>
                         @error('email')
                             <span class="invalid-feedback" role="alert">
@@ -66,14 +66,17 @@
                     </div>
 
                     <div class="form-group row mb-0">
-                        <div class="col-md-8 offset-md-4">
-                            <button type="submit" class="btn btn-primary">
+                        <div class="col-12">
+                            <button type="submit" class="btn btn-primary btn-block shadow redounded">
                                 {{ __('Login') }}
                             </button>
-
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12 text-center text-muted">
                             @if (Route::has('password.request'))
                                 <a class="btn btn-link" href="{{ route('password.request') }}">
-                                    {{ __('Forgot Your Password?') }}
+                                    {{ __('Olvidaste tu password?') }}
                                 </a>
                             @endif
                         </div>

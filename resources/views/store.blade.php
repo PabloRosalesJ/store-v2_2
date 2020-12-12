@@ -23,47 +23,27 @@
                 <div class="loader-fill"></div>
             </div>
         </div>
-        
+
         @include('layouts.includes.menu')
-        
+
         @include('layouts.includes.header')
-        
+
         <div class="pcoded-main-container">
             <div class="pcoded-content">
-                <!-- [ breadcrumb ] start -->
-                <div class="page-header">
-                    {{-- <div class="page-block">
-                        <div class="row align-items-center">
-                        <ul class="breadcrumb">
-                            <li class="breadcrumb-item">
-                                <router-link to="/"><i class="feather icon-home"></i></router-link>
-                            </li>
-                            <li class="breadcrumb-item"></li>
-                        </ul>
-                    </div>
-                    </div> --}}
-                </div>
-                        <router-view></router-view>
+                <div class="page-header"></div>
+                    <router-view></router-view>
             </div>
         </div>
-        
+
     </div>
 
     <script src="{{ asset('js/app.js') }}" ></script>
     <script src="{{ asset('js/scripts.js') }}" ></script>
 
-    {{-- <script src="{{ asset('js/plugins/jquery.dataTables.min.js') }}"></script> --}}
     <script src="{{ asset('js/plugins/dataTables.bootstrap4.min.js') }}"></script>
-    
+
     @yield('extra_js')
 
-    <script>
-        // setTimeout(function(){ 
-        //     // $("#client-table").DataTable();
-        // }, 3000);
-       
-    </script>
-    
 </body>
 
 </html>

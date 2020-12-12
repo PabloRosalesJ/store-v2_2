@@ -104,12 +104,12 @@
               <tbody>
                 <tr v-for="l_shop of last_shops" :key="l_shop.id">
                   <td> 
-                    <router-link :to="{ path: `/usuario/${l_shop.sale.user_id}`}">
+                    <router-link :to="{ name: 'usersShops', params: { id: l_shop.sale.user_id }}">
                       Vendedor {{l_shop.sale.user_id}}
                     </router-link>
                   </td>
                   <td> 
-                    <router-link :to="{ path: `/cliente/${l_shop.sale.people_id}`}">
+                    <router-link :to="{ name: 'client', params: { id: l_shop.sale.people_id }}">
                       Cliente {{l_shop.sale.people_id}}
                     </router-link>
                   </td>

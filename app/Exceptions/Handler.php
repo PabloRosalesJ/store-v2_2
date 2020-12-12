@@ -60,13 +60,13 @@ class Handler extends ExceptionHandler
             return response()->json(["message"=>"Entidad no encontrada"], 404);
         }
 
-        if ($exception instanceof MethodNotAllowedHttpException)
-        {
-            return response()->json([
-                                    "message"=>"El metodo espesificado en la peticion no es valido",
-                                    "exception" => $exception->getMessage()
-                                    ], 405);
-        }
+        // if ($exception instanceof MethodNotAllowedHttpException)
+        // {
+        //     return response()->json([
+        //                             "message"=>"El metodo espesificado en la peticion no es valido",
+        //                             "exception" => $exception->getMessage()
+        //                             ], 405);
+        // }
 
         if($exception instanceof NotFoundHttpException)
         {

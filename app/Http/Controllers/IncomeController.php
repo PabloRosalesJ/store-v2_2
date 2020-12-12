@@ -31,9 +31,9 @@ class IncomeController extends Controller
         return response()->json($this->repository->getIncome($id));
     }
     
-    public function disable($id)
+    public function disable(Request $request, $id)
     {
-        return response()->json($this->repository->disableIncome($id));
+        return response()->json($this->repository->disableIncome($request, $id));
     }
     
     public function search(REquest $request)

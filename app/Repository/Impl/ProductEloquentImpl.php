@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\SaleDetails;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
-
+use Illuminate\Database\Eloquent\Collection;
 
 class ProductEloquentImpl implements ProductRepository
 {
@@ -146,6 +146,39 @@ class ProductEloquentImpl implements ProductRepository
         }
 
         if (count($cart) === $count) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function income(array $cart) : bool
+    {
+        $count = 0;
+        foreach ($cart as $key => $item) {   
+            $product = Product::findOrFail($item['product_id']);
+            $product->stock += $item['quantity'];
+            $product->buy_price = $item['price'];
+            $product->save();
+            $count ++;
+        }
+
+        if (count($cart) === $count) {
+            return true;
+        }
+        return false;
+    }
+
+    public static function cancelOperation(Collection $productList, string $product_flag, string $pz_flag) : bool
+    {
+        $count = 0;
+        foreach ($productList as $key => $item) {   
+            $product = Product::findOrFail($item["$product_flag"]);
+            $product->stock -= $item["$pz_flag"];
+            $product->save();
+            $count ++;
+        }
+
+        if (count($productList) === $count) {
             return true;
         }
         return false;

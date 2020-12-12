@@ -3,9 +3,11 @@
 use App\Models\Income;
 use App\Models\IncomeDetail;
 use App\Repository\IcomeRepository;
+use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Str;
 
 class IcomeEloquentImpl implements IcomeRepository
 {
@@ -18,27 +20,34 @@ class IcomeEloquentImpl implements IcomeRepository
 
     public function store(Request $request)
     {
+        // TODO -> verify pw
         try {
-            //DB::beginTransaction();
+            DB::beginTransaction();
             
             $income = new Income();
-            $income->user_id = $request->user_id;
-            $income->number = $request->number;
+            $income->user_id = 1;               //TODO refactor
+            $income->number = "I-".strtoupper(Str::random(4)).date('ym');
             $income->total = $request->total;
-            //$income->save();
+            $income->updated_at = $request->updated_at;
+            $income->save();
 
-            $details = $request->details;
+            $details = $request->products;
 
             foreach ($details as $key => $item) {
-                $detail = new IncomeDetail();
-                //$detail->income_id = $income->id;
-                $detail->product_id = $item['product_id'];
-                $detail->quantity = $item['quantity'];
-                $detail->price = $item['price'];
-                //$detail->save();
+                $incDet = new IncomeDetail();
+                $incDet->income_id = $income->id;
+                $incDet->product_id = $item['product_id'];
+                $incDet->quantity = $item['quantity'];
+                $incDet->price = $item['price'];
+                $incDet->sub_total = $item['sub_total'];
+                $incDet->save();
             }
-            return [$income,$detail];
-            //DB::commit();
+            
+            if (ProductEloquentImpl::income($details)) {
+                DB::commit();
+                return $income;
+            }
+            throw new Exception("Error Processing Request", 1);
         } catch (\Throwable $th) {
             DB::rollBack();
             dd($th);
@@ -53,11 +62,24 @@ class IcomeEloquentImpl implements IcomeRepository
                         ->get();
     }
     
-    public function disableIncome($id)
+    public function disableIncome(Request $request,$id)
     {
-        $income = Income::findOrFail($id);
-        $income->state = false;
-        return $income->save();
+        $details = IncomeDetail::where('income_id', $id)->get(['product_id','quantity']);
+        // dd($details);
+        try{
+            DB::beginTransaction();
+            $income = Income::findOrFail($id);
+            $income->state = false;
+            $income->save();
+            if (ProductEloquentImpl::cancelOperation($details,'product_id','quantity')) {
+                DB::commit();
+                return $income;
+            }
+            throw new Exception("Error Processing Request", 1);
+        } catch(\Throwable $th){
+            DB::rollBack();
+            dd($th);
+        }
     }
 
 

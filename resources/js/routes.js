@@ -8,17 +8,17 @@ let routes = [
         component: require('./components/ExampleComponent.vue').default
     },
     {
-        path: '/cliente',
+        path: '/user/cliente',
         name: 'clients',
         component: require('./views/users/Clients.vue').default
     },
     {
-        path: '/cliente/:id',
+        path: '/user/cliente/:id',
         name: 'client',
         component: require('./views/users/Client.vue').default
     },
     {
-        path: '/provedor',
+        path: '/user/provedor',
         name: 'providers',
         component: require('./views/users/Providers.vue').default
     },
@@ -40,39 +40,39 @@ let routes = [
         component: require('./views/sales/Sales.vue').default
     },
     {
-        path: '/hacer-venta',
+        path: '/ventas/hacer-venta',
         name: 'makeSale',
         component: require('./views/sales/MakeSale.vue').default
     },
     {
-        path: '/creditos',
+        path: '/ventas/creditos',
         name: 'allCredits',
         component: require('./views/sales/Credits.vue').default
     },
     {
-        path: '/hacer-venta-credito',
+        path: '/ventas/hacer-venta-credito',
         name: 'makeCredit',
         component: require('./views/sales/MakeCredit.vue').default
     },
 
     //  #Almacén
     {
-        path: '/categorias',
+        path: '/almacén/categorias',
         name: 'allCategories',
         component: require('./views/store/Categories.vue').default
     },
     {
-        path: '/productos',
+        path: '/almacén/productos',
         name: 'allProducts',
         component: require('./views/store/Products.vue').default
     },
     {
-        path: '/producto/:id',
+        path: '/almacén/producto/:id',
         name: 'productDetails',
         component: require('./components/Store/Products/ProductDetailsComponent.vue').default
     },
     {
-        path: '/ingresos',
+        path: '/almacén/ingresos',
         name: 'allIncomes',
         component: require('./views/store/Incomes.vue').default
     },

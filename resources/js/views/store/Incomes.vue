@@ -35,13 +35,13 @@
 
         <div v-else
           class="dt-responsive table-responsive">
-            <table id="incomes-details-table" class="table table-sm table-striped table-bordered nowrap">
+            <table id="incomes-details-table" class="table table-sm table-hover">
                 <thead>
                     <tr>
-                        <th>Nombre</th>
-                        <th>Desc</th>
+                        <th>Nombre prod.</th>
+                        <th>Desc. prod.</th>
                         <th>Cantidad</th>
-                        <th>Pz</th>
+                        <th>Precio</th>
                         <th>Subtotal</th>
                     </tr>
                 </thead>
@@ -49,9 +49,9 @@
                     <tr v-for="in_det of incomeDetails" :key="in_det.id">
                       <td> {{ in_det.product[0].name }} </td>
                       <td> {{ in_det.product[0].description }} </td>
-                      <td> {{ in_det.quantity }} </td>
-                      <td> {{ in_det.price }} </td>
-                      <td> {{ in_det.sub_total }} </td>
+                      <td class="text-center"> {{ in_det.quantity }} </td>
+                      <td class="text-center"> ${{ in_det.price }} </td>
+                      <td class="text-center"> ${{ in_det.sub_total }} </td>
                     </tr>
                 </tbody>
                 <tfoot>
@@ -59,7 +59,7 @@
                         <th>Nombre</th>
                         <th>Desc</th>
                         <th>Cantidad</th>
-                        <th>Pz</th>
+                        <th>Precio</th>
                         <th>Subtotal</th>
                     </tr>
                 </tfoot>
@@ -97,6 +97,12 @@
       <!-- Create Income -->
       <div class="collapse" id="create-income">
         <div class="card card-body">
+          <div class="row">
+            <div class="col">
+              <h4 class="text-center">Reabastecer</h4>
+              <hr>
+            </div>
+          </div>
           <div class="row">
             <div class="col-4">
               <div class="card">
@@ -142,9 +148,9 @@
             <div class="col-8">
               <div class="row">
 
-                <div class="col-3">
+                <div class="col-6">
 
-                  <label for="prod_name">Código de barrars</label>
+                  <label for="prod_name">Nombre del producto</label>
                   <v-select
                     id="prod_name"
                     @search="searchProduct"
@@ -181,21 +187,101 @@
                 </div>
 
                 <div class="col-3">
-                  <label for="pz">Cantidad</label>
-                  <input v-model="productSelected.quantity"
-                    type="number" name="pz" id="pz">
+
+                  <div class="form-group">
+                      <label class="floating-label" for="pz">Pz</label>
+                      <input v-model="productSelected.quantity" 
+                        type="text" class="form-control" id="pz" placeholder="Pz">
+                  </div>
+                  <br>
+                  <strong>Subtotal: $ {{subtotal}}</strong>
+                </div>
+                  
+                <div class="col-3">
+
+                  <div class="form-group">
+                      <label class="floating-label" for="price">Precio</label>
+                      <input v-model="productSelected.price" 
+                        type="text" class="form-control" id="price" placeholder="Precio">
+                  </div>
+
+                  <div class="form-group"> 
+                    <button @click="addToCart()"
+                      class="btn btn-outline-primary btn-block shadow-sm rounded">
+                      Agergar
+                    </button>
+                  </div>
+                
                 </div>
 
-                <div class="col-3">
-                  <label for="price">Precio</label>
-                  <input v-model="productSelected.price"
-                    type="number" name="price" id="price">
-                .</div>
-
-                <div class="col-3">
-                  Subtotal: $ {{subtotal}}
+              </div>
+              <div class="row justify-content-center mt-3">
+                <div v-if="product != null">
+                  <div v-if="productSelected.price != product.buy_price"
+                    class="alert alert-warning alert-dismissible fade show" role="alert">
+                    <strong>Precios diferntes!</strong> Se actualizará el precio de compra de este producto.
+                  </div>
                 </div>
-
+              </div>
+              <div class="row mt-1">
+                <div class="col-12">
+                  <p class="text-center"><strong>Productos:</strong></p>
+                  <div class="table-responsive">
+                    <table class="table table-sm">
+                      <thead>
+                        <tr>
+                          <th>Prod. id</th>
+                          <th>Nombre</th>
+                          <th>Desc</th>
+                          <th>Pz</th>
+                          <th>Precio</th>
+                          <th>Subtotal</th>
+                          <th class="text-center"> <i class="feather icon-settings"></i> </th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr v-for="(product, index) of cartView" :key="product.id">
+                          <td> {{ product.id }} </td>
+                          <td> {{ product.name }} </td>
+                          <td> {{ product.description }} </td>
+                          <td class="text-center"> {{ product.pz }} </td>
+                          <td class="text-center"> ${{ product.price }} </td>
+                          <td class="text-center"> ${{ product.sub_total }} </td>
+                          <td>
+                            <i @click="removeItem(index)"
+                              title="Eliminar de la lista"
+                              class="p-1 mr-2 feather icon-trash-2 btn btn-outline-danger btn-sm shadow-sm rounded"
+                            ></i>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+              </div>
+              <div class="row" v-if="cart.length >= 1">
+                <div class="col-8">
+                  <button @click="store()"
+                    class="btn btn-danger btn-block">
+                    Finalizar
+                  </button>
+                </div>
+                <div class="col-4">
+                  <table class="table table-sm">
+                    <tr class="m-0 p-0">
+                      <td class="m-0 p-0">Productos</td>
+                      <td class="m-0 p-0"> {{products}} </td>
+                    </tr>
+                    <tr class="m-0 p-0">
+                      <td class="m-0 p-0">Piezas</td>
+                      <td class="m-0 p-0"> {{pices}} </td>
+                    </tr>
+                    <tr class="m-0 p-0">
+                      <td class="m-0 p-0">Total</td>
+                      <td class="m-0 p-0"> $ {{total}} </td>
+                    </tr>
+                  </table>
+                </div>
               </div>
             </div>
           </div>
@@ -231,7 +317,8 @@
                     </tr>
                 </thead>
                 <tbody> 
-                    <tr v-for="income of incomesList" :key="income.id">
+                    <tr v-for="income of incomesList" :key="income.id"
+                        :class="{'table-danger' : !income.state}">
                         <td>
                           <button @click="getIncomeDetails(income)"
                             type="button"
@@ -257,11 +344,14 @@
                           </span>
                         </td>
                         <td class="text-center">
-                          <i
-                            @click="disable(income.id)"
+                          <i v-if="income.state"
+                            @click="disable(income.id, income.number)"
                             title="Cancelar ingreso"
                             class="p-1 mr-2 feather icon-trash-2 btn btn-outline-danger btn-sm shadow-sm rounded"
                           ></i>
+                          <div v-else>
+                            <p class="badge badge-danger">Cancelado el {{income.updated_at}}</p>
+                          </div>
                         </td>
                     </tr>
                 </tbody>
@@ -298,8 +388,6 @@ export default {
 
       loading : {main:true, details:true},
 
-      cart:[],
-
       productList: [],
       product:null,
       productSelected:{
@@ -307,7 +395,9 @@ export default {
         quantity: 0,
         price:0,
         sub_total:0,
-      }
+      },
+      cart:[],
+      cartView:[],
     }
   },
   components: {
@@ -369,10 +459,155 @@ export default {
     },
     getProduct(product) {
       this.product = product;
-      this.productSelected.product_id = product.id
+      this.productSelected.product_id = product.id 
+      this.productSelected.price = product.buy_price
     },
-    disable(id){
-      console.log(id);
+    addToCart(){
+      if(this.validate()){
+        this.cart.push(this.productSelected)
+        this.product.pz = this.productSelected.quantity
+        this.product.price = this.productSelected.price 
+        this.product.sub_total = this.productSelected.sub_total 
+        this.cartView.push(this.product);
+        this.product = null;
+        this.productSelected = {
+          product_id:null,
+          quantity: 0,
+          price:0,
+          sub_total:0,
+        }
+      }
+      return false
+    },
+    validate(){
+      if( this.productSelected.quantity >= 1 && this.productSelected.price >= 1){
+        return true
+      }
+      return false
+    },
+    removeItem(index){
+      this.cart.splice(index, 1)
+      this.cartView.splice(index, 1)
+    },
+    store(){
+      Swal.fire({
+        title: 'Finalizar ingreso?',
+        text: "Asegúrese de que la información sea correcta.",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Registrar!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Confirme con su password',
+            input: 'password',
+            inputAttributes: {
+              autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+              let data = new Object();
+              data.password = login;
+              data.total = this.total;
+              data.products = this.cart;
+              return fetch(`/api/income`,{
+                  method: 'POST', // or 'PUT'
+                  body: JSON.stringify(data), // data can be `string` or {object}!
+                  headers:{
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                  }
+              })
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(response.statusText)
+                  }
+                  return response.json()
+                })
+                .catch(error => {
+                  Swal.showValidationMessage(
+                    `Ooops, hubo un error: ${error}`
+                  )
+                })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if (result.isConfirmed) {
+              console.log(result.value)
+              Swal.fire(
+                'Éxito!',
+                `Ingreso generado con la serie: ${result.value.number}`,
+                'success'
+              )
+              this.getIncomes();
+              this.cart = [];
+              this.cartView = [];
+              $("#create-income").collapse('toggle');
+            }
+          })
+        }
+      })
+    },
+    disable(id, number){
+      
+      Swal.fire({
+        title: 'Estas seguro?',
+        text: `Los productos relacionados al ingreso ${number} serán descontados del stock.`,
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ok!'
+      }).then((result) => {
+        if (result.isConfirmed) {
+          Swal.fire({
+            title: 'Confirme con su password',
+            input: 'password',
+            inputAttributes: {
+              autocapitalize: 'off'
+            },
+            showCancelButton: true,
+            confirmButtonText: 'Enviar',
+            showLoaderOnConfirm: true,
+            preConfirm: (login) => {
+              return fetch(`/api/income/${id}/disable`,{
+                  method: 'PUT', // or 'PUT'
+                  body: JSON.stringify({'password':login}), // data can be `string` or {object}!
+                  headers:{
+                    'X-Requested-With': 'XMLHttpRequest',
+                    'Content-Type': 'application/json'
+                  }
+              })
+                .then(response => {
+                  if (!response.ok) {
+                    throw new Error(response.statusText)
+                  }
+                  return response.json()
+                })
+                .catch(error => {
+                  Swal.showValidationMessage(
+                    `Ooops, hubo un error: ${error}`
+                  )
+                })
+            },
+            allowOutsideClick: () => !Swal.isLoading()
+          }).then((result) => {
+            if (result.isConfirmed) {
+              console.log(result.value)
+              Swal.fire(
+                'Éxito!',
+                `Ingreso con la serie: ${result.value.number} ha sido cancelado`,
+                'success'
+              )
+              this.getIncomes();
+            }
+          })
+        }
+      })
     },
     activeTable() {
       setTimeout(() => {
@@ -387,6 +622,23 @@ export default {
       let sub_total = this.productSelected.quantity * this.productSelected.price;
       this.productSelected.sub_total = sub_total;
       return sub_total;
+    },
+    products(){
+      return this.cart.length
+    },
+    pices(){
+      let pices = 0;
+      for (let i = 0; i < this.cart.length; i++) {
+        pices = Number(pices) + Number(this.cart[i].quantity);
+      }
+      return pices
+    },
+    total(){
+      let total = 0
+      this.cart.forEach(item=>{
+        total += item.sub_total
+      })
+      return total
     }
   }
 };

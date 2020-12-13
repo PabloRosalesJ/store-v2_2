@@ -13,7 +13,9 @@ class PaymentEloquentImpl implements PaymentRepository
 
     public function all()
     {
-        return Payment::withTrashed()->get();
+        return Payment::with(['client:id,name,l_name,s_name','user:id,username'])
+                    ->orderBy('id', 'desc')
+                    ->get();
     }
 
     public function store(Request $request)
@@ -52,7 +54,7 @@ class PaymentEloquentImpl implements PaymentRepository
     public function disablePayment(Request $request, int $payment_id)
     {
         if ($request->pw === "12312300") {
-            
+
             $payment = $this->getPayment($payment_id);
             $payment->delete();
 

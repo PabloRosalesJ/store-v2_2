@@ -15,6 +15,7 @@ use App\Repository\Impl\ProductEloquentImpl;
 
 use Barryvdh\DomPDF\Facade as PDF;
 use Exception;
+use Illuminate\Support\Facades\Auth;
 
 class SaleEloquentImpl implements SaleRepository
 {
@@ -28,10 +29,10 @@ class SaleEloquentImpl implements SaleRepository
     {
         try {
             DB::beginTransaction();
-            
+
             $sale = new Sale();
             $sale->people_id = $request->client['id'];
-            $sale->user_id = 1; // ToRefactor
+            $sale->user_id = Auth::user()->id; 
             $sale->serie = "V-".strtoupper(Str::random(4)).date('ym');
             $sale->total = $request->total;
             $sale->updated_at = null;
@@ -59,20 +60,20 @@ class SaleEloquentImpl implements SaleRepository
             return $th;
         }
     }
-    
+
     public function getSale($id)
     {
         return SaleDetails::where('sale_id', '=', $id)
                     ->with('product')
                     ->get();
-        
+
     }
-    
+
     public function disableSale(Request $request, int $id)
     {
-        
+
         if ($request->pw === "12312300") {
-            
+
             $income = Sale::findOrFail($id);
             $income->status = 0;
             $income->save();
@@ -80,7 +81,7 @@ class SaleEloquentImpl implements SaleRepository
             return \response()->json('Ok', 200);
         }
         \abort(403);
-        
+
     }
 
     public function search(Request $request)
@@ -99,7 +100,7 @@ class SaleEloquentImpl implements SaleRepository
                             ->get();
         return $sales_user;
     }
-    
+
     public function byClient(Request $request, int $id)
     {
         if ($request->has('export')) {
@@ -108,7 +109,7 @@ class SaleEloquentImpl implements SaleRepository
                 $client = Person::findOrFail($id);
 
                 // return view('reports.clients.shops', compact('client', 'now'));
-                
+
                 $pdf = PDF::loadView('reports.clients.shops', compact('client', 'now'));
                 return $pdf->download('historial-compras-'.$client->FullName.'-'.$now->format("m/d/Y").'.pdf');
             }
@@ -118,7 +119,7 @@ class SaleEloquentImpl implements SaleRepository
                             ->orderBy('created_at', 'desc')
                             ->with('user')
                             ->get();
-        
+
         return \response()->json($sales_user);
     }
 

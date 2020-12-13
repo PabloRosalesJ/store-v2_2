@@ -1,6 +1,13 @@
 import VueRouter from 'vue-router'
 
 let routes = [
+    //  #session
+    {
+        path: '/login',
+        name: 'login',
+        component: require('./views/login.vue').default
+    },
+
     //  #usuarios
     {
         path: '/',
@@ -53,6 +60,11 @@ let routes = [
         path: '/ventas/hacer-venta-credito',
         name: 'makeCredit',
         component: require('./views/sales/MakeCredit.vue').default
+    },
+    {
+        path: '/ventas/pagos',
+        name: 'allPayments',
+        component: require('./views/sales/Payments.vue').default
     },
 
     //  #Almacén

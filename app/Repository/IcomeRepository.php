@@ -8,9 +8,9 @@ interface IcomeRepository
     public function all(Model $model);
 
     public function store(Request $request);
-    
+
     public function getIncome(int $id);
-    
+
     public function disableIncome(Request $request, int $id);
 
     public function search(Request $request);

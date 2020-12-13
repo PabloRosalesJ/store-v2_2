@@ -8,6 +8,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Relations\belongsTo;
+use Illuminate\Support\Facades\Auth;
 
 class CreditEloquentImpl implements CreditRepository{
     public function all(){
@@ -23,11 +24,11 @@ class CreditEloquentImpl implements CreditRepository{
 
             $credit = Credit::create([
                 'people_id' => $request->people_id,
-                'user_id' => 1, // ToRefactor
+                'user_id' => Auth::user()->id, // ToRefactor
                 'take' => $request->take,
                 'total' => $request->total,
             ]);
-            
+
             $cart = $request->cart;
 
             foreach ($cart as $key => $item) {

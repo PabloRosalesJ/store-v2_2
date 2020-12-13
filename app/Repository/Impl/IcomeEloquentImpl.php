@@ -6,6 +6,7 @@ use App\Repository\IcomeRepository;
 use Exception;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
@@ -20,12 +21,13 @@ class IcomeEloquentImpl implements IcomeRepository
 
     public function store(Request $request)
     {
+        dd($request->user());
         // TODO -> verify pw
         try {
             DB::beginTransaction();
-            
+
             $income = new Income();
-            $income->user_id = 1;               //TODO refactor
+            $income->user_id = Auth::user();
             $income->number = "I-".strtoupper(Str::random(4)).date('ym');
             $income->total = $request->total;
             $income->updated_at = $request->updated_at;
@@ -42,7 +44,7 @@ class IcomeEloquentImpl implements IcomeRepository
                 $incDet->sub_total = $item['sub_total'];
                 $incDet->save();
             }
-            
+
             if (ProductEloquentImpl::income($details)) {
                 DB::commit();
                 return $income;
@@ -53,7 +55,7 @@ class IcomeEloquentImpl implements IcomeRepository
             dd($th);
         }
     }
-    
+
     public function getIncome($id)
     {
 
@@ -61,7 +63,7 @@ class IcomeEloquentImpl implements IcomeRepository
                         ->where('income_id',$id)
                         ->get();
     }
-    
+
     public function disableIncome(Request $request,$id)
     {
         $details = IncomeDetail::where('income_id', $id)->get(['product_id','quantity']);

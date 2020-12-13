@@ -19,8 +19,10 @@
 <body>
 
 </body>
-
-<div class="auth-wrapper align-items-stretch aut-bg-img">
+    <div id="app">
+        <example-component></example-component>
+    </div>
+{{-- <div class="auth-wrapper align-items-stretch aut-bg-img">
     <div class="flex-grow-1">
         <div class="h-100 d-md-flex align-items-center auth-side-img">
             <div class="col-sm-10 auth-content w-auto">
@@ -32,7 +34,7 @@
         <div class="auth-side-form">
             <div class=" auth-content">
                 <img src="{{ asset('img/fox-login.jpg') }}" alt="" class="img-fluid mb-4 d-block d-xl-none d-lg-none">
-                <form method="POST" action="{{ route('login') }}">
+                <form method="POST" action="/login">
                     @csrf
                     <br>
                     <br>
@@ -110,7 +112,7 @@
             </div>
         </div>
     </div>
-
+</div> --}}
 <script src="{{ asset('js/app.js') }}" ></script>
 <script src="{{ asset('js/scripts.js') }}" ></script>
 </body>
